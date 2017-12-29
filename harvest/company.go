@@ -2,6 +2,7 @@ package harvest
 
 import (
 	"context"
+	"net/http"
 )
 
 // CompanyService handles communication with the company related
@@ -33,7 +34,7 @@ func (c Company) String() string {
 	return Stringify(c)
 }
 
-func (s *CompanyService) Get(ctx context.Context) (*Company, *Response, error) {
+func (s *CompanyService) Get(ctx context.Context) (*Company, *http.Response, error) {
 	u := "company"
 
 	req, err := s.client.NewRequest("GET", u, nil)

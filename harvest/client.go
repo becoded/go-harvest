@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 	"fmt"
+	"net/http"
 )
 
 // ClientService handles communication with the client related
@@ -45,7 +46,7 @@ type ClientListOptions struct {
 	ListOptions
 }
 
-func (s *ClientService) List(ctx context.Context, opt *ClientListOptions) (*ClientList, *Response, error) {
+func (s *ClientService) List(ctx context.Context, opt *ClientListOptions) (*ClientList, *http.Response, error) {
 	u := "clients"
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -67,7 +68,7 @@ func (s *ClientService) List(ctx context.Context, opt *ClientListOptions) (*Clie
 	return clientList, resp, nil
 }
 
-func (s *ClientService) Get(ctx context.Context, clientId int) (*Client, *Response, error) {
+func (s *ClientService) Get(ctx context.Context, clientId int) (*Client, *http.Response, error) {
 	u := fmt.Sprintf("clients/%d", clientId)
 
 	req, err := s.client.NewRequest("GET", u, nil)
