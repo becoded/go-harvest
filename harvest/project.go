@@ -16,7 +16,7 @@ type ProjectService service
 
 
 type Project struct {
-	Id *int `json:"id,omitempty"` //Unique ID for the project.
+	Id *int64 `json:"id,omitempty"` //Unique ID for the project.
 	Client *Client `json:"client,omitempty"` //An object containing the project’s client id, name, and currency.
 	Name *string `json:"name,omitempty"` //Unique name for the project.
 	Code *string `json:"code,omitempty"` //The code associated with the project.
@@ -29,7 +29,7 @@ type Project struct {
 	BudgetBy *string `json:"budget_by,omitempty"` //The method by which the project is budgeted.
 	NotifyWhenOverBudget *bool `json:"notify_when_over_budget,omitempty"` //Whether project managers should be notified when the project goes over budget.
 	OverBudgetNotificationPercentage *float64 `json:"over_budget_notification_percentage,omitempty"` //Percentage value used to trigger over budget email alerts.
-	OverBudgetNotificationDate *time.Time `json:"over_budget_notification_date,omitempty"` //Date of last over budget notification. If none have been sent, this will be null.
+	OverBudgetNotificationDate *Date `json:"over_budget_notification_date,omitempty"` //Date of last over budget notification. If none have been sent, this will be null.
 	ShowBudgetToAll *bool `json:"show_budget_to_all,omitempty"` //Option to show project budget to all employees. Does not apply to Total Project Fee projects.
 	CostBudget *float64 `json:"cost_budget,omitempty"` //The monetary budget for the project when budgeting by money.
 	CostBudgetIncludeExpenses *bool `json:"cost_budget_include_expenses,omitempty"` //Option for budget of Total Project Fees projects to include tracked expenses.
@@ -59,7 +59,7 @@ type ProjectListOptions struct {
 	// Pass true to only return active projects and false to return inactive projects.
 	IsActive	bool `url:"is_active,omitempty"`
 	// Only return projects belonging to the client with the given ID.
-	ClientId	int `url:"client_id,omitempty"`
+	ClientId	int64 `url:"client_id,omitempty"`
 	// Only return projects that have been updated since the given date and time.
 	UpdatedSince	time.Time `url:"updated_since,omitempty"`
 
@@ -87,7 +87,7 @@ func (s *ProjectService) List(ctx context.Context, opt *ProjectListOptions) (*Pr
 	return projectList, resp, nil
 }
 
-func (s *ProjectService) Get(ctx context.Context, projectId string) (*Project, *http.Response, error) {
+func (s *ProjectService) Get(ctx context.Context, projectId int64) (*Project, *http.Response, error) {
 	u := fmt.Sprintf("projects/%d", projectId)
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
