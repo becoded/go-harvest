@@ -129,7 +129,6 @@ func NewHarvestClient(httpClient *http.Client) *HarvestClient {
 	c.Invoice = (*InvoiceService)(&c.common)
 	c.Timesheet = (*TimesheetService)(&c.common)
 	c.Role = (*RoleService)(&c.common)
-	//c.Retainer = (*RetainerService)(&c.common)
 
 	return c
 }
