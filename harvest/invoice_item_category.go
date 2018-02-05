@@ -10,12 +10,12 @@ import (
 // Harvest API docs: https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-item-categories/
 
 type InvoiceItemCategory struct {
-	Id *int64 `json:"id,omitempty"` // Unique ID for the invoice item category.
-	Name *string `json:"name,omitempty"` // The name of the invoice item category.
-	UseAsService *bool `json:"use_as_service,omitempty"` // Whether this invoice item category is used for billable hours when generating an invoice.
-	UseAsExpense *bool `json:"use_as_expense,omitempty"` // Whether this invoice item category is used for expenses when generating an invoice.
-	CreatedAt *time.Time `json:"created_at,omitempty"` // Date and time the invoice item category was created.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"` // Date and time the invoice item category was last updated.
+	Id           *int64     `json:"id,omitempty"`             // Unique ID for the invoice item category.
+	Name         *string    `json:"name,omitempty"`           // The name of the invoice item category.
+	UseAsService *bool      `json:"use_as_service,omitempty"` // Whether this invoice item category is used for billable hours when generating an invoice.
+	UseAsExpense *bool      `json:"use_as_expense,omitempty"` // Whether this invoice item category is used for expenses when generating an invoice.
+	CreatedAt    *time.Time `json:"created_at,omitempty"`     // Date and time the invoice item category was created.
+	UpdatedAt    *time.Time `json:"updated_at,omitempty"`     // Date and time the invoice item category was last updated.
 }
 
 type InvoiceItemCategoryList struct {
@@ -38,7 +38,7 @@ func (p InvoiceItemCategoryList) String() string {
 
 type InvoiceItemCategoryListOptions struct {
 	// Only return invoice item categories that have been updated since the given date and time.
-	UpdatedSince	time.Time `url:"updated_since,omitempty"`
+	UpdatedSince time.Time `url:"updated_since,omitempty"`
 
 	ListOptions
 }

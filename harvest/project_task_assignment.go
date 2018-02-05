@@ -1,22 +1,21 @@
 package harvest
 
-
 import (
-"context"
-"fmt"
-"time"
+	"context"
+	"fmt"
+	"time"
 	"net/http"
 )
 
 type ProjectTaskAssignment struct {
-	Id *int64 `json:"id,omitempty"` // Unique ID for the task assignment.
-	Task *Task `json:"task,omitempty"` // An object containing the id and name of the associated task.
-	IsActive *bool `json:"is_active,omitempty"` // Whether the task assignment is active or archived.
-	Billable *bool `json:"billable,omitempty"` // Whether the task assignment is billable or not. For example: if set to true, all time tracked on this project for the associated task will be marked as billable.
-	HourlyRate *float64 `json:"hourly_rate,omitempty"` // Rate used when the project’s bill_by is Tasks.
-	Budget *float64 `json:"budget,omitempty"` // Budget used when the project’s budget_by is task or task_fees.
-	CreatedAt *time.Time `json:"created_at,omitempty"` // Date and time the task assignment was created.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"` // Date and time the task assignment was last updated.
+	Id         *int64     `json:"id,omitempty"`          // Unique ID for the task assignment.
+	Task       *Task      `json:"task,omitempty"`        // An object containing the id and name of the associated task.
+	IsActive   *bool      `json:"is_active,omitempty"`   // Whether the task assignment is active or archived.
+	Billable   *bool      `json:"billable,omitempty"`    // Whether the task assignment is billable or not. For example: if set to true, all time tracked on this project for the associated task will be marked as billable.
+	HourlyRate *float64   `json:"hourly_rate,omitempty"` // Rate used when the project’s bill_by is Tasks.
+	Budget     *float64   `json:"budget,omitempty"`      // Budget used when the project’s budget_by is task or task_fees.
+	CreatedAt  *time.Time `json:"created_at,omitempty"`  // Date and time the task assignment was created.
+	UpdatedAt  *time.Time `json:"updated_at,omitempty"`  // Date and time the task assignment was last updated.
 }
 
 type ProjectTaskAssignmentList struct {
@@ -35,11 +34,11 @@ func (p ProjectTaskAssignmentList) String() string {
 
 type ProjectTaskAssignmentListOptions struct {
 	// Pass true to only return active projects and false to return inactive projects.
-	IsActive	bool `url:"is_active,omitempty"`
+	IsActive bool `url:"is_active,omitempty"`
 	// Only return projects belonging to the client with the given ID.
-	ClientId	int64 `url:"client_id,omitempty"`
+	ClientId int64 `url:"client_id,omitempty"`
 	// Only return projects that have been updated since the given date and time.
-	UpdatedSince	time.Time `url:"updated_since,omitempty"`
+	UpdatedSince time.Time `url:"updated_since,omitempty"`
 
 	ListOptions
 }

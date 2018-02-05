@@ -1,27 +1,26 @@
 package harvest
 
-
 import (
-"context"
-"fmt"
-"time"
+	"context"
+	"fmt"
+	"time"
 	"net/http"
 )
 
 // Harvest API docs: https://help.getharvest.com/api-v2/clients-api/clients/contacts/
 
 type ClientContact struct {
-	Id *int64 `json:"id,omitempty"` // Unique ID for the contact.
-	Client *Client `json:"client,omitempty"` // An object containing the contact’s client id and name.
-	Title *string `json:"title,omitempty"` // The title of the contact.
-	FirstName *string `json:"first_name,omitempty"` // The first name of the contact.
-	LastName *string `json:"last_name,omitempty"` // The last name of the contact.
-	Email *string `json:"email,omitempty"` // The contact’s email address.
-	PhoneOffice *string `json:"phone_office,omitempty"` // The contact’s office phone number.
-	PhoneMobile *string `json:"phone_mobile,omitempty"` // The contact’s mobile phone number.
-	Fax *string `json:"fax,omitempty"` // The contact’s fax number.
-	CreatedAt *time.Time `json:"created_at,omitempty"` // Date and time the contact was created.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"` // Date and time the contact was last updated.
+	Id          *int64     `json:"id,omitempty"`           // Unique ID for the contact.
+	Client      *Client    `json:"client,omitempty"`       // An object containing the contact’s client id and name.
+	Title       *string    `json:"title,omitempty"`        // The title of the contact.
+	FirstName   *string    `json:"first_name,omitempty"`   // The first name of the contact.
+	LastName    *string    `json:"last_name,omitempty"`    // The last name of the contact.
+	Email       *string    `json:"email,omitempty"`        // The contact’s email address.
+	PhoneOffice *string    `json:"phone_office,omitempty"` // The contact’s office phone number.
+	PhoneMobile *string    `json:"phone_mobile,omitempty"` // The contact’s mobile phone number.
+	Fax         *string    `json:"fax,omitempty"`          // The contact’s fax number.
+	CreatedAt   *time.Time `json:"created_at,omitempty"`   // Date and time the contact was created.
+	UpdatedAt   *time.Time `json:"updated_at,omitempty"`   // Date and time the contact was last updated.
 }
 
 type ClientContactList struct {
@@ -40,35 +39,34 @@ func (p ClientContactList) String() string {
 
 type ClientContactListOptions struct {
 	// Only return contacts belonging to the client with the given ID.
-	ClientId	int64 `url:"client_id,omitempty"`
+	ClientId int64 `url:"client_id,omitempty"`
 	// Only return contacts that have been updated since the given date and time.
-	UpdatedSince	time.Time `url:"updated_since,omitempty"`
+	UpdatedSince time.Time `url:"updated_since,omitempty"`
 
 	ListOptions
 }
 
 type ClientContactCreateRequest struct {
-	ClientId *int64 `json:"client_id"` // required	The ID of the client associated with this contact.
-	Title *string `json:"title,omitempty"` // optional	The title of the contact.
-	FirstName *string `json:"first_name"` // required	The first name of the contact.
-	LastName *string `json:"last_name,omitempty"` // optional	The last name of the contact.
-	Email *string `json:"email,omitempty"` // optional	The contact’s email address.
+	ClientId    *int64  `json:"client_id"`              // required	The ID of the client associated with this contact.
+	Title       *string `json:"title,omitempty"`        // optional	The title of the contact.
+	FirstName   *string `json:"first_name"`             // required	The first name of the contact.
+	LastName    *string `json:"last_name,omitempty"`    // optional	The last name of the contact.
+	Email       *string `json:"email,omitempty"`        // optional	The contact’s email address.
 	PhoneOffice *string `json:"phone_office,omitempty"` // optional	The contact’s office phone number.
 	PhoneMobile *string `json:"phone_mobile,omitempty"` // optional	The contact’s mobile phone number.
-	Fax *string `json:"fax,omitempty"` // optional	The contact’s fax number.
+	Fax         *string `json:"fax,omitempty"`          // optional	The contact’s fax number.
 }
 
 type ClientContactUpdateRequest struct {
-	ClientId *int64 `json:"client_id,omitempty"` // required	The ID of the client associated with this contact.
-	Title *string `json:"title,omitempty"` // optional	The title of the contact.
-	FirstName *string `json:"first_name,omitempty"` // required	The first name of the contact.
-	LastName *string `json:"last_name,omitempty"` // optional	The last name of the contact.
-	Email *string `json:"email,omitempty"` // optional	The contact’s email address.
+	ClientId    *int64  `json:"client_id,omitempty"`    // required	The ID of the client associated with this contact.
+	Title       *string `json:"title,omitempty"`        // optional	The title of the contact.
+	FirstName   *string `json:"first_name,omitempty"`   // required	The first name of the contact.
+	LastName    *string `json:"last_name,omitempty"`    // optional	The last name of the contact.
+	Email       *string `json:"email,omitempty"`        // optional	The contact’s email address.
 	PhoneOffice *string `json:"phone_office,omitempty"` // optional	The contact’s office phone number.
 	PhoneMobile *string `json:"phone_mobile,omitempty"` // optional	The contact’s mobile phone number.
-	Fax *string `json:"fax,omitempty"` // optional	The contact’s fax number.
+	Fax         *string `json:"fax,omitempty"`          // optional	The contact’s fax number.
 }
-
 
 func (s *ClientService) ListContacts(ctx context.Context, opt *ClientContactListOptions) (*ClientContactList, *http.Response, error) {
 	u := "contacts"

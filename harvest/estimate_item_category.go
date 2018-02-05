@@ -10,8 +10,8 @@ import (
 // Harvest API docs: https://help.getharvest.com/api-v2/estimates-api/estimates/estimate-item-categories/
 
 type EstimateItemCategory struct {
-	Id *int64 `json:"id,omitempty"` // Unique ID for the estimate item category.
-	Name *string `json:"name,omitempty"` // The name of the estimate item category.
+	Id        *int64     `json:"id,omitempty"`         // Unique ID for the estimate item category.
+	Name      *string    `json:"name,omitempty"`       // The name of the estimate item category.
 	CreatedAt *time.Time `json:"created_at,omitempty"` // Date and time the estimate item category was created.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"` // Date and time the estimate item category was last updated.
 }
@@ -36,7 +36,7 @@ func (p EstimateItemCategoryList) String() string {
 
 type EstimateItemCategoryListOptions struct {
 	// Only return estimate item categories that have been updated since the given date and time.
-	UpdatedSince	time.Time `url:"updated_since,omitempty"`
+	UpdatedSince time.Time `url:"updated_since,omitempty"`
 
 	ListOptions
 }

@@ -10,11 +10,11 @@ import (
 // Harvest API docs: https://help.getharvest.com/api-v2/expenses-api/expenses/expense-categories/
 
 type ExpenseCategory struct {
-	Id *int64 `json:"id,omitempty"` // Unique ID for the expense category.
-	Name *string `json:"name,omitempty"` // The name of the expense category.
-	UnitName *string `json:"unit_name,omitempty"` // The unit name of the expense category.
-	UnitPrice *float64 `json:"unit_price,omitempty"` // The unit price of the expense category.
-	IsActive *bool `json:"is_active,omitempty"` // Whether the expense category is active or archived.
+	Id        *int64     `json:"id,omitempty"`         // Unique ID for the expense category.
+	Name      *string    `json:"name,omitempty"`       // The name of the expense category.
+	UnitName  *string    `json:"unit_name,omitempty"`  // The unit name of the expense category.
+	UnitPrice *float64   `json:"unit_price,omitempty"` // The unit price of the expense category.
+	IsActive  *bool      `json:"is_active,omitempty"`  // Whether the expense category is active or archived.
 	CreatedAt *time.Time `json:"created_at,omitempty"` // Date and time the expense category was created.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"` // Date and time the expense category was last updated.
 }
@@ -26,10 +26,10 @@ type ExpenseCategoryList struct {
 }
 
 type ExpenseCategoryRequest struct {
-	Name *string `json:"name,omitempty"` // required	The name of the expense category.
-	UnitName *string `json:"unit_name,omitempty"` // optional	The unit name of the expense category.
+	Name      *string  `json:"name,omitempty"`       // required	The name of the expense category.
+	UnitName  *string  `json:"unit_name,omitempty"`  // optional	The unit name of the expense category.
 	UnitPrice *float64 `json:"unit_price,omitempty"` // optional	The unit price of the expense category.
-	IsActive *bool `json:"is_active,omitempty"` // optional	Whether the expense category is active or archived. Defaults to true.
+	IsActive  *bool    `json:"is_active,omitempty"`  // optional	Whether the expense category is active or archived. Defaults to true.
 }
 
 func (p ExpenseCategory) String() string {
@@ -41,7 +41,7 @@ func (p ExpenseCategoryList) String() string {
 }
 
 type ExpenseCategoryListOptions struct {
-	IsActive *bool `url:"is_active,omitempty"` // Pass true to only return active expense categories and false to return inactive expense categories.
+	IsActive     *bool      `url:"is_active,omitempty"`     // Pass true to only return active expense categories and false to return inactive expense categories.
 	UpdatedSince *time.Time `url:"updated_since,omitempty"` // Only return expense categories that have been updated since the given date and time.
 
 	ListOptions

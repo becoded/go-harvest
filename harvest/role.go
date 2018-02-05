@@ -1,10 +1,9 @@
 package harvest
 
-
 import (
-"context"
-"fmt"
-"time"
+	"context"
+	"fmt"
+	"time"
 	"net/http"
 )
 
@@ -14,11 +13,10 @@ import (
 // Harvest API docs: https://help.getharvest.com/api-v2/roles-api/roles/roles/
 type RoleService service
 
-
 type Role struct {
-	Id *int64 `json:"id,omitempty"` // Unique ID for the role.
-	Name *string `json:"name,omitempty"` // The name of the role.
-	UserIds *[]int64 `json:"user_ids,omitempty"` // of integers	The IDs of the users assigned to this role.
+	Id         *int64     `json:"id,omitempty"`         // Unique ID for the role.
+	Name       *string    `json:"name,omitempty"`       // The name of the role.
+	UserIds    *[]int64   `json:"user_ids,omitempty"`   // of integers	The IDs of the users assigned to this role.
 	Created_at *time.Time `json:"created_at,omitempty"` // Date and time the role was created.
 	Updated_at *time.Time `json:"updated_at,omitempty"` // Date and time the role was last updated.
 }
@@ -42,12 +40,12 @@ type RoleListOptions struct {
 }
 
 type RoleCreateRequest struct {
-	Name *string `json:"name"` // required	The name of the role.
+	Name    *string  `json:"name"`               // required	The name of the role.
 	UserIds *[]int64 `json:"user_ids,omitempty"` // The IDs of the users assigned to this role.
 }
 
 type RoleUpdateRequest struct {
-	Name *string `json:"name,omitempty"` // The name of the role.
+	Name    *string  `json:"name,omitempty"`     // The name of the role.
 	UserIds *[]int64 `json:"user_ids,omitempty"` // The IDs of the users assigned to this role.
 }
 

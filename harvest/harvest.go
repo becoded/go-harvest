@@ -1,21 +1,21 @@
 package harvest
 
 import (
-"bytes"
-"context"
-"encoding/json"
-"fmt"
-"io"
-"io/ioutil"
-"net/http"
-"net/url"
-"reflect"
-"strconv"
-"strings"
-"sync"
-"time"
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"reflect"
+	"strconv"
+	"strings"
+	"sync"
+	"time"
 
-"github.com/google/go-querystring/query"
+	"github.com/google/go-querystring/query"
 )
 
 const (
@@ -27,30 +27,30 @@ const (
 
 // A HarvestClient manages communication with the Harvest API.
 type HarvestClient struct {
-	clientMu	sync.Mutex   // clientMu protects the client during calls that modify the CheckRedirect func.
-	client		*http.Client // HTTP client used to communicate with the API.
+	clientMu sync.Mutex   // clientMu protects the client during calls that modify the CheckRedirect func.
+	client   *http.Client // HTTP client used to communicate with the API.
 
 	// Base URL for API requests. Defaults to the public Harvest API.
 	// BaseURL should always be specified with a trailing slash.
-	BaseURL		*url.URL
+	BaseURL *url.URL
 
-	AccountId	string
+	AccountId string
 
 	// User agent used when communicating with the Harvest API.
-	UserAgent	string
+	UserAgent string
 
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// Services used for talking to different parts of the Harvest API.
-	Client		*ClientService
-	Company		*CompanyService
-	Project		*ProjectService
-	Task		*TaskService
-	User		*UserService
-	Estimate	*EstimateService
-	Invoice		*InvoiceService
-	Timesheet	*TimesheetService
-	Role		*RoleService
+	Client    *ClientService
+	Company   *CompanyService
+	Project   *ProjectService
+	Task      *TaskService
+	User      *UserService
+	Estimate  *EstimateService
+	Invoice   *InvoiceService
+	Timesheet *TimesheetService
+	Role      *RoleService
 	//Retainer	*RetainerService
 }
 
@@ -70,20 +70,20 @@ type ListOptions struct {
 }
 
 type Pagination struct {
-	PerPage *int `json:"per_page,omitempty"`
-	TotalPages *int `json:"total_pages,omitempty"`
-	TotalEntries *int `json:"total_entries,omitempty"`
-	NextPage *string `json:"next_page,omitempty"`
-	PreviousPage *string `json:"previous_page,omitempty",`
-	Page *int `json:"page,omitempty"`
-	Links *PageLinks `json:"links,omitempty"`
+	PerPage      *int       `json:"per_page,omitempty"`
+	TotalPages   *int       `json:"total_pages,omitempty"`
+	TotalEntries *int       `json:"total_entries,omitempty"`
+	NextPage     *string    `json:"next_page,omitempty"`
+	PreviousPage *string    `json:"previous_page,omitempty",`
+	Page         *int       `json:"page,omitempty"`
+	Links        *PageLinks `json:"links,omitempty"`
 }
 
 type PageLinks struct {
- 	First *string `json:"first,omitempty"`
-	Next *string `json:"next,omitempty"`
+	First    *string `json:"first,omitempty"`
+	Next     *string `json:"next,omitempty"`
 	Previous *string `json:"previous,omitempty"`
-	Last *string `json:"last,omitempty"`
+	Last     *string `json:"last,omitempty"`
 }
 
 // addOptions adds the parameters in opt as URL query parameters to s. opt
@@ -132,8 +132,6 @@ func NewHarvestClient(httpClient *http.Client) *HarvestClient {
 
 	return c
 }
-
-
 
 // NewRequest creates an API request. A relative URL can be provided in urlStr,
 // in which case it is resolved relative to the BaseURL of the Client.
@@ -258,7 +256,6 @@ func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}
 // Otherwise it returns nil, and Client.Do should proceed normally.
 func (c *HarvestClient) checkRateLimitBeforeDo(req *http.Request) *RateLimitError {
 
-
 	return nil
 }
 
@@ -266,12 +263,12 @@ func (c *HarvestClient) checkRateLimitBeforeDo(req *http.Request) *RateLimitErro
 An ErrorResponse reports one or more errors caused by an API request.
 */
 type ErrorResponse struct {
-	Response *http.Response // HTTP response that caused this error
-	Message  string         `json:"message"` // error message
-	Errors   []Error        `json:"errors"`  // more detail on individual errors
+	Response *http.Response           // HTTP response that caused this error
+	Message  string  `json:"message"` // error message
+	Errors   []Error `json:"errors"`  // more detail on individual errors
 
 	Block *struct {
-		Reason    string     `json:"reason,omitempty"`
+		Reason string `json:"reason,omitempty"`
 	} `json:"block,omitempty"`
 
 	DocumentationURL string `json:"documentation_url,omitempty"`
@@ -286,9 +283,9 @@ func (r *ErrorResponse) Error() string {
 // RateLimitError occurs when Harvest returns 429 Forbidden response with a rate limit
 // remaining value of 0, and error message starts with "API rate limit exceeded for ".
 type RateLimitError struct {
-	Rate     Rate           // Rate specifies last known rate limit for the client
-	Response *http.Response // HTTP response that caused this error
-	Message  string         `json:"message"` // error message
+	Rate     Rate                    // Rate specifies last known rate limit for the client
+	Response *http.Response          // HTTP response that caused this error
+	Message  string `json:"message"` // error message
 }
 
 func (r *RateLimitError) Error() string {
@@ -301,8 +298,8 @@ func (r *RateLimitError) Error() string {
 // AbuseRateLimitError occurs when Harvest returns 429 Too many requests response with the
 // "documentation_url" field value equal to "https://help.getharvest.com/api-v2/introduction/overview/general/#rate-limiting".
 type AbuseRateLimitError struct {
-	Response *http.Response // HTTP response that caused this error
-	Message  string         `json:"message"` // error message
+	Response *http.Response          // HTTP response that caused this error
+	Message  string `json:"message"` // error message
 
 	// RetryAfter is provided with some abuse rate limit errors. If present,
 	// it is the amount of time that the client should wait before retrying.
