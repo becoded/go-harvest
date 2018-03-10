@@ -67,7 +67,7 @@ if err != nil {
 * [ - ] [Expense Categories](https://help.getharvest.com/api-v2/expenses-api/expenses/expense-categories/)
 
 ## [Tasks API](https://help.getharvest.com/api-v2/tasks-api)
-* [ - ] [Tasks](https://help.getharvest.com/api-v2/tasks-api/tasks/tasks/)
+* [ X ] [Tasks](https://help.getharvest.com/api-v2/tasks-api/tasks/tasks/)
 
 ## [Timesheets API](https://help.getharvest.com/api-v2/timesheets-api)
 * [ - ] [Time Entries](https://help.getharvest.com/api-v2/timesheets-api/timesheets/time-entries/)
