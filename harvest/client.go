@@ -115,8 +115,8 @@ func (s *ClientService) CreateClient(ctx context.Context, data *ClientCreateRequ
 	return client, resp, nil
 }
 
-func (s *ClientService) UpdateClient(ctx context.Context, contactId int64, data *ClientUpdateRequest) (*Client, *http.Response, error) {
-	u := fmt.Sprintf("clients/%d", contactId)
+func (s *ClientService) UpdateClient(ctx context.Context, clientId int64, data *ClientUpdateRequest) (*Client, *http.Response, error) {
+	u := fmt.Sprintf("clients/%d", clientId)
 
 	req, err := s.client.NewRequest("PATCH", u, data)
 	if err != nil {
@@ -132,8 +132,8 @@ func (s *ClientService) UpdateClient(ctx context.Context, contactId int64, data 
 	return client, resp, nil
 }
 
-func (s *ClientService) DeleteClient(ctx context.Context, contactId int64) (*http.Response, error) {
-	u := fmt.Sprintf("clients/%d", contactId)
+func (s *ClientService) DeleteClient(ctx context.Context, clientId int64) (*http.Response, error) {
+	u := fmt.Sprintf("clients/%d", clientId)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {
 		return nil, err

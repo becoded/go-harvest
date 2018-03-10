@@ -54,7 +54,7 @@ if err != nil {
 ## [Invoices API](https://help.getharvest.com/api-v2/invoices-api)
 * [ x ] [Invoice Messages](https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-messages/)
 * [ x ] [Invoice Payments](https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-payments/)
-* [ - ] [Invoices](https://help.getharvest.com/api-v2/invoices-api/invoices/invoices/)
+* [ x ] [Invoices](https://help.getharvest.com/api-v2/invoices-api/invoices/invoices/)
 * [ - ] [Invoice Item Categories](https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-item-categories/)
 
 ## [Estimates API](https://help.getharvest.com/api-v2/estimates-api)
