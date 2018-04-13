@@ -55,16 +55,16 @@ if err != nil {
 * [ x ] [Invoice Messages](https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-messages/)
 * [ x ] [Invoice Payments](https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-payments/)
 * [ x ] [Invoices](https://help.getharvest.com/api-v2/invoices-api/invoices/invoices/)
-* [ - ] [Invoice Item Categories](https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-item-categories/)
+* [ x ] [Invoice Item Categories](https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-item-categories/)
 
 ## [Estimates API](https://help.getharvest.com/api-v2/estimates-api)
-* [ - ] [Estimate Messages](https://help.getharvest.com/api-v2/estimates-api/estimates/estimate-messages/)
+* [ x ] [Estimate Messages](https://help.getharvest.com/api-v2/estimates-api/estimates/estimate-messages/)
 * [ - ] [Estimates](https://help.getharvest.com/api-v2/estimates-api/estimates/estimates/)
 * [ - ] [Estimate Item Categories](https://help.getharvest.com/api-v2/estimates-api/estimates/estimate-item-categories/)
 
 ## [Expenses API](https://help.getharvest.com/api-v2/expenses-api)
-* [ - ] [Expenses](https://help.getharvest.com/api-v2/expenses-api/expenses/expenses/)
-* [ - ] [Expense Categories](https://help.getharvest.com/api-v2/expenses-api/expenses/expense-categories/)
+* [ x ] [Expenses](https://help.getharvest.com/api-v2/expenses-api/expenses/expenses/)
+* [ x ] [Expense Categories](https://help.getharvest.com/api-v2/expenses-api/expenses/expense-categories/)
 
 ## [Tasks API](https://help.getharvest.com/api-v2/tasks-api)
 * [ X ] [Tasks](https://help.getharvest.com/api-v2/tasks-api/tasks/tasks/)

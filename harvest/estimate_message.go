@@ -29,6 +29,20 @@ type EstimateMessageRecipient struct {
 	Email *string `json:"email,omitempty"` // Email of the message recipient.
 }
 
+type EstimateMessageCreateRequest struct {
+	Recipients     *[]EstimateMessageRecipientCreateRequest   `json:"recipients,omitempty"`     // required	Array of recipient parameters. See below for details.
+	Subject        *string  `json:"subject,omitempty"`        // optional	The message subject.
+	Body           *string  `json:"body,omitempty"`           // optional	The message body.
+	SendMeACopy *bool `json:"send_me_a_copy,omitempty"` // optional	If set to true, a copy of the message email will be sent to the current user. Defaults to false.
+	EventType     *string  `json:"event_type,omitempty"`     // optional	If provided, runs an event against the estimate. Options: “accept”, “decline”, “re-open”, or “send”.
+}
+
+type EstimateMessageRecipientCreateRequest struct {
+	Name *string `json:"name,omitempty"` // optional	Name of the message recipient.
+	Email *string `json:"email"` // required	Email of the message recipient.
+}
+
+
 type EstimateMessageList struct {
 	Estimates []*Estimate `json:"estimates"`
 
@@ -74,8 +88,21 @@ func (s *EstimateService) ListMessages(ctx context.Context, estimateId int64, op
 	return estimateList, resp, nil
 }
 
-func (s *EstimateService) CreateEstimateMessage(ctx context.Context) {
-	// TODO
+func (s *EstimateService) CreateEstimateMessage(ctx context.Context, data *EstimateMessageCreateRequest) (*EstimateMessage, *http.Response, error) {
+	u := "invoices"
+
+	req, err := s.client.NewRequest("POST", u, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	estimateMessage := new(EstimateMessage)
+	resp, err := s.client.Do(ctx, req, estimateMessage)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return estimateMessage, resp, nil
 }
 
 func (s *EstimateService) DeleteEstimateMessage(ctx context.Context, estimateId, estimateMessageId int64) (*http.Response, error) {
