@@ -57,10 +57,10 @@ type TaskCreateRequest struct {
 
 type TaskUpdateRequest struct {
 	Name                *string  `json:"name,omitempty"`                // The name of the task.
-	Billable_by_default *bool    `json:"billable_by_default,omitempty"` // Used in determining whether default tasks should be marked billable when creating a new project.
-	Default_hourly_rate *float64 `json:"default_hourly_rate,omitempty"` // The default hourly rate to use for this task when it is added to a project.
-	Is_default          *bool    `json:"is_default,omitempty"`          // Whether this task should be automatically added to future projects.
-	Is_active           *bool    `json:"is_active,omitempty"`           // Whether this task is active or archived.
+	BillableByDefault *bool    `json:"billable_by_default,omitempty"` // Used in determining whether default tasks should be marked billable when creating a new project.
+	DefaultHourlyRate *float64 `json:"default_hourly_rate,omitempty"` // The default hourly rate to use for this task when it is added to a project.
+	IsDefault          *bool    `json:"is_default,omitempty"`          // Whether this task should be automatically added to future projects.
+	IsActive           *bool    `json:"is_active,omitempty"`           // Whether this task is active or archived.
 }
 
 func (s *TaskService) List(ctx context.Context, opt *TaskListOptions) (*TaskList, *http.Response, error) {

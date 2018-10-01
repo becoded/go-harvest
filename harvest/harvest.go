@@ -73,8 +73,8 @@ type Pagination struct {
 	PerPage      *int       `json:"per_page,omitempty"`
 	TotalPages   *int       `json:"total_pages,omitempty"`
 	TotalEntries *int       `json:"total_entries,omitempty"`
-	NextPage     *string    `json:"next_page,omitempty"`
-	PreviousPage *string    `json:"previous_page,omitempty",`
+	NextPage     *int    `json:"next_page,omitempty"`
+	PreviousPage *int    `json:"previous_page,omitempty",`
 	Page         *int       `json:"page,omitempty"`
 	Links        *PageLinks `json:"links,omitempty"`
 }
