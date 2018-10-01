@@ -3,8 +3,8 @@ package harvest
 import (
 	"context"
 	"fmt"
-	"time"
 	"net/http"
+	"time"
 )
 
 // TimeEntryService handles communication with the issue related
@@ -78,24 +78,24 @@ type TimeEntryListOptions struct {
 }
 
 type TimeEntryCreateViaDuration struct {
-	UserId *int64 `json:"user_id,omitempty"` // optional	The ID of the user to associate with the time entry. Defaults to the currently authenticated user’s ID.
-	ProjectId *int64 `json:"project_id"` // required	The ID of the project to associate with the time entry.
-	TaskId *int64 `json:"task_id"` // required	The ID of the task to associate with the time entry.
-	SpentDate *Date `json:"spent_date"` // required	The ISO 8601 formatted date the time entry was spent.
-	Hours *float64 `json:"hours,omitempty"` // optional	The current amount of time tracked. If provided, the time entry will be created with the specified hours and is_running will be set to false. If not provided, hours will be set to 0.0 and is_running will be set to true.
-	Notes *string `json:"notes,omitempty"` // optional	Any notes to be associated with the time entry.
+	UserId    *int64   `json:"user_id,omitempty"` // optional	The ID of the user to associate with the time entry. Defaults to the currently authenticated user’s ID.
+	ProjectId *int64   `json:"project_id"`        // required	The ID of the project to associate with the time entry.
+	TaskId    *int64   `json:"task_id"`           // required	The ID of the task to associate with the time entry.
+	SpentDate *Date    `json:"spent_date"`        // required	The ISO 8601 formatted date the time entry was spent.
+	Hours     *float64 `json:"hours,omitempty"`   // optional	The current amount of time tracked. If provided, the time entry will be created with the specified hours and is_running will be set to false. If not provided, hours will be set to 0.0 and is_running will be set to true.
+	Notes     *string  `json:"notes,omitempty"`   // optional	Any notes to be associated with the time entry.
 	//TODO
 	//ExternalReference *object `json:"external_reference,omitempty"` // optional	An object containing the id, group_id, and permalink of the external reference.
 }
 
 type TimeEntryCreateViaStartEndTime struct {
-	UserId *int64 `json:"user_id,omitempty"` // optional	The ID of the user to associate with the time entry. Defaults to the currently authenticated user’s ID.
-	ProjectId *int64 `json:"project_id"` // required	The ID of the project to associate with the time entry.
-	TaskId *int64 `json:"task_id"` // required	The ID of the task to associate with the time entry.
-	SpentDate *Date `json:"spent_date"` // required	The ISO 8601 formatted date the time entry was spent.
+	UserId      *int64     `json:"user_id,omitempty"`      // optional	The ID of the user to associate with the time entry. Defaults to the currently authenticated user’s ID.
+	ProjectId   *int64     `json:"project_id"`             // required	The ID of the project to associate with the time entry.
+	TaskId      *int64     `json:"task_id"`                // required	The ID of the task to associate with the time entry.
+	SpentDate   *Date      `json:"spent_date"`             // required	The ISO 8601 formatted date the time entry was spent.
 	StartedTime *time.Time `json:"started_time,omitempty"` // optional	The time the entry started. Defaults to the current time. Example: “8:00am”.
-	EndedTime *time.Time `json:"ended_time,omitempty"` // optional	The time the entry ended. If provided, is_running will be set to false. If not provided, is_running will be set to true.
-	Notes *string `json:"notes,omitempty"` // optional	Any notes to be associated with the time entry.
+	EndedTime   *time.Time `json:"ended_time,omitempty"`   // optional	The time the entry ended. If provided, is_running will be set to false. If not provided, is_running will be set to true.
+	Notes       *string    `json:"notes,omitempty"`        // optional	Any notes to be associated with the time entry.
 	//TODO
 	//External_reference *object `json:"external_reference,omitempty"` // optional	An object containing the id, group_id, and permalink of the external reference.
 }

@@ -3,8 +3,8 @@ package harvest
 import (
 	"context"
 	"fmt"
-	"time"
 	"net/http"
+	"time"
 )
 
 // RoleService handles communication with the issue related

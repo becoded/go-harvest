@@ -3,8 +3,8 @@ package harvest
 import (
 	"context"
 	"fmt"
-	"time"
 	"net/http"
+	"time"
 )
 
 // Harvest API docs: https://help.getharvest.com/api-v2/estimates-api/estimates/estimate-messages/
@@ -30,18 +30,17 @@ type EstimateMessageRecipient struct {
 }
 
 type EstimateMessageCreateRequest struct {
-	Recipients     *[]EstimateMessageRecipientCreateRequest   `json:"recipients,omitempty"`     // required	Array of recipient parameters. See below for details.
-	Subject        *string  `json:"subject,omitempty"`        // optional	The message subject.
-	Body           *string  `json:"body,omitempty"`           // optional	The message body.
-	SendMeACopy *bool `json:"send_me_a_copy,omitempty"` // optional	If set to true, a copy of the message email will be sent to the current user. Defaults to false.
-	EventType     *string  `json:"event_type,omitempty"`     // optional	If provided, runs an event against the estimate. Options: “accept”, “decline”, “re-open”, or “send”.
+	Recipients  *[]EstimateMessageRecipientCreateRequest `json:"recipients,omitempty"`     // required	Array of recipient parameters. See below for details.
+	Subject     *string                                  `json:"subject,omitempty"`        // optional	The message subject.
+	Body        *string                                  `json:"body,omitempty"`           // optional	The message body.
+	SendMeACopy *bool                                    `json:"send_me_a_copy,omitempty"` // optional	If set to true, a copy of the message email will be sent to the current user. Defaults to false.
+	EventType   *string                                  `json:"event_type,omitempty"`     // optional	If provided, runs an event against the estimate. Options: “accept”, “decline”, “re-open”, or “send”.
 }
 
 type EstimateMessageRecipientCreateRequest struct {
-	Name *string `json:"name,omitempty"` // optional	Name of the message recipient.
-	Email *string `json:"email"` // required	Email of the message recipient.
+	Name  *string `json:"name,omitempty"` // optional	Name of the message recipient.
+	Email *string `json:"email"`          // required	Email of the message recipient.
 }
-
 
 type EstimateMessageList struct {
 	Estimates []*Estimate `json:"estimates"`

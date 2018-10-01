@@ -3,8 +3,8 @@ package harvest
 import (
 	"context"
 	"fmt"
-	"time"
 	"net/http"
+	"time"
 )
 
 /** https://help.getharvest.com/api-v2/projects-api/projects/user-assignments/#the-user-assignment-object **/
