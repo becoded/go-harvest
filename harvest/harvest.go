@@ -73,8 +73,8 @@ type Pagination struct {
 	PerPage      *int       `json:"per_page,omitempty"`
 	TotalPages   *int       `json:"total_pages,omitempty"`
 	TotalEntries *int       `json:"total_entries,omitempty"`
-	NextPage     *string    `json:"next_page,omitempty"`
-	PreviousPage *string    `json:"previous_page,omitempty",`
+	NextPage     *int       `json:"next_page,omitempty"`
+	PreviousPage *int       `json:"previous_page,omitempty",`
 	Page         *int       `json:"page,omitempty"`
 	Links        *PageLinks `json:"links,omitempty"`
 }
@@ -263,9 +263,9 @@ func (c *HarvestClient) checkRateLimitBeforeDo(req *http.Request) *RateLimitErro
 An ErrorResponse reports one or more errors caused by an API request.
 */
 type ErrorResponse struct {
-	Response *http.Response           // HTTP response that caused this error
-	Message  string  `json:"message"` // error message
-	Errors   []Error `json:"errors"`  // more detail on individual errors
+	Response *http.Response // HTTP response that caused this error
+	Message  string         `json:"message"` // error message
+	Errors   []Error        `json:"errors"`  // more detail on individual errors
 
 	Block *struct {
 		Reason string `json:"reason,omitempty"`
@@ -283,23 +283,23 @@ func (r *ErrorResponse) Error() string {
 // RateLimitError occurs when Harvest returns 429 Forbidden response with a rate limit
 // remaining value of 0, and error message starts with "API rate limit exceeded for ".
 type RateLimitError struct {
-	Rate     Rate                    // Rate specifies last known rate limit for the client
-	Response *http.Response          // HTTP response that caused this error
-	Message  string `json:"message"` // error message
+	Rate     Rate           // Rate specifies last known rate limit for the client
+	Response *http.Response // HTTP response that caused this error
+	Message  string         `json:"message"` // error message
 }
 
 func (r *RateLimitError) Error() string {
 	return "Rate limit"
 	/*return fmt.Sprintf("%v %v: %d %v %v",
-		r.Response.Request.Method, sanitizeURL(r.Response.Request.URL),
-		r.Response.StatusCode, r.Message, formatRateReset(r.Rate.Reset.Time.Sub(time.Now())))*/
+	r.Response.Request.Method, sanitizeURL(r.Response.Request.URL),
+	r.Response.StatusCode, r.Message, formatRateReset(r.Rate.Reset.Time.Sub(time.Now())))*/
 }
 
 // AbuseRateLimitError occurs when Harvest returns 429 Too many requests response with the
 // "documentation_url" field value equal to "https://help.getharvest.com/api-v2/introduction/overview/general/#rate-limiting".
 type AbuseRateLimitError struct {
-	Response *http.Response          // HTTP response that caused this error
-	Message  string `json:"message"` // error message
+	Response *http.Response // HTTP response that caused this error
+	Message  string         `json:"message"` // error message
 
 	// RetryAfter is provided with some abuse rate limit errors. If present,
 	// it is the amount of time that the client should wait before retrying.

@@ -3,8 +3,8 @@ package harvest
 import (
 	"context"
 	"fmt"
-	"time"
 	"net/http"
+	"time"
 )
 
 // Harvest API docs: https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-payments/

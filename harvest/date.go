@@ -1,8 +1,8 @@
 package harvest
 
 import (
-	"time"
 	"strings"
+	"time"
 )
 
 type Date struct {

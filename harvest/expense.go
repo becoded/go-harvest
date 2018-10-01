@@ -3,8 +3,8 @@ package harvest
 import (
 	"context"
 	"fmt"
-	"time"
 	"net/http"
+	"time"
 )
 
 // ExpenseService handles communication with the issue related
@@ -47,27 +47,27 @@ type ExpenseList struct {
 }
 
 type ExpenseCreateRequest struct {
-	UserId *int64 `json:"user_id,omitempty"` // optional	The ID of the user associated with this expense. Defaults to the ID of the currently authenticated user.
-	ProjectId *int64 `json:"project_id"` // required	The ID of the project associated with this expense.
-	ExpenseCategoryId *int64 `json:"expense_category_id"` // required	The ID of the expense category this expense is being tracked against.
-	SpentDate *Date `json:"spent_date"` // required	Date the expense occurred.
-	Units *int64 `json:"units,omitempty"` // *optional	The quantity of units to use in calculating the total_cost of the expense.
-	TotalCost *float64 `json:"total_cost,omitempty"` // *optional	The total amount of the expense.
-	Notes *string `json:"notes,omitempty"` // optional	Textual notes used to describe the expense.
-	Billable *bool `json:"billable,omitempty"` // optional	Whether this expense is billable or not. Defaults to true.
-	// TODO add receipt file
+	UserId            *int64   `json:"user_id,omitempty"`    // optional	The ID of the user associated with this expense. Defaults to the ID of the currently authenticated user.
+	ProjectId         *int64   `json:"project_id"`           // required	The ID of the project associated with this expense.
+	ExpenseCategoryId *int64   `json:"expense_category_id"`  // required	The ID of the expense category this expense is being tracked against.
+	SpentDate         *Date    `json:"spent_date"`           // required	Date the expense occurred.
+	Units             *int64   `json:"units,omitempty"`      // *optional	The quantity of units to use in calculating the total_cost of the expense.
+	TotalCost         *float64 `json:"total_cost,omitempty"` // *optional	The total amount of the expense.
+	Notes             *string  `json:"notes,omitempty"`      // optional	Textual notes used to describe the expense.
+	Billable          *bool    `json:"billable,omitempty"`   // optional	Whether this expense is billable or not. Defaults to true.
+	//TODO add receipt file
 	// Receipt *file `json:"receipt,omitempty"` // optional	A receipt file to attach to the expense. If including a receipt, you must submit a multipart/form-data request.
 }
 
 type ExpenseUpdateRequest struct {
-	ProjectId *int64 `json:"project_id,omitempty"` // The ID of the project associated with this expense.
-	ExpenseCategoryId *int64 `json:"expense_category_id,omitempty"` // The ID of the expense category this expense is being tracked against.
-	Spent_date *Date `json:"spent_date,omitempty"` // Date the expense occurred.
-	Units *int64 `json:"units,omitempty"` // The quantity of units to use in calculating the total_cost of the expense.
-	TotalCost *float64 `json:"total_cost,omitempty"` // The total amount of the expense.
-	Notes *string `json:"notes,omitempty"` // Textual notes used to describe the expense.
-	Billable *bool `json:"billable,omitempty"` // Whether this expense is billable or not. Defaults to true.
-	// TODO add receipt file
+	ProjectId         *int64   `json:"project_id,omitempty"`          // The ID of the project associated with this expense.
+	ExpenseCategoryId *int64   `json:"expense_category_id,omitempty"` // The ID of the expense category this expense is being tracked against.
+	Spent_date        *Date    `json:"spent_date,omitempty"`          // Date the expense occurred.
+	Units             *int64   `json:"units,omitempty"`               // The quantity of units to use in calculating the total_cost of the expense.
+	TotalCost         *float64 `json:"total_cost,omitempty"`          // The total amount of the expense.
+	Notes             *string  `json:"notes,omitempty"`               // Textual notes used to describe the expense.
+	Billable          *bool    `json:"billable,omitempty"`            // Whether this expense is billable or not. Defaults to true.
+	//TODO add receipt file
 	// Receipt *file `json:"receipt,omitempty"` // A receipt file to attach to the expense. If including a receipt, you must submit a multipart/form-data request.
 	DeleteReceipt *bool `json:"delete_receipt,omitempty"` // Whether an attached expense receipt should be deleted. Pass true to delete the expense receipt.
 }

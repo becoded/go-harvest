@@ -2,9 +2,9 @@ package harvest
 
 import (
 	"context"
-	"time"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 // UserService handles communication with the user related

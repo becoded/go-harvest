@@ -2,9 +2,9 @@ package harvest
 
 import (
 	"context"
-	"time"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 // ClientService handles communication with the client related
