@@ -67,7 +67,7 @@ if err != nil {
 * [ x ] [Expense Categories](https://help.getharvest.com/api-v2/expenses-api/expenses/expense-categories/)
 
 ## [Tasks API](https://help.getharvest.com/api-v2/tasks-api)
-* [ X ] [Tasks](https://help.getharvest.com/api-v2/tasks-api/tasks/tasks/)
+* [ x ] [Tasks](https://help.getharvest.com/api-v2/tasks-api/tasks/tasks/)
 
 ## [Timesheets API](https://help.getharvest.com/api-v2/timesheets-api)
 * [ - ] [Time Entries](https://help.getharvest.com/api-v2/timesheets-api/timesheets/time-entries/)
@@ -82,7 +82,7 @@ if err != nil {
 
 ## [Users API](https://help.getharvest.com/api-v2/users-api)
 * [ - ] [User Project Assignments](https://help.getharvest.com/api-v2/users-api/users/project-assignments/)
-* [ - ] [Users](https://help.getharvest.com/api-v2/users-api/users/users/)
+* [ x ] [Users](https://help.getharvest.com/api-v2/users-api/users/users/)
 
 ## Todo
 * [ ] Unit tests
