@@ -1,0 +1,127 @@
+{
+    "openapi": "3.0.0",
+    "servers": [
+        {
+            "url": "http://https://api.harvestapp.com/v2"
+        }
+    ],
+    "info": {
+        "description": "The Harvest V2 API is a REST API that allows you to interact with your Harvest account programmatically. You can track time, log expenses, create projects, and more.",
+        "version": "2.0.0",
+        "title": "GetHarvest",
+        "termsOfService": "",
+        "contact": {
+            "email": ""
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "tags": [],
+    "paths": {
+        "/contacts/{CONTACT_ID}": {
+            "get": {
+                "summary": "",
+                "description": "",
+                "parameters": [],
+                "operationId": "",
+                "responses": {
+                    "default": {
+                        "description": "Contact",
+                        "content": {
+                            "contact": {
+                                "schema": [
+                                    {
+                                        "id": ""
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "",
+                "description": "",
+                "parameters": [],
+                "operationId": "",
+                "responses": {
+                    "default": {
+                        "description": "Default response"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "",
+                "description": "",
+                "parameters": [],
+                "operationId": "",
+                "responses": {
+                    "default": {
+                        "description": "Default response"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "description": "",
+                "parameters": [],
+                "operationId": "",
+                "responses": {
+                    "default": {
+                        "description": "Default response"
+                    }
+                }
+            }
+        },
+        "/contacts": {
+            "get": {
+                "summary": "",
+                "description": "",
+                "parameters": [],
+                "operationId": "",
+                "responses": {
+                    "default": {
+                        "description": "contacts"
+                    }
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "The Harvest V2 API is a REST API that allows you to interact with your Harvest account programmatically. You can track time, log expenses, create projects, and more.",
+        "url": "https://help.getharvest.com/api-v2/"
+    },
+    "components": {
+        "schemas": {
+            "contact": {
+              "id":4706479,
+              "title":"Owner",
+              "first_name":"Jane",
+              "last_name":"Doe",
+              "email":"janedoe@example.com",
+              "phone_office":"(203) 697-8885",
+              "phone_mobile":"(203) 697-8886",
+              "fax":"(203) 697-8887",
+              "created_at":"2017-06-26T21:20:07Z",
+              "updated_at":"2017-06-26T21:27:07Z",
+              "client":{
+                "id":5735774,
+                "name":"ABC Corp"
+              }
+            }
+        },
+        "securitySchemes": {
+            "harvest_auth": {
+                "type": "oauth2",
+                "flows": {
+                    "authorizationCode": {}
+                }
+            }
+        },
+        "links": {},
+        "callbacks": {}
+    },
+    "security": []
+}
