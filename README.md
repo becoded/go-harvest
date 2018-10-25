@@ -88,4 +88,132 @@ if err != nil {
 * [ ] Unit tests
 * [ ] Rate limits
 * [ ] Documentation
-* [ ] Examples
+
+
+## Examples
+### Create client
+```
+ctx := context.Background()
+ts := oauth2.StaticTokenSource(
+	&oauth2.Token{
+        AccessToken: os.Getenv("HARVEST_ACCESS_TOKEN"),
+    },
+)
+tc := oauth2.NewClient(ctx, ts)
+
+```
+
+### Create service
+```
+service := harvest.NewHarvestClient(tc)
+service.AccountId = os.Getenv("HARVEST_ACCOUNT_ID")
+```
+
+### Get organisation
+```
+c, _, err := service.Company.Get(ctx)
+if err != nil {
+    log.Error(err)
+    return
+}
+
+fmt.Println("Company info")
+fmt.Println(c.String())
+```
+
+### Get clients
+```
+clientList, _, err := service.Client.List(ctx, &harvest.ClientListOptions{})
+if err != nil {
+    log.Error(err)
+    return
+}
+
+fmt.Println("Client list")
+fmt.Println(clientList.String())
+```
+
+### Get contacts
+```
+contactList, _, err := service.Client.ListContacts(ctx, &harvest.ClientContactListOptions{})
+if err != nil {
+    log.Error(err)
+    return
+}
+
+fmt.Println("Contact list")
+fmt.Println(contactList.String())
+```
+
+### Get projects
+```
+projectList, _, err := service.Project.List(ctx, &harvest.ProjectListOptions{})
+if err != nil {
+    log.Error(err)
+    return
+}
+
+fmt.Println("Project list")
+fmt.Println(projectList.String())
+```
+
+### Get tasks
+```
+taskList, _, err := service.Task.List(ctx, &harvest.TaskListOptions{})
+if err != nil {
+    log.Error(err)
+    return
+}
+
+fmt.Println("Task list")
+fmt.Println(taskList.String())
+```
+
+### Get users
+```
+userList, _, err := service.User.List(ctx, &harvest.UserListOptions{})
+if err != nil {
+    log.Error(err)
+    return
+}
+
+fmt.Println("User list")
+fmt.Println(userList.String())
+```
+
+### Get estimates
+```
+estimateList, _, err := service.Estimate.List(ctx, &harvest.EstimateListOptions{})
+if err != nil {
+    log.Error(err)
+    return
+}
+
+fmt.Println("Estimate list")
+fmt.Println(estimateList.String())
+```
+
+### Get invoices
+```
+invoiceList, _, err := service.Invoice.List(ctx, &harvest.InvoiceListOptions{})
+if err != nil {
+    log.Error(err)
+    return
+}
+
+fmt.Println("Invoice list")
+fmt.Println(invoiceList.String())
+```
+
+### Get roles
+```
+roleList, _, err := service.Role.List(ctx, &harvest.RoleListOptions{})
+if err != nil {
+    log.Error(err)
+    return
+}
+
+fmt.Println("Role list")
+fmt.Println(roleList.String())
+```
+
