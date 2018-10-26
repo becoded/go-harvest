@@ -23,7 +23,7 @@ type UserProjectAssignment struct {
 }
 
 type UserProjectAssignmentList struct {
-	UserAssignments []*UserProjectAssignment `json:"user_assignments"`
+	UserAssignments []*UserProjectAssignment `json:"project_assignments"`
 
 	Pagination
 }
@@ -37,18 +37,18 @@ func (p UserProjectAssignmentList) String() string {
 }
 
 type UserProjectAssignmentListOptions struct {
-	// Pass true to only return active projects and false to return inactive projects.
-	IsActive bool `url:"is_active,omitempty"`
-	// Only return projects belonging to the client with the given ID.
-	ClientId int64 `url:"client_id,omitempty"`
 	// Only return projects that have been updated since the given date and time.
 	UpdatedSince time.Time `url:"updated_since,omitempty"`
 
 	ListOptions
 }
 
-func (s *ProjectService) ListUserAssignments(ctx context.Context, projectId int64, opt *UserProjectAssignmentListOptions) (*UserProjectAssignmentList, *http.Response, error) {
-	u := fmt.Sprintf("projects/%d/user_assignments", projectId)
+type MyProjectAssignmentListOptions struct {
+	ListOptions
+}
+
+func (s *ProjectService) ListProjectAssignments(ctx context.Context, userId int64, opt *UserProjectAssignmentListOptions) (*UserProjectAssignmentList, *http.Response, error) {
+	u := fmt.Sprintf("users/%d/project_assignments", userId)
 	u, err := addOptions(u, opt)
 	if err != nil {
 		return nil, nil, err
@@ -68,18 +68,23 @@ func (s *ProjectService) ListUserAssignments(ctx context.Context, projectId int6
 	return UserProjectAssignmentList, resp, nil
 }
 
-func (s *ProjectService) GetUserAssignment(ctx context.Context, projectId int64, userAssignmentId int64) (*UserProjectAssignment, *http.Response, error) {
-	u := fmt.Sprintf("projects/%d/user_assignments/%d", projectId, userAssignmentId)
+func (s *ProjectService) GetMyProjectAssignments(ctx context.Context, opt *MyProjectAssignmentListOptions) (*UserProjectAssignmentList, *http.Response, error) {
+	u := "users/me/project_assignments"
+	u, err := addOptions(u, opt)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	UserProjectAssignment := new(UserProjectAssignment)
-	resp, err := s.client.Do(ctx, req, UserProjectAssignment)
+	UserProjectAssignmentList := new(UserProjectAssignmentList)
+	resp, err := s.client.Do(ctx, req, &UserProjectAssignmentList)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return UserProjectAssignment, resp, nil
+	return UserProjectAssignmentList, resp, nil
 }
