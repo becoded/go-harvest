@@ -65,14 +65,14 @@ func (p TimeEntryList) String() string {
 }
 
 type TimeEntryListOptions struct {
-	UserId       *int64     `json:"user_id,omitempty"`       // Only return time entries belonging to the user with the given ID.
-	ClientId     *int64     `json:"client_id,omitempty"`     // Only return time entries belonging to the client with the given ID.
-	ProjectId    *int64     `json:"project_id,omitempty"`    // Only return time entries belonging to the project with the given ID.
-	IsBilled     *bool      `json:"is_billed,omitempty"`     // Pass true to only return time entries that have been invoiced and false to return time entries that have not been invoiced.
-	IsRunning    *bool      `json:"is_running,omitempty"`    // Pass true to only return running time entries and false to return non-running time entries.
-	UpdatedSince *time.Time `json:"updated_since,omitempty"` // Only return time entries that have been updated since the given date and time.
-	From         *Date      `json:"from,omitempty"`          // Only return time entries with a spent_date on or after the given date.
-	To           *Date      `json:"to,omitempty"`            // Only return time entries with a spent_date on or before the given date.
+	UserId       *int64     `url:"user_id,omitempty"`       // Only return time entries belonging to the user with the given ID.
+	ClientId     *int64     `url:"client_id,omitempty"`     // Only return time entries belonging to the client with the given ID.
+	ProjectId    *int64     `url:"project_id,omitempty"`    // Only return time entries belonging to the project with the given ID.
+	IsBilled     *bool      `url:"is_billed,omitempty"`     // Pass true to only return time entries that have been invoiced and false to return time entries that have not been invoiced.
+	IsRunning    *bool      `url:"is_running,omitempty"`    // Pass true to only return running time entries and false to return non-running time entries.
+	UpdatedSince *time.Time `url:"updated_since,omitempty"` // Only return time entries that have been updated since the given date and time.*/
+	From         *Date      `url:"from,omitempty"`          // Only return time entries with a spent_date on or after the given date.
+	To           *Date      `url:"to,omitempty"`            // Only return time entries with a spent_date on or before the given date.
 
 	ListOptions
 }
