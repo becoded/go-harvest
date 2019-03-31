@@ -1,6 +1,7 @@
 package harvest
 
 import (
+	"net/url"
 	"strings"
 	"time"
 )
@@ -19,6 +20,11 @@ func (t *Date) UnmarshalJSON(data []byte) (err error) {
 	const shortForm = "2006-01-02"
 	(*t).Time, err = time.Parse(shortForm, str)
 	return
+}
+
+func (t *Date) EncodeValues(key string, v *url.Values) error {
+	v.Add(key, t.String())
+	return nil
 }
 
 // Equal reports whether t and u are equal based on time.Equal
