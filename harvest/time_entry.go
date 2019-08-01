@@ -89,15 +89,27 @@ type TimeEntryCreateViaDuration struct {
 }
 
 type TimeEntryCreateViaStartEndTime struct {
-	UserId      *int64     `json:"user_id,omitempty"`      // optional	The ID of the user to associate with the time entry. Defaults to the currently authenticated user’s ID.
-	ProjectId   *int64     `json:"project_id"`             // required	The ID of the project to associate with the time entry.
-	TaskId      *int64     `json:"task_id"`                // required	The ID of the task to associate with the time entry.
-	SpentDate   *Date      `json:"spent_date"`             // required	The ISO 8601 formatted date the time entry was spent.
-	StartedTime *time.Time `json:"started_time,omitempty"` // optional	The time the entry started. Defaults to the current time. Example: “8:00am”.
-	EndedTime   *time.Time `json:"ended_time,omitempty"`   // optional	The time the entry ended. If provided, is_running will be set to false. If not provided, is_running will be set to true.
-	Notes       *string    `json:"notes,omitempty"`        // optional	Any notes to be associated with the time entry.
+	UserId      *int64  `json:"user_id,omitempty"`      // optional	The ID of the user to associate with the time entry. Defaults to the currently authenticated user’s ID.
+	ProjectId   *int64  `json:"project_id"`             // required	The ID of the project to associate with the time entry.
+	TaskId      *int64  `json:"task_id"`                // required	The ID of the task to associate with the time entry.
+	SpentDate   *Date   `json:"spent_date"`             // required	The ISO 8601 formatted date the time entry was spent.
+	StartedTime *Time   `json:"started_time,omitempty"` // optional	The time the entry started. Defaults to the current time. Example: “8:00am”.
+	EndedTime   *Time   `json:"ended_time,omitempty"`   // optional	The time the entry ended. If provided, is_running will be set to false. If not provided, is_running will be set to true.
+	Notes       *string `json:"notes,omitempty"`        // optional	Any notes to be associated with the time entry.
 	//TODO
 	//External_reference *object `json:"external_reference,omitempty"` // optional	An object containing the id, group_id, and permalink of the external reference.
+}
+
+type TimeEntryUpdate struct {
+	ProjectId   *int64   `json:"project_id"`             // required	The ID of the project to associate with the time entry.
+	TaskId      *int64   `json:"task_id"`                // required	The ID of the task to associate with the time entry.
+	SpentDate   *Date    `json:"spent_date"`             // required	The ISO 8601 formatted date the time entry was spent.
+	StartedTime *Time    `json:"started_time,omitempty"` // optional	The time the entry started. Defaults to the current time. Example: “8:00am”.
+	EndedTime   *Time    `json:"ended_time,omitempty"`   // optional	The time the entry ended. If provided, is_running will be set to false. If not provided, is_running will be set to true.
+	Hours       *float64 `json:"hours,omitempty"`        // optional	The current amount of time tracked. If provided, the time entry will be created with the specified hours and is_running will be set to false. If not provided, hours will be set to 0.0 and is_running will be set to true.
+	Notes       *string  `json:"notes,omitempty"`        // optional	Any notes to be associated with the time entry.
+	//TODO
+	//ExternalReference *object `json:"external_reference,omitempty"` // optional	An object containing the id, group_id, and permalink of the external reference.
 }
 
 func (s *TimesheetService) List(ctx context.Context, opt *TimeEntryListOptions) (*TimeEntryList, *http.Response, error) {
@@ -158,6 +170,68 @@ func (s *TimesheetService) CreateTimeEntryViaStartEndTime(ctx context.Context, d
 	u := "time_entries"
 
 	req, err := s.client.NewRequest("POST", u, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	timeEntry := new(TimeEntry)
+	resp, err := s.client.Do(ctx, req, timeEntry)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return timeEntry, resp, nil
+}
+
+func (s *TimesheetService) UpdateTimeEntry(ctx context.Context, timeEntryId int64, data *TimeEntryUpdate) (*TimeEntry, *http.Response, error) {
+	u := fmt.Sprintf("time_entries/%d", timeEntryId)
+
+	req, err := s.client.NewRequest("PATCH", u, data)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	timeEntry := new(TimeEntry)
+	resp, err := s.client.Do(ctx, req, timeEntry)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return timeEntry, resp, nil
+}
+
+func (s *TimesheetService) DeleteTimeEntry(ctx context.Context, timeEntryId int64) (*http.Response, error) {
+	u := fmt.Sprintf("time_entries/%d", timeEntryId)
+
+	req, err := s.client.NewRequest("DELETE", u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(ctx, req, nil)
+}
+
+func (s *TimesheetService) RestartTimeEntry(ctx context.Context, timeEntryId int64) (*TimeEntry, *http.Response, error) {
+	u := fmt.Sprintf("time_entries/%d/restart", timeEntryId)
+
+	req, err := s.client.NewRequest("PATCH", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	timeEntry := new(TimeEntry)
+	resp, err := s.client.Do(ctx, req, timeEntry)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return timeEntry, resp, nil
+}
+
+func (s *TimesheetService) StopTimeEntry(ctx context.Context, timeEntryId int64) (*TimeEntry, *http.Response, error) {
+	u := fmt.Sprintf("time_entries/%d/stop", timeEntryId)
+
+	req, err := s.client.NewRequest("PATCH", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
