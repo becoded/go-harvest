@@ -31,8 +31,8 @@ type TimeEntry struct {
 	IsClosed          *bool                  `json:"is_closed,omitempty"`          // Whether or not the time entry has been approved via Timesheet Approval.
 	IsBilled          *bool                  `json:"is_billed,omitempty"`          // Whether or not the time entry has been marked as invoiced.
 	TimerStartedAt    *time.Time             `json:"timer_started_at,omitempty"`   // Date and time the timer was started (if tracking by duration).
-	StartedTime       *string                `json:"started_time,omitempty"`       // Time the time entry was started (if tracking by start/end times).
-	EndedTime         *time.Time             `json:"ended_time,omitempty"`         // Time the time entry was ended (if tracking by start/end times).
+	StartedTime       *Time                  `json:"started_time,omitempty"`       // Time the time entry was started (if tracking by start/end times).
+	EndedTime         *Time                  `json:"ended_time,omitempty"`         // Time the time entry was ended (if tracking by start/end times).
 	IsRunning         *bool                  `json:"is_running,omitempty"`         // Whether or not the time entry is currently running.
 	Billable          *bool                  `json:"billable,omitempty"`           // Whether or not the time entry is billable.
 	Budgeted          *bool                  `json:"budgeted,omitempty"`           // Whether or not the time entry counts towards the project budget.
