@@ -1,0 +1,29 @@
+language: go
+
+go:
+  - "1.x"
+  - "1.13.x"
+  - master
+
+matrix:
+  allow_failures:
+    - go: master
+  fast_finish: true
+
+cache:
+  directories:
+    - $HOME/.cache/go-build
+    - $HOME/gopath/pkg/mod
+
+env:
+  global:
+    - GO111MODULE=on
+
+script:
+  - diff -u <(echo -n) <(gofmt -d -s .)
+  - go generate -x ./... && git diff --exit-code; code=$?; git checkout -- .; (exit $code) # Check that go generate ./... produces a zero diff; clean up any changes afterwards.
+  - go vet ./...
+  - go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
