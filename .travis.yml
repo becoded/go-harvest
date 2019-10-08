@@ -24,7 +24,6 @@ script:
   - go generate -x ./... && git diff --exit-code; code=$?; git checkout -- .; (exit $code) # Check that go generate ./... produces a zero diff; clean up any changes afterwards.
   - go vet ./...
   - go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
-  - go test -v -tags=integration -run=^$ ./test/integration # Check that integration test builds successfully, but don't run any of the tests (they hit live GitHub API).
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
