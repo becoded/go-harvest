@@ -114,7 +114,7 @@ func addOptions(s string, opt interface{}) (string, error) {
 // for you (such as that provided by the golang.org/x/oauth2 library).
 func NewHarvestClient(httpClient *http.Client) *HarvestClient {
 	if httpClient == nil {
-		httpClient = http.DefaultClient
+		httpClient = &http.Client{}
 	}
 	baseURL, _ := url.Parse(defaultBaseURL)
 
