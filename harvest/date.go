@@ -1,10 +1,13 @@
 package harvest
 
 import (
+	"errors"
 	"net/url"
 	"strings"
 	"time"
 )
+
+var DateParseError = errors.New(`DateParseError: should be a string formatted as "2006-01-02"`)
 
 type Date struct {
 	time.Time
@@ -19,7 +22,12 @@ func (t *Date) UnmarshalJSON(data []byte) (err error) {
 	str = strings.Trim(str, "\"")
 	const shortForm = "2006-01-02"
 	(*t).Time, err = time.ParseInLocation(shortForm, str, time.Local)
-	return
+
+	if err != nil {
+		return DateParseError
+	}
+
+	return nil
 }
 
 func (t *Date) EncodeValues(key string, v *url.Values) error {
