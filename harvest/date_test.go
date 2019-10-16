@@ -2,9 +2,43 @@ package harvest
 
 import (
 	"encoding/json"
+	"net/url"
+	"reflect"
 	"testing"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
+
+func TestDate_String(t *testing.T) {
+	tests := []struct {
+		name string
+		input Date
+		want string
+	} {
+		{
+			name: "2nd of January",
+			input: Date{Time: time.Date(2006, time.January, 2, 0, 0, 0, 0, time.Local)},
+			want: "2006-01-02",
+		},
+		{
+			name: "31th of December",
+			input: Date{Time: time.Date(2006, time.December, 31, 0, 0, 0, 0, time.Local)},
+			want: "2006-12-31",
+		},
+		{
+			name: "6th of May",
+			input: Date{Time: time.Date(2016, time.May, 6, 0, 0, 0, 0, time.Local)},
+			want: "2016-05-06",
+		},
+	}
+
+	for _, tt := range tests {
+		if tt.input.String() != tt.want {
+			t.Errorf("%q. String() = %v, want %v", tt.name, tt.input.String(), tt.want)
+		}
+	}
+}
 
 func TestDate_UnmarshalJSONParse(t *testing.T) {
 	type args struct {
@@ -64,6 +98,7 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 	type args struct {
 		jsonStr string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -107,6 +142,59 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 			} else if tt.want.Date != nil && (f.Date == nil || !(*tt.want.Date).Equal(*f.Date)) {
 				t.Errorf("%q. UnmarshalJSON() = %v, want %v", tt.name, f, tt.want)
 			}
+		}
+	}
+}
+
+func TestDate_EncodeValues(t *testing.T) {
+	type foo struct {
+		Query   *string `url:"query,omitempty"`
+		Date *Date  `url:"date,omitempty"`
+	}
+
+	tests := []struct {
+		name string
+		args *foo
+		want url.Values
+	} {
+		{
+			name: "All fields filled in",
+			args: &foo{
+				Query:   String("foo"),
+				Date: &Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
+			},
+			want: url.Values{
+				"query": []string{"foo"},
+				"date": []string{"2019-01-02"},
+			},
+		},
+		{
+			name: "No query",
+			args: &foo{
+				Date: &Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
+			},
+			want: url.Values{
+				"date": []string{"2019-01-02"},
+			},
+		},
+		{
+			name: "No date",
+			args: &foo{
+				Query:   String("foo"),
+			},
+			want: url.Values{
+				"query": []string{"foo"},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		qs, err := query.Values(tt.args)
+		if err != nil {
+			t.Errorf("%q. EncodeValues() error = %v", tt.name, err)
+		}
+		if !reflect.DeepEqual(qs, tt.want) {
+			t.Errorf("%q. EncodeValues() = %v, want %v", tt.name, qs, tt.want)
 		}
 	}
 }
