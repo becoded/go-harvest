@@ -33,8 +33,8 @@ type Project struct {
 	CostBudgetIncludeExpenses        *bool      `json:"cost_budget_include_expenses,omitempty"`        //Option for budget of Total Project Fees projects to include tracked expenses.
 	Fee                              *float64   `json:"fee,omitempty"`                                 //The amount you plan to invoice for the project. Only used by fixed-fee projects.
 	Notes                            *string    `json:"notes,omitempty"`                               //Project notes.
-	StartsOn                         *time.Time `json:"starts_on,omitempty"`                           //Date the project was started.
-	EndsOn                           *time.Time `json:"ends_on,omitempty"`                             //Date the project will end.
+	StartsOn                         *Date      `json:"starts_on,omitempty"`                           //Date the project was started.
+	EndsOn                           *Date      `json:"ends_on,omitempty"`                             //Date the project will end.
 	CreatedAt                        *time.Time `json:"created_at,omitempty"`                          //Date and time the project was created.
 	UpdatedAt                        *time.Time `json:"updated_at,omitempty"`                          //Date and time the project was last updated.
 }
