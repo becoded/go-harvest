@@ -94,14 +94,14 @@ func TestClientService_Get(t *testing.T) {
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
 	want := &Client{
-				Id:        Int64(1),
-				Name:      String("Client 1"),
-				IsActive:  Bool(true),
-				Address:   String("Address line 1"),
-				Currency:  String("EUR"),
-				CreatedAt: &createdOne,
-				UpdatedAt: &updatedOne,
-			}
+		Id:        Int64(1),
+		Name:      String("Client 1"),
+		IsActive:  Bool(true),
+		Address:   String("Address line 1"),
+		Currency:  String("EUR"),
+		CreatedAt: &createdOne,
+		UpdatedAt: &updatedOne,
+	}
 
 	if !reflect.DeepEqual(clientList, want) {
 		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
@@ -109,13 +109,100 @@ func TestClientService_Get(t *testing.T) {
 }
 
 func TestClientService_CreateClient(t *testing.T) {
-	t.SkipNow()
+	service, mux, _, teardown := setup()
+	defer teardown()
+
+	mux.HandleFunc("/clients", func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "POST")
+		testFormValues(t, r, values{})
+		testBody(t, r, `{"name":"Client new","is_active":true,"address":"Address line 1","currency":"EUR"}`+"\n")
+		fmt.Fprint(w, `{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"}`)
+	})
+
+	clientList, _, err := service.Client.CreateClient(context.Background(), &ClientCreateRequest{
+		Name:     String("Client new"),
+		IsActive: Bool(true),
+		Address:  String("Address line 1"),
+		Currency: String("EUR"),
+	})
+	if err != nil {
+		t.Errorf("Create client returned error: %v", err)
+	}
+
+	createdOne := time.Date(
+		2018, 1, 31, 20, 34, 30, 0, time.UTC)
+	updatedOne := time.Date(
+		2018, 5, 31, 21, 34, 30, 0, time.UTC)
+
+	want := &Client{
+		Id:        Int64(1),
+		Name:      String("Client 1"),
+		IsActive:  Bool(true),
+		Address:   String("Address line 1"),
+		Currency:  String("EUR"),
+		CreatedAt: &createdOne,
+		UpdatedAt: &updatedOne,
+	}
+
+	if !reflect.DeepEqual(clientList, want) {
+		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
+	}
 }
 
 func TestClientService_UpdateClient(t *testing.T) {
-	t.SkipNow()
+	service, mux, _, teardown := setup()
+	defer teardown()
+
+	mux.HandleFunc("/clients/1", func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "PATCH")
+		testFormValues(t, r, values{})
+		testBody(t, r, `{"name":"Client new","is_active":true,"address":"Address line 1","currency":"EUR"}`+"\n")
+		fmt.Fprint(w, `{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"}`)
+	})
+
+	clientList, _, err := service.Client.UpdateClient(context.Background(), 1, &ClientUpdateRequest{
+		Name:     String("Client new"),
+		IsActive: Bool(true),
+		Address:  String("Address line 1"),
+		Currency: String("EUR"),
+	})
+	if err != nil {
+		t.Errorf("Create client returned error: %v", err)
+	}
+
+	createdOne := time.Date(
+		2018, 1, 31, 20, 34, 30, 0, time.UTC)
+	updatedOne := time.Date(
+		2018, 5, 31, 21, 34, 30, 0, time.UTC)
+
+	want := &Client{
+		Id:        Int64(1),
+		Name:      String("Client 1"),
+		IsActive:  Bool(true),
+		Address:   String("Address line 1"),
+		Currency:  String("EUR"),
+		CreatedAt: &createdOne,
+		UpdatedAt: &updatedOne,
+	}
+
+	if !reflect.DeepEqual(clientList, want) {
+		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
+	}
 }
 
 func TestClientService_DeleteClient(t *testing.T) {
-	t.SkipNow()
+	service, mux, _, teardown := setup()
+	defer teardown()
+
+	mux.HandleFunc("/clients/1", func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "DELETE")
+		testFormValues(t, r, values{})
+		testBody(t, r, ``)
+		fmt.Fprint(w, ``)
+	})
+
+	_, err := service.Client.DeleteClient(context.Background(), 1)
+	if err != nil {
+		t.Errorf("Create client returned error: %v", err)
+	}
 }

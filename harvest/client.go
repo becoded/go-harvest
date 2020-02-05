@@ -82,7 +82,7 @@ func (s *ClientService) List(ctx context.Context, opt *ClientListOptions) (*Clie
 	return clientList, resp, nil
 }
 
-//Get retrieves the client with the given ID.
+// Get retrieves the client with the given ID.
 // Returns a client object and a 200 OK response code if a valid identifier was provided.
 func (s *ClientService) Get(ctx context.Context, clientId int64) (*Client, *http.Response, error) {
 	u := fmt.Sprintf("clients/%d", clientId)

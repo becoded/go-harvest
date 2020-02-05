@@ -12,24 +12,24 @@ import (
 
 func TestDate_String(t *testing.T) {
 	tests := []struct {
-		name string
+		name  string
 		input Date
-		want string
-	} {
+		want  string
+	}{
 		{
-			name: "2nd of January",
+			name:  "2nd of January",
 			input: Date{Time: time.Date(2006, time.January, 2, 0, 0, 0, 0, time.Local)},
-			want: "2006-01-02",
+			want:  "2006-01-02",
 		},
 		{
-			name: "31th of December",
+			name:  "31th of December",
 			input: Date{Time: time.Date(2006, time.December, 31, 0, 0, 0, 0, time.Local)},
-			want: "2006-12-31",
+			want:  "2006-12-31",
 		},
 		{
-			name: "6th of May",
+			name:  "6th of May",
 			input: Date{Time: time.Date(2016, time.May, 6, 0, 0, 0, 0, time.Local)},
-			want: "2016-05-06",
+			want:  "2016-05-06",
 		},
 	}
 
@@ -148,24 +148,24 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 
 func TestDate_EncodeValues(t *testing.T) {
 	type foo struct {
-		Query   *string `url:"query,omitempty"`
-		Date *Date  `url:"date,omitempty"`
+		Query *string `url:"query,omitempty"`
+		Date  *Date   `url:"date,omitempty"`
 	}
 
 	tests := []struct {
 		name string
 		args *foo
 		want url.Values
-	} {
+	}{
 		{
 			name: "All fields filled in",
 			args: &foo{
-				Query:   String("foo"),
-				Date: &Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
+				Query: String("foo"),
+				Date:  &Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
 			},
 			want: url.Values{
 				"query": []string{"foo"},
-				"date": []string{"2019-01-02"},
+				"date":  []string{"2019-01-02"},
 			},
 		},
 		{
@@ -180,7 +180,7 @@ func TestDate_EncodeValues(t *testing.T) {
 		{
 			name: "No date",
 			args: &foo{
-				Query:   String("foo"),
+				Query: String("foo"),
 			},
 			want: url.Values{
 				"query": []string{"foo"},
