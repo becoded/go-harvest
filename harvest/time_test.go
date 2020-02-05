@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestUnmarshalJSONParse(t *testing.T) {
+func TestTime_UnmarshalJSONParse(t *testing.T) {
 
 	type args struct {
 		str string
@@ -96,11 +96,7 @@ func TestUnmarshalJSONParse(t *testing.T) {
 	}
 }
 
-func intPtr(v int64) *int64 {
-	return &v
-}
-
-func TestUnmarshalJSON(t *testing.T) {
+func TestTime_UnmarshalJSON(t *testing.T) {
 
 	type foo struct {
 		ID   *int64 `json:"id"`
@@ -120,7 +116,7 @@ func TestUnmarshalJSON(t *testing.T) {
 			name: "Typical json",
 			args: args{`{"id": 123, "time": "3:13am"}`},
 			want: foo{
-				ID:   intPtr(123),
+				ID:   Int64(123),
 				Time: &Time{Time: time.Date(0, time.January, 1, 3, 13, 0, 0, time.Local)},
 			},
 			err: nil,
@@ -129,7 +125,7 @@ func TestUnmarshalJSON(t *testing.T) {
 			name: "null time",
 			args: args{`{"id": 123, "time": null}`},
 			want: foo{
-				ID:   intPtr(123),
+				ID:   Int64(123),
 				Time: nil,
 			},
 			err: nil,

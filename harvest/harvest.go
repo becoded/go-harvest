@@ -114,7 +114,7 @@ func addOptions(s string, opt interface{}) (string, error) {
 // for you (such as that provided by the golang.org/x/oauth2 library).
 func NewHarvestClient(httpClient *http.Client) *HarvestClient {
 	if httpClient == nil {
-		httpClient = http.DefaultClient
+		httpClient = &http.Client{}
 	}
 	baseURL, _ := url.Parse(defaultBaseURL)
 
@@ -436,6 +436,10 @@ func Bool(v bool) *bool { return &v }
 // Int is a helper routine that allocates a new int value
 // to store v and returns a pointer to it.
 func Int(v int) *int { return &v }
+
+// Int64 is a helper routine that allocates a new int value
+// to store v and returns a pointer to it.
+func Int64(v int64) *int64 { return &v }
 
 // String is a helper routine that allocates a new string value
 // to store v and returns a pointer to it.
