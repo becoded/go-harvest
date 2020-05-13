@@ -100,7 +100,7 @@ type UserListOptions struct {
 	ListOptions
 }
 
-func (s *UserService) List(ctx context.Context, opt *UserListOptions) (*UserList, *http.Response, error) {
+func (s *UserService) ListUsers(ctx context.Context, opt *UserListOptions) (*UserList, *http.Response, error) {
 	u := "users"
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -121,7 +121,7 @@ func (s *UserService) List(ctx context.Context, opt *UserListOptions) (*UserList
 	return userList, resp, nil
 }
 
-func (s *UserService) Get(ctx context.Context, userId int64) (*User, *http.Response, error) {
+func (s *UserService) GetUser(ctx context.Context, userId int64) (*User, *http.Response, error) {
 	u := fmt.Sprintf("users/%d", userId)
 
 	req, err := s.client.NewRequest("GET", u, nil)

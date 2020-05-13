@@ -58,7 +58,7 @@ type service struct {
 	client *HarvestClient
 }
 
-// ListOptions specifies the optional parameters to various List methods that
+// ListOptions specifies the optional parameters to various ListRoles methods that
 // support pagination.
 type ListOptions struct {
 	// For paginated result sets, page of results to retrieve.
@@ -238,7 +238,7 @@ func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}
 
 	if v != nil {
 		if w, ok := v.(io.Writer); ok {
-			io.Copy(w, resp.Body)
+			_, err = io.Copy(w, resp.Body)
 		} else {
 			err = json.NewDecoder(resp.Body).Decode(v)
 			if err == io.EOF {
@@ -441,6 +441,26 @@ func Int(v int) *int { return &v }
 // to store v and returns a pointer to it.
 func Int64(v int64) *int64 { return &v }
 
+// Ints64 is a helper routine that allocates a new int slice
+// to store v and returns a pointer to it.
+func Ints64(v []int64) *[]int64 { return &v }
+
+// Float64 is a helper routine that allocates a new float64 value
+// to store v and returns a pointer to it.
+func Float64(v float64) *float64 { return &v }
+
 // String is a helper routine that allocates a new string value
 // to store v and returns a pointer to it.
 func String(v string) *string { return &v }
+
+// DateP is a helper routine that allocates a new Date value
+// to store v and returns a pointer to it.
+func DateP(v Date) *Date { return &v }
+
+// TimeTimeP is a helper routine that allocates a new time.Time value
+// to store v and returns a pointer to it.
+func TimeTimeP(v time.Time) *time.Time { return &v }
+
+// TimeP is a helper routine that allocates a new Time value
+// to store v and returns a pointer to it.
+func TimeP(v Time) *Time { return &v }

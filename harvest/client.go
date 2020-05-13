@@ -60,8 +60,8 @@ type ClientUpdateRequest struct {
 	Currency *string `json:"currency,omitempty"`  // The currency used by the client. If not provided, the company’s currency will be used. See a list of supported currencies
 }
 
-// List returns a list of your clients. The clients are returned sorted by creation date, with the most recently created clients appearing first.
-func (s *ClientService) List(ctx context.Context, opt *ClientListOptions) (*ClientList, *http.Response, error) {
+// ListClients returns a list of your clients. The clients are returned sorted by creation date, with the most recently created clients appearing first.
+func (s *ClientService) ListClients(ctx context.Context, opt *ClientListOptions) (*ClientList, *http.Response, error) {
 	u := "clients"
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -82,9 +82,9 @@ func (s *ClientService) List(ctx context.Context, opt *ClientListOptions) (*Clie
 	return clientList, resp, nil
 }
 
-// Get retrieves the client with the given ID.
+// GetClient retrieves the client with the given ID.
 // Returns a client object and a 200 OK response code if a valid identifier was provided.
-func (s *ClientService) Get(ctx context.Context, clientId int64) (*Client, *http.Response, error) {
+func (s *ClientService) GetClient(ctx context.Context, clientId int64) (*Client, *http.Response, error) {
 	u := fmt.Sprintf("clients/%d", clientId)
 
 	req, err := s.client.NewRequest("GET", u, nil)

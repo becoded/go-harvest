@@ -69,7 +69,7 @@ type InvoiceMessageCreateRequest struct {
 	EventType                  *bool                      `json:"event_type,omitempty"`                     // optional	If provided, runs an event against the invoice. Options: close, draft, re-open, or send.
 }
 
-func (s *InvoiceService) ListMessages(ctx context.Context, invoiceId int64, opt *InvoiceMessageListOptions) (*InvoiceList, *http.Response, error) {
+func (s *InvoiceService) ListInvoiceMessages(ctx context.Context, invoiceId int64, opt *InvoiceMessageListOptions) (*InvoiceList, *http.Response, error) {
 	u := fmt.Sprintf("invoices/%d/messages", invoiceId)
 	u, err := addOptions(u, opt)
 	if err != nil {

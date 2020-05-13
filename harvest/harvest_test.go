@@ -99,7 +99,7 @@ func testFormValues(t *testing.T, r *http.Request, values values) {
 
 func testHeader(t *testing.T, r *http.Request, header string, want string) {
 	if got := r.Header.Get(header); got != want {
-		t.Errorf("Header.Get(%q) returned %q, want %q", header, got, want)
+		t.Errorf("Header.GetCompany(%q) returned %q, want %q", header, got, want)
 	}
 }
 

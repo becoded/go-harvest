@@ -96,7 +96,7 @@ type ExpenseListOptions struct {
 	ListOptions
 }
 
-func (s *ExpenseService) List(ctx context.Context, opt *ExpenseListOptions) (*ExpenseList, *http.Response, error) {
+func (s *ExpenseService) ListExpenses(ctx context.Context, opt *ExpenseListOptions) (*ExpenseList, *http.Response, error) {
 	u := "expenses"
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -117,7 +117,7 @@ func (s *ExpenseService) List(ctx context.Context, opt *ExpenseListOptions) (*Ex
 	return expenseList, resp, nil
 }
 
-func (s *ExpenseService) Get(ctx context.Context, expenseId int64) (*Expense, *http.Response, error) {
+func (s *ExpenseService) GetExpense(ctx context.Context, expenseId int64) (*Expense, *http.Response, error) {
 	u := fmt.Sprintf("expenses/%d", expenseId)
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func TestClientService_List(t *testing.T) {
+func TestClientService_ListClients(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
@@ -19,9 +19,9 @@ func TestClientService_List(t *testing.T) {
 		fmt.Fprint(w, `{"clients":[{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"},{"id":2,"name":"Client 2","is_active":false,"address":"Address line 2","statement_key":"0987654321","created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z","currency":"EUR"}],"per_page":100,"total_pages":1,"total_entries":2,"next_page":null,"previous_page":null,"page":1,"links":{"first":"https://api.harvestapp.com/v2/clients?page=1&per_page=100","next":null,"previous":null,"last":"https://api.harvestapp.com/v2/clients?page=1&per_page=100"}}`)
 	})
 
-	clientList, _, err := service.Client.List(context.Background(), &ClientListOptions{})
+	clientList, _, err := service.Client.ListClients(context.Background(), &ClientListOptions{})
 	if err != nil {
-		t.Errorf("Client.List returned error: %v", err)
+		t.Errorf("Client.ListClient returned error: %v", err)
 	}
 
 	createdOne := time.Date(
@@ -69,11 +69,11 @@ func TestClientService_List(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.List returned %+v, want %+v", clientList, want)
+		t.Errorf("Client.ListClients returned %+v, want %+v", clientList, want)
 	}
 }
 
-func TestClientService_Get(t *testing.T) {
+func TestClientService_GetClient(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
@@ -83,9 +83,9 @@ func TestClientService_Get(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"}`)
 	})
 
-	clientList, _, err := service.Client.Get(context.Background(), 1)
+	clientList, _, err := service.Client.GetClient(context.Background(), 1)
 	if err != nil {
-		t.Errorf("Client.Get returned error: %v", err)
+		t.Errorf("Client.GetClient returned error: %v", err)
 	}
 
 	createdOne := time.Date(
@@ -104,7 +104,7 @@ func TestClientService_Get(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
+		t.Errorf("Client.GetClient returned %+v, want %+v", clientList, want)
 	}
 }
 
@@ -126,7 +126,7 @@ func TestClientService_CreateClient(t *testing.T) {
 		Currency: String("EUR"),
 	})
 	if err != nil {
-		t.Errorf("Create client returned error: %v", err)
+		t.Errorf("CreateClient returned error: %v", err)
 	}
 
 	createdOne := time.Date(
@@ -145,7 +145,7 @@ func TestClientService_CreateClient(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
+		t.Errorf("Client.CreateClient returned %+v, want %+v", clientList, want)
 	}
 }
 
@@ -167,7 +167,7 @@ func TestClientService_UpdateClient(t *testing.T) {
 		Currency: String("EUR"),
 	})
 	if err != nil {
-		t.Errorf("Create client returned error: %v", err)
+		t.Errorf("UpdateClient returned error: %v", err)
 	}
 
 	createdOne := time.Date(
@@ -186,7 +186,7 @@ func TestClientService_UpdateClient(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
+		t.Errorf("Client.UpdateClient returned %+v, want %+v", clientList, want)
 	}
 }
 
@@ -203,6 +203,6 @@ func TestClientService_DeleteClient(t *testing.T) {
 
 	_, err := service.Client.DeleteClient(context.Background(), 1)
 	if err != nil {
-		t.Errorf("Create client returned error: %v", err)
+		t.Errorf("DeleteClient returned error: %v", err)
 	}
 }

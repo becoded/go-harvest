@@ -66,7 +66,7 @@ type EstimateEventTypeRequest struct {
 	EventType string `json:"event_type"`
 }
 
-func (s *EstimateService) ListMessages(ctx context.Context, estimateId int64, opt *EstimateMessageListOptions) (*EstimateList, *http.Response, error) {
+func (s *EstimateService) ListEstimateMessages(ctx context.Context, estimateId int64, opt *EstimateMessageListOptions) (*EstimateList, *http.Response, error) {
 	u := fmt.Sprintf("estimates/%d/messages", estimateId)
 	u, err := addOptions(u, opt)
 	if err != nil {
