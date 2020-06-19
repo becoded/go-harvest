@@ -18,6 +18,14 @@ type ProjectTaskAssignment struct {
 	UpdatedAt  *time.Time `json:"updated_at,omitempty"`  // Date and time the task assignment was last updated.
 }
 
+type ProjectTaskAssignmentCreateRequest struct {
+	TaskId     *int64   `json:"task_id"`               // required The ID of the task to associate with the project.
+	IsActive   *bool    `json:"is_active,omitempty"`   // optional Whether the task assignment is active or archived. Defaults to true
+	Billable   *bool    `json:"billable,omitempty"`    // optional Whether the task assignment is billable or not. Defaults to false.
+	HourlyRate *float64 `json:"hourly_rate,omitempty"` // optional Rate used when the project’s bill_by is Tasks. Defaults to null when billing by task hourly rate, otherwise 0.
+	Budget     *float64 `json:"budget,omitempty"`      // optional Budget used when the project’s budget_by is task or task_fees.
+}
+
 type ProjectTaskAssignmentList struct {
 	TaskAssignments []*ProjectTaskAssignment `json:"task_assignments"`
 
@@ -67,6 +75,22 @@ func (s *ProjectService) ListTaskAssignments(ctx context.Context, projectId int6
 func (s *ProjectService) GetTaskAssignment(ctx context.Context, projectId int64, taskAssignmentId int64) (*ProjectTaskAssignment, *http.Response, error) {
 	u := fmt.Sprintf("projects/%d/task_assignments/%d", projectId, taskAssignmentId)
 	req, err := s.client.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	projectTaskAssignment := new(ProjectTaskAssignment)
+	resp, err := s.client.Do(ctx, req, projectTaskAssignment)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return projectTaskAssignment, resp, nil
+}
+
+func (s *ProjectService) CreateTaskAssignment(ctx context.Context, projectId int64, data *ProjectTaskAssignmentCreateRequest) (*ProjectTaskAssignment, *http.Response, error) {
+	u := fmt.Sprintf("projects/%d/task_assignments", projectId)
+	req, err := s.client.NewRequest("POST", u, data)
 	if err != nil {
 		return nil, nil, err
 	}
