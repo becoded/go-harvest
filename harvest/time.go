@@ -1,7 +1,9 @@
 package harvest
 
 import (
+	"bytes"
 	"errors"
+	"fmt"
 	"net/url"
 	"strings"
 	"time"
@@ -31,6 +33,11 @@ func (t *Time) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 	return TimeParseError
+}
+
+func (t *Time) MarshalJSON() ([]byte, error) {
+	buffer := bytes.NewBufferString(fmt.Sprintf("\"%s\"", t.String()))
+	return buffer.Bytes(), nil
 }
 
 func (t *Time) EncodeValues(key string, v *url.Values) error {
