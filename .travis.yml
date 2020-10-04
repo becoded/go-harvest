@@ -5,9 +5,11 @@ go:
   - "1.15.x"
   - master
 
+os:
+  - linux
+  - osx
+
 matrix:
-  allow_failures:
-    - go: master
   fast_finish: true
 
 cache:
@@ -28,14 +30,14 @@ jobs:
       script: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
       after_success:
         - bash <(curl -s https://codecov.io/bash)
-    - stage: "Code Quality"
-      name: "Code Quality Analysis"
+    - stage: "Lint"
+      name: "Code style"
       before_script:
         - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.31.0
       script: golangci-lint run
-    - stage: "Code Quality"
-      name: "Vet"
+    - stage: "Vet"
+      name: "Correctness"
       script: go vet ./...
-    - stage: "Code Quality"
+    - stage: "Generate"
       name: "All generated objects are up to data"
       script: go generate -x ./... && git diff --exit-code; code=$?; git checkout -- .; (exit $code) # Check that go generate ./... produces a zero diff; clean up any changes afterwards.
