@@ -9,9 +9,6 @@ os:
   - linux
   - osx
 
-matrix:
-  fast_finish: true
-
 cache:
   directories:
     - $GOPATH/pkg/mod
