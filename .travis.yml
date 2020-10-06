@@ -1,5 +1,10 @@
 language: go
 
+go_import_path: github.com/becoded/go-harvest
+
+os: linux
+dist: xenial
+
 cache:
   directories:
     - $HOME/.cache/go-build
@@ -28,6 +33,8 @@ jobs:
       os: linux
       dist: xenial
       go: 1.15.x
+      env:
+        - GO111MODULE=on
       name: "Compile Packages and Dependencies Go 1.15.x"
       script:
         - go build
@@ -36,6 +43,8 @@ jobs:
       os: linux
       dist: xenial
       go: master
+      env:
+        - GO111MODULE=on
       name: "Compile Packages and Dependencies Go master"
       script:
         - go build
@@ -44,6 +53,8 @@ jobs:
       os: linux
       dist: xenial
       go: 1.15.x
+      env:
+        - GO111MODULE=on
       name: "Unit Tests"
       script: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
       after_success:
@@ -53,6 +64,8 @@ jobs:
       os: linux
       dist: xenial
       go: 1.15.x
+      env:
+        - GO111MODULE=on
       name: "Correctness"
       script: go vet ./...
 
@@ -60,5 +73,7 @@ jobs:
       os: linux
       dist: xenial
       go: 1.15.x
+      env:
+        - GO111MODULE=on
       name: "All generated objects are up to data"
       script: go generate -x ./... && git diff --exit-code; code=$?; git checkout -- .; (exit $code) # Check that go generate ./... produces a zero diff; clean up any changes afterwards.
