@@ -1,17 +1,5 @@
 language: go
 
-go:
-  - "1.x"
-  - "1.15.x"
-  - master
-
-os:
-  - linux
-
-matrix:
-  allow_failures:
-    - go: master
-
 cache:
   directories:
     - $HOME/.cache/go-build
@@ -22,23 +10,55 @@ env:
     - GO111MODULE=on
 
 jobs:
+  allow_failures:
+    - stage: build
+      go: master
+
   include:
-    - stage: "Compile"
-      name: "Compile Packages and Dependencies"
-      script: go build
-    - stage: "Tests"
+    - stage: lint
+      os: linux
+      dist: xenial
+      go: 1.15.x
+      before_script:
+        - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.31.0
+      script:
+        - golangci-lint run
+
+    - stage: build
+      os: linux
+      dist: xenial
+      go: 1.15.x
+      name: "Compile Packages and Dependencies Go 1.15.x"
+      script:
+        - go build
+
+    - stage: build
+      os: linux
+      dist: xenial
+      go: master
+      name: "Compile Packages and Dependencies Go master"
+      script:
+        - go build
+
+    - stage: test
+      os: linux
+      dist: xenial
+      go: 1.15.x
       name: "Unit Tests"
       script: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
       after_success:
         - bash <(curl -s https://codecov.io/bash)
-    - stage: "Lint"
-      name: "Code style"
-      before_script:
-        - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.31.0
-      script: golangci-lint run
-    - stage: "Vet"
+
+    - stage: vet
+      os: linux
+      dist: xenial
+      go: 1.15.x
       name: "Correctness"
       script: go vet ./...
-    - stage: "Generate"
+
+    - stage: generate
+      os: linux
+      dist: xenial
+      go: 1.15.x
       name: "All generated objects are up to data"
       script: go generate -x ./... && git diff --exit-code; code=$?; git checkout -- .; (exit $code) # Check that go generate ./... produces a zero diff; clean up any changes afterwards.
