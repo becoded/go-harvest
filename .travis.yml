@@ -16,7 +16,7 @@ env:
 
 jobs:
   allow_failures:
-    - stage: build
+    - stage: test
       go: master
 
   include:
@@ -29,29 +29,6 @@ jobs:
       script:
         - golangci-lint run
 
-    - stage: build
-      os: linux
-      dist: xenial
-      go: 1.15.x
-      env:
-        - GO111MODULE=on
-      name: "Compile Packages and Dependencies Go 1.15.x"
-      script:
-        - pwd
-        - updatedb
-        - locate becoded
-        - go build
-
-    - stage: build
-      os: linux
-      dist: xenial
-      go: master
-      env:
-        - GO111MODULE=on
-      name: "Compile Packages and Dependencies Go master"
-      script:
-        - go build
-
     - stage: test
       os: linux
       dist: xenial
@@ -62,6 +39,15 @@ jobs:
       script: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
       after_success:
         - bash <(curl -s https://codecov.io/bash)
+
+    - stage: test
+      os: linux
+      dist: xenial
+      go: master
+      env:
+        - GO111MODULE=on
+      name: "Unit Tests"
+      script: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 
     - stage: vet
       os: linux
