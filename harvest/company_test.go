@@ -43,6 +43,6 @@ func TestCompanyService_Get(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(company, want) {
-		t.Errorf("Company.Get returned %+v, want %+v", company, want)
+		t.Errorf("Company.Get returned %+v, response %+v", company, want)
 	}
 }

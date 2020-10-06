@@ -35,7 +35,7 @@ func TestDate_String(t *testing.T) {
 
 	for _, tt := range tests {
 		if tt.input.String() != tt.want {
-			t.Errorf("%q. String() = %v, want %v", tt.name, tt.input.String(), tt.want)
+			t.Errorf("%q. String() = %v, response %v", tt.name, tt.input.String(), tt.want)
 		}
 	}
 }
@@ -82,9 +82,9 @@ func TestDate_UnmarshalJSONParse(t *testing.T) {
 	for _, tt := range tests {
 		tm := Date{}
 		if gotErr := tm.UnmarshalJSON([]byte(tt.args.str)); gotErr != tt.err {
-			t.Errorf("%q. UnmarshalJSON() error = %v, want %v", tt.name, gotErr, tt.err)
+			t.Errorf("%q. UnmarshalJSON() error = %v, response %v", tt.name, gotErr, tt.err)
 		} else if !tm.Equal(tt.want) {
-			t.Errorf("%q. UnmarshalJSON() = %v, want %v", tt.name, tm, tt.want)
+			t.Errorf("%q. UnmarshalJSON() = %v, response %v", tt.name, tm, tt.want)
 		}
 	}
 }
@@ -133,14 +133,14 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 	for _, tt := range tests {
 		var f foo
 		if gotErr := json.Unmarshal([]byte(tt.args.jsonStr), &f); gotErr != tt.err {
-			t.Errorf("%q. UnmarshalJSON() error = %v, want %v", tt.name, gotErr, tt.err)
+			t.Errorf("%q. UnmarshalJSON() error = %v, response %v", tt.name, gotErr, tt.err)
 		} else if tt.err == nil {
 			if f.ID == nil || *f.ID != *tt.want.ID {
-				t.Errorf("%q. UnmarshalJSON() = %v, want %v - ID messed up", tt.name, f, tt.want)
+				t.Errorf("%q. UnmarshalJSON() = %v, response %v - ID messed up", tt.name, f, tt.want)
 			} else if tt.want.Date == nil && f.Date != nil {
-				t.Errorf("%q. UnmarshalJSON() = %v, want %v - unexpected time", tt.name, f, tt.want)
+				t.Errorf("%q. UnmarshalJSON() = %v, response %v - unexpected time", tt.name, f, tt.want)
 			} else if tt.want.Date != nil && (f.Date == nil || !(*tt.want.Date).Equal(*f.Date)) {
-				t.Errorf("%q. UnmarshalJSON() = %v, want %v", tt.name, f, tt.want)
+				t.Errorf("%q. UnmarshalJSON() = %v, response %v", tt.name, f, tt.want)
 			}
 		}
 	}
@@ -194,7 +194,7 @@ func TestDate_EncodeValues(t *testing.T) {
 			t.Errorf("%q. EncodeValues() error = %v", tt.name, err)
 		}
 		if !reflect.DeepEqual(qs, tt.want) {
-			t.Errorf("%q. EncodeValues() = %v, want %v", tt.name, qs, tt.want)
+			t.Errorf("%q. EncodeValues() = %v, response %v", tt.name, qs, tt.want)
 		}
 	}
 }
