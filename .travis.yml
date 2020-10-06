@@ -35,7 +35,7 @@ jobs:
       go: 1.15.x
       env:
         - GO111MODULE=on
-      name: "Unit Tests"
+      name: "Unit Tests go 1.15.x"
       script: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
       after_success:
         - bash <(curl -s https://codecov.io/bash)
@@ -46,7 +46,7 @@ jobs:
       go: master
       env:
         - GO111MODULE=on
-      name: "Unit Tests"
+      name: "Unit Tests go master"
       script: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 
     - stage: vet
