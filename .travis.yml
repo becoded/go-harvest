@@ -7,11 +7,15 @@ go:
 
 os:
   - linux
-  - osx
+
+matrix:
+  allow_failures:
+    - go: master
 
 cache:
   directories:
-    - $GOPATH/pkg/mod
+    - $HOME/.cache/go-build
+    - $HOME/gopath/pkg/mod
 
 env:
   global:
