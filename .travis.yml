@@ -37,6 +37,9 @@ jobs:
         - GO111MODULE=on
       name: "Compile Packages and Dependencies Go 1.15.x"
       script:
+        - pwd
+        - updatedb
+        - locate becoded
         - go build
 
     - stage: build
