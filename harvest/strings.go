@@ -6,6 +6,8 @@ import (
 	"io"
 	"reflect"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 var dateType = reflect.TypeOf(Date{})
@@ -26,7 +28,10 @@ func Stringify(message interface{}) string {
 
 func stringifyValue(w io.Writer, val reflect.Value) {
 	if val.Kind() == reflect.Ptr && val.IsNil() {
-		w.Write([]byte("<nil>"))
+		if _, err := w.Write([]byte("<nil>")); err != nil {
+			logrus.Error(err)
+		}
+
 		return
 	}
 
@@ -36,20 +41,28 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 	case reflect.String:
 		fmt.Fprintf(w, `"%s"`, v)
 	case reflect.Slice:
-		w.Write([]byte{'['})
+		if _, err := w.Write([]byte{'['}); err != nil {
+			logrus.Error(err)
+		}
 		for i := 0; i < v.Len(); i++ {
 			if i > 0 {
-				w.Write([]byte{' '})
+				if _, err := w.Write([]byte{' '}); err != nil {
+					logrus.Error(err)
+				}
 			}
 
 			stringifyValue(w, v.Index(i))
 		}
 
-		w.Write([]byte{']'})
+		if _, err := w.Write([]byte{']'}); err != nil {
+			logrus.Error(err)
+		}
 		return
 	case reflect.Struct:
 		if v.Type().Name() != "" {
-			w.Write([]byte(v.Type().String()))
+			if _, err := w.Write([]byte(v.Type().String())); err != nil {
+				logrus.Error(err)
+			}
 		}
 
 		// special handling of date values
@@ -62,7 +75,9 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 			return
 		}
 
-		w.Write([]byte{'{'})
+		if _, err := w.Write([]byte{'{'}); err != nil {
+			logrus.Error(err)
+		}
 
 		var sep bool
 		for i := 0; i < v.NumField(); i++ {
@@ -75,17 +90,25 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 			}
 
 			if sep {
-				w.Write([]byte(", "))
+				if _, err := w.Write([]byte(", ")); err != nil {
+					logrus.Error(err)
+				}
 			} else {
 				sep = true
 			}
 
-			w.Write([]byte(v.Type().Field(i).Name))
-			w.Write([]byte{':'})
+			if _, err := w.Write([]byte(v.Type().Field(i).Name)); err != nil {
+				logrus.Error(err)
+			}
+			if _, err := w.Write([]byte{':'}); err != nil {
+				logrus.Error(err)
+			}
 			stringifyValue(w, fv)
 		}
 
-		w.Write([]byte{'}'})
+		if _, err := w.Write([]byte{'}'}); err != nil {
+			logrus.Error(err)
+		}
 	default:
 		if v.CanInterface() {
 			fmt.Fprint(w, v.Interface())

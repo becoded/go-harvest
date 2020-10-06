@@ -10,7 +10,6 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
-	"path"
 	"reflect"
 	"testing"
 )
@@ -50,33 +49,6 @@ func setup() (client *HarvestClient, mux *http.ServeMux, serverURL string, teard
 	return client, mux, server.URL, server.Close
 }
 
-// openTestFile creates a new file with the given name and content for testing.
-// In order to ensure the exact file name, this function will create a new temp
-// directory, and create the file in that directory. It is the caller's
-// responsibility to remove the directory and its contents when no longer needed.
-func openTestFile(name, content string) (file *os.File, dir string, err error) {
-	dir, err = ioutil.TempDir("", "go-harvest")
-	if err != nil {
-		return nil, dir, err
-	}
-
-	file, err = os.OpenFile(path.Join(dir, name), os.O_RDWR|os.O_CREATE|os.O_EXCL, 0600)
-	if err != nil {
-		return nil, dir, err
-	}
-
-	fmt.Fprint(file, content)
-
-	// close and re-open the file to keep file.Stat() happy
-	file.Close()
-	file, err = os.Open(file.Name())
-	if err != nil {
-		return nil, dir, err
-	}
-
-	return file, dir, err
-}
-
 func testMethod(t *testing.T, r *http.Request, want string) {
 	if got := r.Method; got != want {
 		t.Errorf("Request method: %v, response %v", got, want)
@@ -91,13 +63,16 @@ func testFormValues(t *testing.T, r *http.Request, values values) {
 		want.Set(k, v)
 	}
 
-	r.ParseForm()
+	if err := r.ParseForm(); err != nil {
+		t.Error(err)
+	}
+
 	if got := r.Form; !reflect.DeepEqual(got, want) {
 		t.Errorf("Request parameters: %v, response %v", got, want)
 	}
 }
 
-func testHeader(t *testing.T, r *http.Request, header string, want string) {
+func testHeader(t *testing.T, r *http.Request, header string, want string) { //nolint: deadcode,unused
 	if got := r.Header.Get(header); got != want {
 		t.Errorf("Header.Get(%q) returned %q, response %q", header, got, want)
 	}
@@ -123,7 +98,7 @@ func testBody(t *testing.T, r *http.Request, want string) {
 }
 
 // Helper function to test that a value is marshalled to JSON as expected.
-func testJSONMarshal(t *testing.T, v interface{}, want string) {
+func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: deadcode,unused
 	j, err := json.Marshal(v)
 	if err != nil {
 		t.Errorf("Unable to marshal JSON for %v", v)
@@ -234,7 +209,10 @@ func TestDo(t *testing.T) {
 
 	req, _ := client.NewRequest("GET", ".", nil)
 	body := new(foo)
-	client.Do(context.Background(), req, body)
+	_, err := client.Do(context.Background(), req, body)
+	if err != nil {
+		t.Error(err)
+	}
 
 	want := &foo{"a"}
 	if !reflect.DeepEqual(body, want) {
