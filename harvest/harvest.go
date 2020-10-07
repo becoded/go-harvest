@@ -401,6 +401,10 @@ func Int(v int) *int { return &v }
 // to store v and returns a pointer to it.
 func Int64(v int64) *int64 { return &v }
 
+// Ints64 is a helper routine that allocates a new int slice
+// to store v and returns a pointer to it.
+func Ints64(v []int64) *[]int64 { return &v }
+
 // Float64 is a helper routine that allocates a new float value
 // to store v and returns a pointer to it.
 func Float64(v float64) *float64 { return &v }
