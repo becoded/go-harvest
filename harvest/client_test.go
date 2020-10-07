@@ -69,7 +69,7 @@ func TestClientService_List(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.List returned %+v, want %+v", clientList, want)
+		t.Errorf("Client.List returned %+v, response %+v", clientList, want)
 	}
 }
 
@@ -104,7 +104,7 @@ func TestClientService_Get(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
+		t.Errorf("Client.Get returned %+v, response %+v", clientList, want)
 	}
 }
 
@@ -145,7 +145,7 @@ func TestClientService_CreateClient(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
+		t.Errorf("Client.Get returned %+v, response %+v", clientList, want)
 	}
 }
 
@@ -186,7 +186,7 @@ func TestClientService_UpdateClient(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
+		t.Errorf("Client.Get returned %+v, response %+v", clientList, want)
 	}
 }
 
