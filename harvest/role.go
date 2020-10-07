@@ -17,8 +17,8 @@ type Role struct {
 	Id         *int64     `json:"id,omitempty"`         // Unique ID for the role.
 	Name       *string    `json:"name,omitempty"`       // The name of the role.
 	UserIds    *[]int64   `json:"user_ids,omitempty"`   // of integers	The IDs of the users assigned to this role.
-	Created_at *time.Time `json:"created_at,omitempty"` // Date and time the role was created.
-	Updated_at *time.Time `json:"updated_at,omitempty"` // Date and time the role was last updated.
+	CreatedAt *time.Time `json:"created_at,omitempty"` // Date and time the role was created.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"` // Date and time the role was last updated.
 }
 
 type RoleList struct {
