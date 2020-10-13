@@ -34,7 +34,7 @@ func (c Company) String() string {
 	return Stringify(c)
 }
 
-func (s *CompanyService) GetCompany(ctx context.Context) (*Company, *http.Response, error) {
+func (s *CompanyService) Get(ctx context.Context) (*Company, *http.Response, error) {
 	u := "company"
 
 	req, err := s.client.NewRequest("GET", u, nil)

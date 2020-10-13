@@ -10,7 +10,6 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
-	"path"
 	"reflect"
 	"testing"
 )
@@ -40,7 +39,7 @@ func setup() (client *HarvestClient, mux *http.ServeMux, serverURL string, teard
 	// server is a test HTTP server used to provide mock API responses.
 	server := httptest.NewServer(apiHandler)
 
-	// client is the GitHub client being tested and is
+	// client is the Harvest client being tested and is
 	// configured to use test server.
 	client = NewHarvestClient(nil)
 	url, _ := url.Parse(server.URL + baseURLPath + "/")
@@ -50,36 +49,9 @@ func setup() (client *HarvestClient, mux *http.ServeMux, serverURL string, teard
 	return client, mux, server.URL, server.Close
 }
 
-// openTestFile creates a new file with the given name and content for testing.
-// In order to ensure the exact file name, this function will create a new temp
-// directory, and create the file in that directory. It is the caller's
-// responsibility to remove the directory and its contents when no longer needed.
-func openTestFile(name, content string) (file *os.File, dir string, err error) {
-	dir, err = ioutil.TempDir("", "go-harvest")
-	if err != nil {
-		return nil, dir, err
-	}
-
-	file, err = os.OpenFile(path.Join(dir, name), os.O_RDWR|os.O_CREATE|os.O_EXCL, 0600)
-	if err != nil {
-		return nil, dir, err
-	}
-
-	fmt.Fprint(file, content)
-
-	// close and re-open the file to keep file.Stat() happy
-	file.Close()
-	file, err = os.Open(file.Name())
-	if err != nil {
-		return nil, dir, err
-	}
-
-	return file, dir, err
-}
-
 func testMethod(t *testing.T, r *http.Request, want string) {
 	if got := r.Method; got != want {
-		t.Errorf("Request method: %v, want %v", got, want)
+		t.Errorf("Request method: %v, response %v", got, want)
 	}
 }
 
@@ -91,15 +63,18 @@ func testFormValues(t *testing.T, r *http.Request, values values) {
 		want.Set(k, v)
 	}
 
-	r.ParseForm()
+	if err := r.ParseForm(); err != nil {
+		t.Error(err)
+	}
+
 	if got := r.Form; !reflect.DeepEqual(got, want) {
-		t.Errorf("Request parameters: %v, want %v", got, want)
+		t.Errorf("Request parameters: %v, response %v", got, want)
 	}
 }
 
-func testHeader(t *testing.T, r *http.Request, header string, want string) {
+func testHeader(t *testing.T, r *http.Request, header string, want string) { //nolint: deadcode,unused
 	if got := r.Header.Get(header); got != want {
-		t.Errorf("Header.GetCompany(%q) returned %q, want %q", header, got, want)
+		t.Errorf("Header.Get(%q) returned %q, want %q", header, got, want)
 	}
 }
 
@@ -118,12 +93,12 @@ func testBody(t *testing.T, r *http.Request, want string) {
 		t.Errorf("Error reading request body: %v", err)
 	}
 	if got := string(b); got != want {
-		t.Errorf("request Body is %s, want %s", got, want)
+		t.Errorf("request Body is %s, response %s", got, want)
 	}
 }
 
 // Helper function to test that a value is marshalled to JSON as expected.
-func testJSONMarshal(t *testing.T, v interface{}, want string) {
+func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: deadcode,unused
 	j, err := json.Marshal(v)
 	if err != nil {
 		t.Errorf("Unable to marshal JSON for %v", v)
@@ -136,7 +111,7 @@ func testJSONMarshal(t *testing.T, v interface{}, want string) {
 	}
 
 	if w.String() != string(j) {
-		t.Errorf("json.Marshal(%q) returned %s, want %s", v, j, w)
+		t.Errorf("json.Marshal(%q) returned %s, response %s", v, j, w)
 	}
 
 	// now go the other direction and make sure things unmarshal as expected
@@ -146,7 +121,7 @@ func testJSONMarshal(t *testing.T, v interface{}, want string) {
 	}
 
 	if !reflect.DeepEqual(v, u) {
-		t.Errorf("json.Unmarshal(%q) returned %s, want %s", want, u, v)
+		t.Errorf("json.Unmarshal(%q) returned %s, response %s", want, u, v)
 	}
 }
 
@@ -154,10 +129,10 @@ func TestNewHarvestClient(t *testing.T) {
 	c := NewHarvestClient(nil)
 
 	if got, want := c.BaseURL.String(), defaultBaseURL; got != want {
-		t.Errorf("NewClient BaseURL is %v, want %v", got, want)
+		t.Errorf("NewClient BaseURL is %v, response %v", got, want)
 	}
 	if got, want := c.UserAgent, userAgent; got != want {
-		t.Errorf("NewClient UserAgent is %v, want %v", got, want)
+		t.Errorf("NewClient UserAgent is %v, response %v", got, want)
 	}
 
 	c2 := NewHarvestClient(nil)
@@ -234,11 +209,14 @@ func TestDo(t *testing.T) {
 
 	req, _ := client.NewRequest("GET", ".", nil)
 	body := new(foo)
-	client.Do(context.Background(), req, body)
+	_, err := client.Do(context.Background(), req, body)
+	if err != nil {
+		t.Error(err)
+	}
 
 	want := &foo{"a"}
 	if !reflect.DeepEqual(body, want) {
-		t.Errorf("Response body = %v, want %v", body, want)
+		t.Errorf("Response body = %v, response %v", body, want)
 	}
 }
 

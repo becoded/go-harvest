@@ -12,10 +12,10 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/google/go-querystring/query"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -27,8 +27,7 @@ const (
 
 // A HarvestClient manages communication with the Harvest API.
 type HarvestClient struct {
-	clientMu sync.Mutex   // clientMu protects the client during calls that modify the CheckRedirect func.
-	client   *http.Client // HTTP client used to communicate with the API.
+	client *http.Client // HTTP client used to communicate with the API.
 
 	// Base URL for API requests. Defaults to the public Harvest API.
 	// BaseURL should always be specified with a trailing slash.
@@ -58,7 +57,7 @@ type service struct {
 	client *HarvestClient
 }
 
-// ListOptions specifies the optional parameters to various ListRoles methods that
+// ListOptions specifies the optional parameters to various List methods that
 // support pagination.
 type ListOptions struct {
 	// For paginated result sets, page of results to retrieve.
@@ -164,7 +163,7 @@ func (c *HarvestClient) NewRequest(method, urlStr string, body interface{}) (*ht
 	}
 
 	if body != nil {
-		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Content-Type", defaultMediaType)
 	}
 	// req.Header.Set("Accept", mediaTypeV3)
 	if c.UserAgent != "" {
@@ -188,16 +187,6 @@ func (c *HarvestClient) NewRequest(method, urlStr string, body interface{}) (*ht
 // The provided ctx must be non-nil. If it is canceled or times out,
 // ctx.Err() will be returned.
 func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
-	/*req = withContext(ctx, req)
-
-	// If we've hit rate limit, don't make further requests before Reset time.
-	if err := c.checkRateLimitBeforeDo(req); err != nil {
-		return &Response{
-			Response: err.Response,
-			Rate:     err.Rate,
-		}, err
-	}*/
-
 	resp, err := c.client.Do(req)
 	if err != nil {
 		// If we got an error, and the context has been canceled,
@@ -221,13 +210,14 @@ func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}
 
 	defer func() {
 		// Drain up to 512 bytes and close the body to let the Transport reuse the connection
-		io.CopyN(ioutil.Discard, resp.Body, 512)
-		resp.Body.Close()
-	}()
+		if _, err := io.CopyN(ioutil.Discard, resp.Body, 512); err != nil {
+			logrus.Error(err)
+		}
 
-	// c.rateMu.Lock()
-	// c.rateLimits[rateLimitCategory] = response.Rate
-	// c.rateMu.Unlock()
+		if err := resp.Body.Close(); err != nil {
+			logrus.Error(err)
+		}
+	}()
 
 	err = CheckResponse(resp)
 	if err != nil {
@@ -238,7 +228,9 @@ func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}
 
 	if v != nil {
 		if w, ok := v.(io.Writer); ok {
-			_, err = io.Copy(w, resp.Body)
+			if _, err := io.Copy(w, resp.Body); err != nil {
+				return resp, err
+			}
 		} else {
 			err = json.NewDecoder(resp.Body).Decode(v)
 			if err == io.EOF {
@@ -248,15 +240,6 @@ func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}
 	}
 
 	return resp, err
-}
-
-// checkRateLimitBeforeDo does not make any network calls, but uses existing knowledge from
-// current client state in order to quickly check if *RateLimitError can be immediately returned
-// from Client.Do, and if so, returns it so that Client.Do can skip making a network API call unnecessarily.
-// Otherwise it returns nil, and Client.Do should proceed normally.
-func (c *HarvestClient) checkRateLimitBeforeDo(req *http.Request) *RateLimitError {
-
-	return nil
 }
 
 /*
@@ -358,7 +341,9 @@ func CheckResponse(r *http.Response) error {
 	errorResponse := &ErrorResponse{Response: r}
 	data, err := ioutil.ReadAll(r.Body)
 	if err == nil && data != nil {
-		json.Unmarshal(data, errorResponse)
+		if err := json.Unmarshal(data, errorResponse); err != nil {
+			logrus.Error(err)
+		}
 	}
 	switch {
 	case r.StatusCode == http.StatusTooManyRequests:
@@ -402,31 +387,6 @@ type RateLimits struct {
 
 func (r RateLimits) String() string {
 	return Stringify(r)
-}
-
-// formatRateReset formats d to look like "[rate reset in 2s]" or
-// "[rate reset in 87m02s]" for the positive durations. And like "[rate limit was reset 87m02s ago]"
-// for the negative cases.
-func formatRateReset(d time.Duration) string {
-	isNegative := d < 0
-	if isNegative {
-		d *= -1
-	}
-	secondsTotal := int(0.5 + d.Seconds())
-	minutes := secondsTotal / 60
-	seconds := secondsTotal - minutes*60
-
-	var timeString string
-	if minutes > 0 {
-		timeString = fmt.Sprintf("%dm%02ds", minutes, seconds)
-	} else {
-		timeString = fmt.Sprintf("%ds", seconds)
-	}
-
-	if isNegative {
-		return fmt.Sprintf("[rate limit was reset %v ago]", timeString)
-	}
-	return fmt.Sprintf("[rate reset in %v]", timeString)
 }
 
 // Bool is a helper routine that allocates a new bool value

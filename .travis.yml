@@ -1,14 +1,9 @@
 language: go
 
-go:
-  - "1.x"
-  - "1.13.x"
-  - master
+go_import_path: github.com/becoded/go-harvest
 
-matrix:
-  allow_failures:
-    - go: master
-  fast_finish: true
+os: linux
+dist: xenial
 
 cache:
   directories:
@@ -19,11 +14,55 @@ env:
   global:
     - GO111MODULE=on
 
-script:
-  - diff -u <(echo -n) <(gofmt -d -s .)
-  - go generate -x ./... && git diff --exit-code; code=$?; git checkout -- .; (exit $code) # Check that go generate ./... produces a zero diff; clean up any changes afterwards.
-  - go vet ./...
-  - go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+jobs:
+  allow_failures:
+    - stage: test
+      go: master
 
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  include:
+    - stage: lint
+      os: linux
+      dist: xenial
+      go: 1.15.x
+      before_script:
+        - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.31.0
+      script:
+        - golangci-lint run
+
+    - stage: test
+      os: linux
+      dist: xenial
+      go: 1.15.x
+      env:
+        - GO111MODULE=on
+      name: "Unit Tests go 1.15.x"
+      script: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
+
+    - stage: test
+      os: linux
+      dist: xenial
+      go: master
+      env:
+        - GO111MODULE=on
+      name: "Unit Tests go master"
+      script: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+    - stage: vet
+      os: linux
+      dist: xenial
+      go: 1.15.x
+      env:
+        - GO111MODULE=on
+      name: "Correctness"
+      script: go vet ./...
+
+    - stage: generate
+      os: linux
+      dist: xenial
+      go: 1.15.x
+      env:
+        - GO111MODULE=on
+      name: "All generated objects are up to data"
+      script: go generate -x ./... && git diff --exit-code; code=$?; git checkout -- .; (exit $code) # Check that go generate ./... produces a zero diff; clean up any changes afterwards.

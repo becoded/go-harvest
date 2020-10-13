@@ -49,7 +49,7 @@ type RoleUpdateRequest struct {
 	UserIds *[]int64 `json:"user_ids,omitempty"` // The IDs of the users assigned to this role.
 }
 
-func (s *RoleService) ListRoles(ctx context.Context, opt *RoleListOptions) (*RoleList, *http.Response, error) {
+func (s *RoleService) List(ctx context.Context, opt *RoleListOptions) (*RoleList, *http.Response, error) {
 	u := "roles"
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -70,7 +70,7 @@ func (s *RoleService) ListRoles(ctx context.Context, opt *RoleListOptions) (*Rol
 	return roleList, resp, nil
 }
 
-func (s *RoleService) GetRole(ctx context.Context, roleId int64) (*Role, *http.Response, error) {
+func (s *RoleService) Get(ctx context.Context, roleId int64) (*Role, *http.Response, error) {
 	u := fmt.Sprintf("roles/%d", roleId)
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
@@ -86,7 +86,7 @@ func (s *RoleService) GetRole(ctx context.Context, roleId int64) (*Role, *http.R
 	return role, resp, nil
 }
 
-func (s *RoleService) CreateRole(ctx context.Context, data *RoleCreateRequest) (*Role, *http.Response, error) {
+func (s *RoleService) Create(ctx context.Context, data *RoleCreateRequest) (*Role, *http.Response, error) {
 	u := "roles"
 
 	req, err := s.client.NewRequest("POST", u, data)
@@ -103,7 +103,7 @@ func (s *RoleService) CreateRole(ctx context.Context, data *RoleCreateRequest) (
 	return role, resp, nil
 }
 
-func (s *RoleService) UpdateRole(ctx context.Context, roleId int64, data *RoleUpdateRequest) (*Role, *http.Response, error) {
+func (s *RoleService) Update(ctx context.Context, roleId int64, data *RoleUpdateRequest) (*Role, *http.Response, error) {
 	u := fmt.Sprintf("roles/%d", roleId)
 
 	req, err := s.client.NewRequest("PATCH", u, data)
@@ -120,7 +120,7 @@ func (s *RoleService) UpdateRole(ctx context.Context, roleId int64, data *RoleUp
 	return role, resp, nil
 }
 
-func (s *RoleService) DeleteRole(ctx context.Context, roleId int64) (*http.Response, error) {
+func (s *RoleService) Delete(ctx context.Context, roleId int64) (*http.Response, error) {
 	u := fmt.Sprintf("roles/%d", roleId)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {

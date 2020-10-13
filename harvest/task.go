@@ -84,7 +84,7 @@ func (s *TaskService) ListTasks(ctx context.Context, opt *TaskListOptions) (*Tas
 	return taskList, resp, nil
 }
 
-func (s *TaskService) GetTask(ctx context.Context, taskId int64) (*Task, *http.Response, error) {
+func (s *TaskService) Get(ctx context.Context, taskId int64) (*Task, *http.Response, error) {
 	u := fmt.Sprintf("tasks/%d", taskId)
 
 	req, err := s.client.NewRequest("GET", u, nil)
@@ -101,7 +101,7 @@ func (s *TaskService) GetTask(ctx context.Context, taskId int64) (*Task, *http.R
 	return task, resp, nil
 }
 
-func (s *TaskService) CreateTask(ctx context.Context, data *TaskCreateRequest) (*Task, *http.Response, error) {
+func (s *TaskService) Create(ctx context.Context, data *TaskCreateRequest) (*Task, *http.Response, error) {
 	u := "tasks"
 
 	req, err := s.client.NewRequest("POST", u, data)
@@ -118,7 +118,7 @@ func (s *TaskService) CreateTask(ctx context.Context, data *TaskCreateRequest) (
 	return task, resp, nil
 }
 
-func (s *TaskService) UpdateTask(ctx context.Context, taskId int64, data *TaskUpdateRequest) (*Task, *http.Response, error) {
+func (s *TaskService) Update(ctx context.Context, taskId int64, data *TaskUpdateRequest) (*Task, *http.Response, error) {
 	u := fmt.Sprintf("tasks/%d", taskId)
 
 	req, err := s.client.NewRequest("PATCH", u, data)
@@ -135,7 +135,7 @@ func (s *TaskService) UpdateTask(ctx context.Context, taskId int64, data *TaskUp
 	return task, resp, nil
 }
 
-func (s *TaskService) DeleteTask(ctx context.Context, taskId int64) (*http.Response, error) {
+func (s *TaskService) Delete(ctx context.Context, taskId int64) (*http.Response, error) {
 	u := fmt.Sprintf("tasks/%d", taskId)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {
