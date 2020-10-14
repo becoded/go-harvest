@@ -144,7 +144,7 @@ func TestTimesheetService_GetTimeEntry(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"TimeEntry new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
 	})
 
-	timeEntry, _, err := service.Timesheet.GetTimeEntry(context.Background(), 1)
+	timeEntry, _, err := service.Timesheet.Get(context.Background(), 1)
 	if err != nil {
 		t.Errorf("TimeEntry.GetTimeEntry returned error: %v", err)
 	}
@@ -422,7 +422,7 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 }`)
 	})
 
-	taskList, _, err := service.Timesheet.ListTimeEntries(context.Background(), &TimeEntryListOptions{})
+	taskList, _, err := service.Timesheet.List(context.Background(), &TimeEntryListOptions{})
 	assert.NoError(t, err)
 
 	want := &TimeEntryList{
