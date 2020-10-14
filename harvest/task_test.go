@@ -4,14 +4,13 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"reflect"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTaskService_CreateTask(t *testing.T) {
+func TestTaskService_Create(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
@@ -70,7 +69,7 @@ func TestTaskService_CreateTask(t *testing.T) {
 				assert.NoError(t, err)
 			})
 
-			task, _, err := service.Task.CreateTask(context.Background(), tt.args)
+			task, _, err := service.Task.Create(context.Background(), tt.args)
 
 			if tt.wantErr != nil {
 				assert.Nil(t, task)
@@ -78,12 +77,13 @@ func TestTaskService_CreateTask(t *testing.T) {
 				return
 			}
 
+			assert.NoError(t, err)
 			assert.Equal(t, tt.want, task)
 		})
 	}
 }
 
-func TestTaskService_DeleteTask(t *testing.T) {
+func TestTaskService_Delete(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
@@ -126,19 +126,20 @@ func TestTaskService_DeleteTask(t *testing.T) {
 				assert.NoError(t, err)
 			})
 
-			_, err := service.Task.DeleteTask(context.Background(), tt.args.taskId)
+			_, err := service.Task.Delete(context.Background(), tt.args.taskId)
 
 			if tt.wantErr != nil {
 				assert.EqualError(t, err, tt.wantErr.Error())
 				return
 			}
 
+			assert.NoError(t, err)
 			assert.Nil(t, err)
 		})
 	}
 }
 
-func TestTaskService_GetTask(t *testing.T) {
+func TestTaskService_Get(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
@@ -205,12 +206,13 @@ func TestTaskService_GetTask(t *testing.T) {
 				return
 			}
 
+			assert.NoError(t, err)
 			assert.Equal(t, tt.want, task)
 		})
 	}
 }
 
-func TestTaskService_ListTasks(t *testing.T) {
+func TestTaskService_List(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
@@ -221,9 +223,7 @@ func TestTaskService_ListTasks(t *testing.T) {
 	})
 
 	taskList, _, err := service.Task.List(context.Background(), &TaskListOptions{})
-	if err != nil {
-		t.Errorf("Task.ListTakes returned error: %v", err)
-	}
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -271,12 +271,10 @@ func TestTaskService_ListTasks(t *testing.T) {
 		},
 	}
 
-	if !reflect.DeepEqual(taskList, want) {
-		t.Errorf("Task.ListTakes returned %+v, response %+v", taskList, want)
-	}
+	assert.ObjectsAreEqual(want, taskList)
 }
 
-func TestTaskService_UpdateTask(t *testing.T) {
+func TestTaskService_Update(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
@@ -287,16 +285,14 @@ func TestTaskService_UpdateTask(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Task update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"Task 2","billable_by_default":false,"default_hourly_rate":321,"is_default":false,"is_active":false, "created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}`)
 	})
 
-	taskList, _, err := service.Task.UpdateTask(context.Background(), 1, &TaskUpdateRequest{
+	task, _, err := service.Task.Update(context.Background(), 1, &TaskUpdateRequest{
 		Name:              String("Task update"),
 		BillableByDefault: Bool(false),
 		DefaultHourlyRate: Float64(213),
 		IsDefault:         Bool(false),
 		IsActive:          Bool(false),
 	})
-	if err != nil {
-		t.Errorf("UpdateTask returned error: %v", err)
-	}
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -314,7 +310,5 @@ func TestTaskService_UpdateTask(t *testing.T) {
 		UpdatedAt:         &updatedOne,
 	}
 
-	if !reflect.DeepEqual(taskList, want) {
-		t.Errorf("Task.UpdateTask returned %+v, response %+v", taskList, want)
-	}
+	assert.ObjectsAreEqual(want, task)
 }

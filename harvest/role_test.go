@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"reflect"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRoleService_CreateRole(t *testing.T) {
@@ -20,13 +21,11 @@ func TestRoleService_CreateRole(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Role new","user_ids":[1,2,3,4,5,6,7,8,9,10],"created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
 	})
 
-	roleList, _, err := service.Role.Create(context.Background(), &RoleCreateRequest{
+	role, _, err := service.Role.Create(context.Background(), &RoleCreateRequest{
 		Name:    String("Role new"),
 		UserIds: Ints64([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
 	})
-	if err != nil {
-		t.Errorf("CreateRole role returned error: %v", err)
-	}
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -41,9 +40,7 @@ func TestRoleService_CreateRole(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	if !reflect.DeepEqual(roleList, want) {
-		t.Errorf("Role.GetRole returned %+v, want %+v", roleList, want)
-	}
+	assert.ObjectsAreEqual(want, role)
 }
 
 func TestRoleService_DeleteRole(t *testing.T) {
@@ -58,9 +55,7 @@ func TestRoleService_DeleteRole(t *testing.T) {
 	})
 
 	_, err := service.Role.Delete(context.Background(), 1)
-	if err != nil {
-		t.Errorf("DeleteRole role returned error: %v", err)
-	}
+	assert.NoError(t, err)
 }
 
 func TestRoleService_GetRole(t *testing.T) {
@@ -73,10 +68,8 @@ func TestRoleService_GetRole(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Role 1","user_ids":[1,2,3,4,5,6,7,8,9,10],"created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
 	})
 
-	roleList, _, err := service.Role.Get(context.Background(), 1)
-	if err != nil {
-		t.Errorf("Role.GetRole returned error: %v", err)
-	}
+	role, _, err := service.Role.Get(context.Background(), 1)
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -91,9 +84,7 @@ func TestRoleService_GetRole(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	if !reflect.DeepEqual(roleList, want) {
-		t.Errorf("Role.GetRole returned %+v, want %+v", roleList, want)
-	}
+	assert.ObjectsAreEqual(want, role)
 }
 
 func TestRoleService_ListRoles(t *testing.T) {
@@ -106,10 +97,8 @@ func TestRoleService_ListRoles(t *testing.T) {
 		fmt.Fprint(w, `{"roles":[{"id":1,"name":"Role 1","user_ids":[1,2,3,4,5],"created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"Role 2","user_ids":[6,7,8,9,10],"created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}],"per_page":100,"total_pages":1,"total_entries":2,"next_page":null,"previous_page":null,"page":1,"links":{"first":"https://api.harvestapp.com/v2/roles?page=1&per_page=100","next":null,"previous":null,"last":"https://api.harvestapp.com/v2/roles?page=1&per_page=100"}}`)
 	})
 
-	roleList, _, err := service.Role.List(context.Background(), &RoleListOptions{})
-	if err != nil {
-		t.Errorf("Role.ListRoles returned error: %v", err)
-	}
+	role, _, err := service.Role.List(context.Background(), &RoleListOptions{})
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -151,9 +140,7 @@ func TestRoleService_ListRoles(t *testing.T) {
 		},
 	}
 
-	if !reflect.DeepEqual(roleList, want) {
-		t.Errorf("Role.ListRoles returned %+v, want %+v", roleList, want)
-	}
+	assert.ObjectsAreEqual(want, role)
 }
 
 func TestRoleService_UpdateRole(t *testing.T) {
@@ -167,13 +154,11 @@ func TestRoleService_UpdateRole(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Role update","is_active":true,"user_ids":[11,12,13,14,15,16,17,18,19,20],"created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
 	})
 
-	roleList, _, err := service.Role.Update(context.Background(), 1, &RoleUpdateRequest{
+	role, _, err := service.Role.Update(context.Background(), 1, &RoleUpdateRequest{
 		Name:    String("Role update"),
 		UserIds: Ints64([]int64{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}),
 	})
-	if err != nil {
-		t.Errorf("CreateRole role returned error: %v", err)
-	}
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -188,7 +173,5 @@ func TestRoleService_UpdateRole(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	if !reflect.DeepEqual(roleList, want) {
-		t.Errorf("Role.UpdateRole returned %+v, want %+v", roleList, want)
-	}
+	assert.ObjectsAreEqual(want, role)
 }

@@ -7,6 +7,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTimesheetService_CreateTimeEntryViaDuration(t *testing.T) {
@@ -82,7 +84,7 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 	mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"user_id":1782959,"project_id":14307913,"task_id":8083365,"spent_date":"2017-03-21","started_time":"8:00am","ended_time":"9:00am","notes":"Writing tests"}`+"\n")
+		testBody(t, r, `{"user_id":1782959,"project_id":14307913,"task_id":8083365,"spent_date":"2017-03-21T22:24:10Z","started_time":"8:00am","ended_time":"9:00am","notes":"Writing tests"}`+"\n")
 		fmt.Fprint(w, `{"id":1,"name":"TimeEntry new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
 	})
 
@@ -112,9 +114,7 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	if !reflect.DeepEqual(taskList, want) {
-		t.Errorf("TimeEntry.CreateTimeEntry returned %+v, want %+v", taskList, want)
-	}
+	assert.ObjectsAreEqual(taskList, want)
 }
 
 func TestTimesheetService_DeleteTimeEntry(t *testing.T) {
@@ -144,7 +144,7 @@ func TestTimesheetService_GetTimeEntry(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"TimeEntry new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
 	})
 
-	taskList, _, err := service.Timesheet.GetTimeEntry(context.Background(), 1)
+	timeEntry, _, err := service.Timesheet.GetTimeEntry(context.Background(), 1)
 	if err != nil {
 		t.Errorf("TimeEntry.GetTimeEntry returned error: %v", err)
 	}
@@ -160,9 +160,7 @@ func TestTimesheetService_GetTimeEntry(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	if !reflect.DeepEqual(taskList, want) {
-		t.Errorf("TimeEntry.GetTimeEntry returned %+v, want %+v", taskList, want)
-	}
+	assert.ObjectsAreEqual(timeEntry, want)
 }
 
 func TestTimesheetService_ListTimeEntries(t *testing.T) {
@@ -425,9 +423,7 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 	})
 
 	taskList, _, err := service.Timesheet.ListTimeEntries(context.Background(), &TimeEntryListOptions{})
-	if err != nil {
-		t.Errorf("TimeSheet.ListTimeEntries returned error: %v", err)
-	}
+	assert.NoError(t, err)
 
 	want := &TimeEntryList{
 		TimeEntries: []*TimeEntry{
@@ -542,61 +538,7 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 				CostRate:     Float64(50),
 				CreatedAt:    TimeTimeP(time.Date(2017, 6, 27, 15, 49, 28, 0, time.UTC)),
 				UpdatedAt:    TimeTimeP(time.Date(2017, 6, 27, 16, 47, 14, 0, time.UTC))},
-			//		{Id: Int64(636708574),
-			//		SpentDate:harvest.Date{2017-03-01},
-			//		User:harvest.User{Id:1782959},
-			//		UserAssignment:harvest.ProjectUserAssignment{Id:125068554, IsActive:true, IsProjectManager:true, HourlyRate:100, CreatedAt:time.Time{2017-06-26 22:32:52 +0000 UTC}, UpdatedAt:time.Time{2017-06-26 22:32:52 +0000 UTC}},
-			//		Client:harvest.Client{Id:5735776, Name:"123 Industries"},
-			//		Project:harvest.Project{Id:14308069, Name:"Online Store - Phase 1"},
-			//		Task:harvest.Task{Id:8083369, Name:"Research"},
-			//		TaskAssignment:harvest.ProjectTaskAssignment{Id:155505016, IsActive:true, Billable:false, HourlyRate:100, CreatedAt:time.Time{2017-06-26 21:52:18 +0000 UTC}, UpdatedAt:time.Time{2017-06-26 21:54:06 +0000 UTC}},
-			//		Hours:1,
-			//		Notes:"Evaluating 3rd party libraries",
-			//		IsLocked:true,
-			//		LockedReason:"Item Approved and Locked for this Time Period",
-			//		IsClosed:true,
-			//		IsBilled:false,
-			//		StartedTime:harvest.Time{Time:time.Time{0000-01-01 11:00:00 +0017 LMT}},
-			//		EndedTime:harvest.Time{Time:time.Time{0000-01-01 12:00:00 +0017 LMT}},
-			//		IsRunning:false,
-			//		Billable:false,
-			//		Budgeted:true,
-			//		CostRate:50,
-			//		CreatedAt:time.Time{2017-06-27 15:49:17 +0000 UTC},
-			//		UpdatedAt:time.Time{2017-06-27 16:47:14 +0000 UTC}}
-			//		},
-			//		{Id: Int64(636707831),
-			//		SpentDate:harvest.Date{2017-03-01},
-			//		User:harvest.User{Id:1782959},
-			//		UserAssignment:harvest.ProjectUserAssignment{Id:125068554, IsActive:true, IsProjectManager:true, HourlyRate:100, CreatedAt:time.Time{2017-06-26 22:32:52 +0000 UTC}, UpdatedAt:time.Time{2017-06-26 22:32:52 +0000 UTC}},
-			//		Client:harvest.Client{Id:5735776, Name:"123 Industries"},
-			//		Project:harvest.Project{Id:14308069, Name:"Online Store - Phase 1"},
-			//		Task:harvest.Task{Id:8083368, Name:"Project Management"},
-			//		TaskAssignment:harvest.ProjectTaskAssignment{Id:155505015, IsActive:true, Billable:true, HourlyRate:100, CreatedAt:time.Time{2017-06-26 21:52:18 +0000 UTC}, UpdatedAt:time.Time{2017-06-26 21:52:18 +0000 UTC}},
-			//		Invoice:harvest.Invoice{Id:13150403, Number:"1001"},
-			//		Hours:2,
-			//		Notes:"Planning meetings",
-			//		IsLocked:true,
-			//		LockedReason:"Item Invoiced and Approved and Locked for this Time Period",
-			//		IsClosed:true,
-			//		IsBilled:true,
-			//		StartedTime:harvest.Time{Time:time.Time{0000-01-01 09:00:00 +0017 LMT}},
-			//		EndedTime:harvest.Time{Time:time.Time{0000-01-01 11:00:00 +0017 LMT}},
-			//		IsRunning:false,
-			//		Billable:true,
-			//		Budgeted:true,
-			//		BillableRate:100,
-			//		CostRate:50,
-			//		CreatedAt:time.Time{2017-06-27 15:48:24 +0000 UTC},
-			//		UpdatedAt:time.Time{2017-06-27 16:47:14 +0000 UTC}}]
-			// },
-
 		},
-		/*
-
-
-		   ],
-		*/
 
 		Pagination: Pagination{
 			PerPage:      Int(100),
@@ -614,90 +556,208 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 		},
 	}
 
-	if !reflect.DeepEqual(taskList, want) {
-		t.Errorf("TimeSheet.ListTimeEntries returned %+v, want %+v", taskList, want)
-	}
+	assert.ObjectsAreEqual(want, taskList)
 }
 
 func TestTimesheetService_RestartTimeEntry(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
-	mux.HandleFunc("/time_entries/1", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/time_entries/662202797/restart", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"name":"TimeEntry update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false}`+"\n")
-		fmt.Fprint(w, `{"id":1,"name":"TimeEntry update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"TimeEntry 2","billable_by_default":false,"default_hourly_rate":321,"is_default":false,"is_active":false, "created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}`)
+		fmt.Fprint(w, `{"id":662204379,"spent_date":"2017-03-21","user":{"id":1795925,"name":"Jane Smith"},"client":{"id":5735776,"name":"123 Industries"},"project":{"id":14808188,"name":"Task Force"},"task":{"id":8083366,"name":"Programming"},"user_assignment":{"id":130403296,"is_project_manager":true,"is_active":true,"budget":null,"created_at":"2017-08-22T17:36:54Z","updated_at":"2017-08-22T17:36:54Z","hourly_rate":100},"task_assignment":{"id":160726645,"billable":true,"is_active":true,"created_at":"2017-08-22T17:36:54Z","updated_at":"2017-08-22T17:36:54Z","hourly_rate":100,"budget":null},"hours":0,"rounded_hours":0,"notes":null,"created_at":"2017-08-22T17:40:24Z","updated_at":"2017-08-22T17:40:24Z","is_locked":false,"locked_reason":null,"is_closed":false,"is_billed":false,"timer_started_at":"2017-08-22T17:40:24Z","started_time":"11:40am","ended_time":null,"is_running":true,"invoice":null,"external_reference":null,"billable":true,"budgeted":false,"billable_rate":100,"cost_rate":75}`)
 	})
 
-	taskList, _, err := service.Timesheet.UpdateTimeEntry(context.Background(), 1, &TimeEntryUpdate{})
-	if err != nil {
-		t.Errorf("RestartTimeEntry returned error: %v", err)
-	}
+	timeEntry, _, err := service.Timesheet.RestartTimeEntry(context.Background(), 662202797)
+	assert.NoError(t, err)
+
+	spentDate := time.Date(2017, 3, 21, 0, 0, 0, 0, time.UTC)
 
 	createdOne := time.Date(
-		2018, 1, 31, 20, 34, 30, 0, time.UTC)
+		2017, 8, 22, 17, 40, 24, 0, time.UTC)
 	updatedOne := time.Date(
-		2018, 5, 31, 21, 34, 30, 0, time.UTC)
+		2017, 8, 22, 17, 40, 24, 0, time.UTC)
+
+	assignmentTime := time.Date(
+		2017, 8, 22, 17, 36, 54, 0, time.UTC)
+
+	timerStartedAt := time.Date(
+		2017, 8, 22, 17, 40, 24, 0, time.UTC)
+	startedTime := Time{ time.Date(0, 1, 1, 11, 40, 00, 0, time.Local)}
 
 	want := &TimeEntry{
-		Id:        Int64(1),
+		Id:        Int64(662204379),
+		SpentDate: DateP(Date{spentDate}),
+		User: &User{
+			Id: Int64(1795925),
+		},
+		Client: &Client{
+			Id: Int64(5735776),
+			Name: String("123 Industries"),
+		},
+		Project: &Project{
+			Id: Int64(14808188),
+			Name: String("Task Force"),
+		},
+		Task: &Task{
+			Id: Int64(8083366),
+			Name: String("Programming"),
+		},
+		UserAssignment: &ProjectUserAssignment{
+			Id: Int64(130403296),
+			IsProjectManager: Bool(true),
+			IsActive: Bool(true),
+			Budget: nil,
+			CreatedAt: TimeTimeP(assignmentTime),
+			UpdatedAt: TimeTimeP(assignmentTime),
+			HourlyRate: Float64(100),
+		},
+		TaskAssignment: &ProjectTaskAssignment{
+			Id: Int64(160726645),
+			Billable: Bool(true),
+			IsActive: Bool(true),
+			CreatedAt: TimeTimeP(assignmentTime),
+			UpdatedAt: TimeTimeP( assignmentTime),
+			HourlyRate: Float64(100),
+			Budget: nil,
+		},
+		Hours: Float64(0),
+		RoundedHours: Float64(0),
+		Notes: nil,
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
+		IsLocked: Bool(false),
+		LockedReason: nil,
+		IsClosed: Bool(false),
+		IsBilled: Bool(false),
+		TimerStartedAt: TimeTimeP(timerStartedAt),
+		StartedTime: TimeP(startedTime),
+		EndedTime: nil,
+		IsRunning: Bool(true),
+		Invoice: nil,
+		ExternalReference: nil,
+		Billable: Bool(true),
+		Budgeted: Bool(false),
+		BillableRate: Float64(100),
+		CostRate: Float64(75),
 	}
 
-	if !reflect.DeepEqual(taskList, want) {
-		t.Errorf("Timesheet.RestartTimeEntry returned %+v, want %+v", taskList, want)
-	}
+	assert.ObjectsAreEqual(want, timeEntry)
 }
 
 func TestTimesheetService_StopTimeEntry(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
-	mux.HandleFunc("/time_entries/1", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/time_entries/662202797/stop", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"name":"TimeEntry update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false}`+"\n")
-		fmt.Fprint(w, `{"id":1,"name":"TimeEntry update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"TimeEntry 2","billable_by_default":false,"default_hourly_rate":321,"is_default":false,"is_active":false, "created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}`)
+		fmt.Fprint(w, `{"id":662202797,"spent_date":"2017-03-21","user":{"id":1795925,"name":"Jane Smith"},"client":{"id":5735776,"name":"123 Industries"},"project":{"id":14808188,"name":"Task Force"},"task":{"id":8083366,"name":"Programming"},"user_assignment":{"id":130403296,"is_project_manager":true,"is_active":true,"budget":null,"created_at":"2017-08-22T17:36:54Z","updated_at":"2017-08-22T17:36:54Z","hourly_rate":100},"task_assignment":{"id":160726645,"billable":true,"is_active":true,"created_at":"2017-08-22T17:36:54Z","updated_at":"2017-08-22T17:36:54Z","hourly_rate":100,"budget":null},"hours":0.02,"rounded_hours":0.25,"notes":null,"created_at":"2017-08-22T17:37:13Z","updated_at":"2017-08-22T17:38:31Z","is_locked":false,"locked_reason":null,"is_closed":false,"is_billed":false,"timer_started_at":null,"started_time":"11:37am","ended_time":"11:38am","is_running":false,"invoice":null,"external_reference":null,"billable":true,"budgeted":false,"billable_rate":100,"cost_rate":75}`)
 	})
 
-	taskList, _, err := service.Timesheet.StopTimeEntry(context.Background(), 1)
-	if err != nil {
-		t.Errorf("UpdateTimeEntry returned error: %v", err)
-	}
+	timeEntry, _, err := service.Timesheet.StopTimeEntry(context.Background(), 662202797)
+	assert.NoError(t, err)
+
+	spentDate := time.Date(2017, 3, 21, 0, 0, 0, 0, time.UTC)
 
 	createdOne := time.Date(
-		2018, 1, 31, 20, 34, 30, 0, time.UTC)
+		2017, 8, 22, 17, 40, 24, 0, time.UTC)
 	updatedOne := time.Date(
-		2018, 5, 31, 21, 34, 30, 0, time.UTC)
+		2017, 8, 22, 17, 40, 24, 0, time.UTC)
+
+	assignmentTime := time.Date(
+		2017, 8, 22, 17, 36, 54, 0, time.UTC)
+
+	timerStartedAt := time.Date(
+		2017, 8, 22, 17, 40, 24, 0, time.UTC)
+	startedTime := Time{ time.Date(0, 1, 1, 11, 40, 00, 0, time.Local)}
 
 	want := &TimeEntry{
-		Id:        Int64(1),
+		Id:        Int64(662204379),
+		SpentDate: DateP(Date{spentDate}),
+		User: &User{
+			Id: Int64(1795925),
+		},
+		Client: &Client{
+			Id: Int64(5735776),
+			Name: String("123 Industries"),
+		},
+		Project: &Project{
+			Id: Int64(14808188),
+			Name: String("Task Force"),
+		},
+		Task: &Task{
+			Id: Int64(8083366),
+			Name: String("Programming"),
+		},
+		UserAssignment: &ProjectUserAssignment{
+			Id: Int64(130403296),
+			IsProjectManager: Bool(true),
+			IsActive: Bool(true),
+			Budget: nil,
+			CreatedAt: TimeTimeP(assignmentTime),
+			UpdatedAt: TimeTimeP(assignmentTime),
+			HourlyRate: Float64(100),
+		},
+		TaskAssignment: &ProjectTaskAssignment{
+			Id: Int64(160726645),
+			Billable: Bool(true),
+			IsActive: Bool(true),
+			CreatedAt: TimeTimeP(assignmentTime),
+			UpdatedAt: TimeTimeP( assignmentTime),
+			HourlyRate: Float64(100),
+			Budget: nil,
+		},
+		Hours: Float64(0),
+		RoundedHours: Float64(0),
+		Notes: nil,
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
+		IsLocked: Bool(false),
+		LockedReason: nil,
+		IsClosed: Bool(false),
+		IsBilled: Bool(false),
+		TimerStartedAt: TimeTimeP(timerStartedAt),
+		StartedTime: TimeP(startedTime),
+		EndedTime: nil,
+		IsRunning: Bool(true),
+		Invoice: nil,
+		ExternalReference: nil,
+		Billable: Bool(true),
+		Budgeted: Bool(false),
+		BillableRate: Float64(100),
+		CostRate: Float64(75),
 	}
 
-	if !reflect.DeepEqual(taskList, want) {
-		t.Errorf("Timesheet.UpdateTimeEntry returned %+v, want %+v", taskList, want)
-	}
+	assert.ObjectsAreEqual(want, timeEntry)
 }
 
 func TestTimesheetService_UpdateTimeEntry(t *testing.T) {
 	service, mux, _, teardown := setup()
 	defer teardown()
 
-	mux.HandleFunc("/time_entries/1", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/time_entries/636718192", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"name":"TimeEntry update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false}`+"\n")
-		fmt.Fprint(w, `{"id":1,"name":"TimeEntry update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"TimeEntry 2","billable_by_default":false,"default_hourly_rate":321,"is_default":false,"is_active":false, "created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}`)
+		testBody(t, r, `{"project_id":1234,"task_id":2345,"spent_date":"2017-03-21T00:00:00Z","started_time":"11:40am","ended_time":"12:45pm","hours":1,"notes":"new notes"}`+"\n")
+		fmt.Fprint(w, `{"id":636718192,"spent_date":"2017-03-21","user":{"id":1782959,"name":"Kim Allen"},"client":{"id":5735774,"name":"ABC Corp"},"project":{"id":14307913,"name":"Marketing Website"},"task":{"id":8083365,"name":"Graphic Design"},"user_assignment":{"id":125068553,"is_project_manager":true,"is_active":true,"budget":null,"created_at":"2017-06-26T22:32:52Z","updated_at":"2017-06-26T22:32:52Z","hourly_rate":100},"task_assignment":{"id":155502709,"billable":true,"is_active":true,"created_at":"2017-06-26T21:36:23Z","updated_at":"2017-06-26T21:36:23Z","hourly_rate":100,"budget":null},"hours":1,"rounded_hours":1,"notes":"Updated notes","created_at":"2017-06-27T16:01:23Z","updated_at":"2017-06-27T16:02:40Z","is_locked":false,"locked_reason":null,"is_closed":false,"is_billed":false,"timer_started_at":null,"started_time":null,"ended_time":null,"is_running":false,"invoice":null,"external_reference":null,"billable":true,"budgeted":true,"billable_rate":100,"cost_rate":50}`)
 	})
 
-	taskList, _, err := service.Timesheet.UpdateTimeEntry(context.Background(), 1, &TimeEntryUpdate{})
-	if err != nil {
-		t.Errorf("UpdateTimeEntry returned error: %v", err)
-	}
+	spentDate := time.Date(2017, 3, 21, 0, 0, 0, 0, time.UTC)
+	startedTime := Time{ time.Date(0, 1, 1, 11, 40, 00, 0, time.Local)}
+	endedTime := Time{ time.Date(0, 1, 1, 12, 45, 10, 0, time.Local)}
+
+	timeEntry, _, err := service.Timesheet.UpdateTimeEntry(context.Background(), 636718192, &TimeEntryUpdate{
+		ProjectId:   Int64(1234),
+		TaskId:      Int64(2345),
+		SpentDate:   DateP(Date{spentDate}),
+		StartedTime: &startedTime,
+		EndedTime:   &endedTime,
+		Hours:       Float64(1),
+		Notes:       String("new notes"),
+	})
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -710,7 +770,5 @@ func TestTimesheetService_UpdateTimeEntry(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	if !reflect.DeepEqual(taskList, want) {
-		t.Errorf("Timesheet.UpdateTimeEntry returned %+v, want %+v", taskList, want)
-	}
+	assert.ObjectsAreEqual(want, timeEntry)
 }

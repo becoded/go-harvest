@@ -3,8 +3,8 @@ package harvest
 import (
 	"context"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"net/http"
-	"reflect"
 	"testing"
 	"time"
 )
@@ -20,9 +20,7 @@ func TestClientService_List(t *testing.T) {
 	})
 
 	clientList, _, err := service.Client.List(context.Background(), &ClientListOptions{})
-	if err != nil {
-		t.Errorf("Client.List returned error: %v", err)
-	}
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -68,9 +66,7 @@ func TestClientService_List(t *testing.T) {
 		},
 	}
 
-	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.List returned %+v, want %+v", clientList, want)
-	}
+	assert.ObjectsAreEqual(want, clientList)
 }
 
 func TestClientService_Get(t *testing.T) {
@@ -83,10 +79,8 @@ func TestClientService_Get(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"}`)
 	})
 
-	clientList, _, err := service.Client.Get(context.Background(), 1)
-	if err != nil {
-		t.Errorf("Client.Get returned error: %v", err)
-	}
+	client, _, err := service.Client.Get(context.Background(), 1)
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -103,9 +97,7 @@ func TestClientService_Get(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
-	}
+	assert.ObjectsAreEqual(want, client)
 }
 
 func TestClientService_CreateClient(t *testing.T) {
@@ -119,15 +111,13 @@ func TestClientService_CreateClient(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"}`)
 	})
 
-	clientList, _, err := service.Client.Create(context.Background(), &ClientCreateRequest{
+	client, _, err := service.Client.Create(context.Background(), &ClientCreateRequest{
 		Name:     String("Client new"),
 		IsActive: Bool(true),
 		Address:  String("Address line 1"),
 		Currency: String("EUR"),
 	})
-	if err != nil {
-		t.Errorf("Create client returned error: %v", err)
-	}
+	assert.NoError(t, err)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -144,9 +134,7 @@ func TestClientService_CreateClient(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.Get returned %+v, want %+v", clientList, want)
-	}
+	assert.ObjectsAreEqual(want, client)
 }
 
 func TestClientService_UpdateClient(t *testing.T) {
@@ -160,7 +148,7 @@ func TestClientService_UpdateClient(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"}`)
 	})
 
-	clientList, _, err := service.Client.Update(context.Background(), 1, &ClientUpdateRequest{
+	client, _, err := service.Client.Update(context.Background(), 1, &ClientUpdateRequest{
 		Name:     String("Client new"),
 		IsActive: Bool(true),
 		Address:  String("Address line 1"),
@@ -185,9 +173,7 @@ func TestClientService_UpdateClient(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	if !reflect.DeepEqual(clientList, want) {
-		t.Errorf("Client.UpdateClient returned %+v, want %+v", clientList, want)
-	}
+	assert.ObjectsAreEqual(want, client)
 }
 
 func TestClientService_DeleteClient(t *testing.T) {
@@ -202,7 +188,5 @@ func TestClientService_DeleteClient(t *testing.T) {
 	})
 
 	_, err := service.Client.Delete(context.Background(), 1)
-	if err != nil {
-		t.Errorf("Delete client returned error: %v", err)
-	}
+	assert.NoError(t, err)
 }

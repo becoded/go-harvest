@@ -2,6 +2,7 @@ package harvest
 
 import (
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"net/url"
 	"reflect"
 	"testing"
@@ -34,9 +35,7 @@ func TestDate_String(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		if tt.input.String() != tt.want {
-			t.Errorf("%q. String() = %v, response %v", tt.name, tt.input.String(), tt.want)
-		}
+		assert.Equal(t,  tt.want, tt.input.String())
 	}
 }
 

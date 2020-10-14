@@ -63,7 +63,7 @@ type TaskUpdateRequest struct {
 	IsActive          *bool    `json:"is_active,omitempty"`           // Whether this task is active or archived.
 }
 
-func (s *TaskService) ListTasks(ctx context.Context, opt *TaskListOptions) (*TaskList, *http.Response, error) {
+func (s *TaskService) List(ctx context.Context, opt *TaskListOptions) (*TaskList, *http.Response, error) {
 	u := "tasks"
 	u, err := addOptions(u, opt)
 	if err != nil {
