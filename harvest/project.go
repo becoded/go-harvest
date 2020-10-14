@@ -64,7 +64,7 @@ type ProjectListOptions struct {
 	ListOptions
 }
 
-func (s *ProjectService) ListProjects(ctx context.Context, opt *ProjectListOptions) (*ProjectList, *http.Response, error) {
+func (s *ProjectService) List(ctx context.Context, opt *ProjectListOptions) (*ProjectList, *http.Response, error) {
 	u := "projects"
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -85,7 +85,7 @@ func (s *ProjectService) ListProjects(ctx context.Context, opt *ProjectListOptio
 	return projectList, resp, nil
 }
 
-func (s *ProjectService) GetProject(ctx context.Context, projectId int64) (*Project, *http.Response, error) {
+func (s *ProjectService) Get(ctx context.Context, projectId int64) (*Project, *http.Response, error) {
 	u := fmt.Sprintf("projects/%d", projectId)
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {

@@ -60,7 +60,7 @@ type ClientUpdateRequest struct {
 	Currency *string `json:"currency,omitempty"`  // The currency used by the client. If not provided, the company’s currency will be used. See a list of supported currencies
 }
 
-// ListClients returns a list of your clients. The clients are returned sorted by creation date, with the most recently created clients appearing first.
+// List returns a list of your clients. The clients are returned sorted by creation date, with the most recently created clients appearing first.
 func (s *ClientService) List(ctx context.Context, opt *ClientListOptions) (*ClientList, *http.Response, error) {
 	u := "clients"
 	u, err := addOptions(u, opt)
@@ -82,7 +82,7 @@ func (s *ClientService) List(ctx context.Context, opt *ClientListOptions) (*Clie
 	return clientList, resp, nil
 }
 
-// GetClient retrieves the client with the given ID.
+// Get retrieves the client with the given ID.
 // Returns a client object and a 200 OK response code if a valid identifier was provided.
 func (s *ClientService) Get(ctx context.Context, clientId int64) (*Client, *http.Response, error) {
 	u := fmt.Sprintf("clients/%d", clientId)
@@ -101,7 +101,7 @@ func (s *ClientService) Get(ctx context.Context, clientId int64) (*Client, *http
 	return client, resp, nil
 }
 
-// CreateClient creates a new client object.
+// Create creates a new client object.
 // Returns a client object and a 201 Created response code if the call succeeded.
 func (s *ClientService) Create(ctx context.Context, data *ClientCreateRequest) (*Client, *http.Response, error) {
 	u := "clients"
@@ -120,7 +120,7 @@ func (s *ClientService) Create(ctx context.Context, data *ClientCreateRequest) (
 	return client, resp, nil
 }
 
-// UpdateClient updates the specific client by setting the values of the parameters passed.
+// Update updates the specific client by setting the values of the parameters passed.
 // Any parameters not provided will be left unchanged. Returns a client object and a 200 OK response code if the call succeeded.
 func (s *ClientService) Update(ctx context.Context, clientId int64, data *ClientUpdateRequest) (*Client, *http.Response, error) {
 	u := fmt.Sprintf("clients/%d", clientId)
@@ -139,7 +139,7 @@ func (s *ClientService) Update(ctx context.Context, clientId int64, data *Client
 	return client, resp, nil
 }
 
-// DeleteClient deletes a specific client. Deleting a client is only possible if it has no projects, invoices, or estimates associated with it.
+// Delete deletes a specific client. Deleting a client is only possible if it has no projects, invoices, or estimates associated with it.
 // Returns a 200 OK response code if the call succeeded.
 func (s *ClientService) Delete(ctx context.Context, clientId int64) (*http.Response, error) {
 	u := fmt.Sprintf("clients/%d", clientId)

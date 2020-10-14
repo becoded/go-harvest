@@ -2,13 +2,13 @@ package harvest
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"net/url"
 	"reflect"
 	"testing"
 	"time"
 
 	"github.com/google/go-querystring/query"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDate_String(t *testing.T) {

@@ -73,7 +73,7 @@ type EstimateListOptions struct {
 	ListOptions
 }
 
-func (s *EstimateService) ListEstimates(ctx context.Context, opt *EstimateListOptions) (*EstimateList, *http.Response, error) {
+func (s *EstimateService) List(ctx context.Context, opt *EstimateListOptions) (*EstimateList, *http.Response, error) {
 	u := "estimates"
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -94,7 +94,7 @@ func (s *EstimateService) ListEstimates(ctx context.Context, opt *EstimateListOp
 	return estimateList, resp, nil
 }
 
-func (s *EstimateService) GetEstimate(ctx context.Context, estimateId int64) (*Estimate, *http.Response, error) {
+func (s *EstimateService) Get(ctx context.Context, estimateId int64) (*Estimate, *http.Response, error) {
 	u := fmt.Sprintf("estimates/%d", estimateId)
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {

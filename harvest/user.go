@@ -100,7 +100,7 @@ type UserListOptions struct {
 	ListOptions
 }
 
-func (s *UserService) ListUsers(ctx context.Context, opt *UserListOptions) (*UserList, *http.Response, error) {
+func (s *UserService) List(ctx context.Context, opt *UserListOptions) (*UserList, *http.Response, error) {
 	u := "users"
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -121,7 +121,7 @@ func (s *UserService) ListUsers(ctx context.Context, opt *UserListOptions) (*Use
 	return userList, resp, nil
 }
 
-func (s *UserService) GetUser(ctx context.Context, userId int64) (*User, *http.Response, error) {
+func (s *UserService) Get(ctx context.Context, userId int64) (*User, *http.Response, error) {
 	u := fmt.Sprintf("users/%d", userId)
 
 	req, err := s.client.NewRequest("GET", u, nil)
@@ -155,7 +155,7 @@ func (s *UserService) Current(ctx context.Context, userId int64) (*User, *http.R
 	return user, resp, nil
 }
 
-func (s *UserService) CreateUser(ctx context.Context, data *UserCreateRequest) (*User, *http.Response, error) {
+func (s *UserService) Create(ctx context.Context, data *UserCreateRequest) (*User, *http.Response, error) {
 	u := "users"
 
 	req, err := s.client.NewRequest("POST", u, data)
@@ -172,7 +172,7 @@ func (s *UserService) CreateUser(ctx context.Context, data *UserCreateRequest) (
 	return user, resp, nil
 }
 
-func (s *UserService) UpdateUser(ctx context.Context, userId int64, data *UserUpdateRequest) (*User, *http.Response, error) {
+func (s *UserService) Update(ctx context.Context, userId int64, data *UserUpdateRequest) (*User, *http.Response, error) {
 	u := fmt.Sprintf("users/%d", userId)
 
 	req, err := s.client.NewRequest("PATCH", u, data)
@@ -189,7 +189,7 @@ func (s *UserService) UpdateUser(ctx context.Context, userId int64, data *UserUp
 	return user, resp, nil
 }
 
-func (s *UserService) DeleteUser(ctx context.Context, userId int64) (*http.Response, error) {
+func (s *UserService) Delete(ctx context.Context, userId int64) (*http.Response, error) {
 	u := fmt.Sprintf("users/%d", userId)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {

@@ -113,7 +113,7 @@ type TimeEntryUpdate struct {
 	//ExternalReference *object `json:"external_reference,omitempty"` // optional	An object containing the id, group_id, and permalink of the external reference.
 }
 
-func (s *TimesheetService) ListTimeEntries(ctx context.Context, opt *TimeEntryListOptions) (*TimeEntryList, *http.Response, error) {
+func (s *TimesheetService) List(ctx context.Context, opt *TimeEntryListOptions) (*TimeEntryList, *http.Response, error) {
 	u := "time_entries"
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -134,7 +134,7 @@ func (s *TimesheetService) ListTimeEntries(ctx context.Context, opt *TimeEntryLi
 	return timeEntryList, resp, nil
 }
 
-func (s *TimesheetService) GetTimeEntry(ctx context.Context, timeEntryId int64) (*TimeEntry, *http.Response, error) {
+func (s *TimesheetService) Get(ctx context.Context, timeEntryId int64) (*TimeEntry, *http.Response, error) {
 	u := fmt.Sprintf("time_entries/%d", timeEntryId)
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {

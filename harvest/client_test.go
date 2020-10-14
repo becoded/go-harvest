@@ -3,10 +3,11 @@ package harvest
 import (
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestClientService_List(t *testing.T) {
