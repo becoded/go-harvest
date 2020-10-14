@@ -185,7 +185,7 @@ func (s *InvoiceService) Get(ctx context.Context, invoiceId int64) (*Invoice, *h
 	return invoice, resp, nil
 }
 
-func (s *InvoiceService) CreateInvoice(ctx context.Context, data *InvoiceCreateRequest) (*Invoice, *http.Response, error) {
+func (s *InvoiceService) Create(ctx context.Context, data *InvoiceCreateRequest) (*Invoice, *http.Response, error) {
 	u := "invoices"
 
 	req, err := s.client.NewRequest("POST", u, data)
@@ -202,7 +202,7 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, data *InvoiceCreateR
 	return invoice, resp, nil
 }
 
-func (s *InvoiceService) UpdateInvoice(ctx context.Context, invoiceId int64, data *InvoiceUpdateRequest) (*Invoice, *http.Response, error) {
+func (s *InvoiceService) Update(ctx context.Context, invoiceId int64, data *InvoiceUpdateRequest) (*Invoice, *http.Response, error) {
 	u := fmt.Sprintf("invoices/%d", invoiceId)
 
 	req, err := s.client.NewRequest("PATCH", u, data)
@@ -219,7 +219,7 @@ func (s *InvoiceService) UpdateInvoice(ctx context.Context, invoiceId int64, dat
 	return invoice, resp, nil
 }
 
-func (s *InvoiceService) DeleteInvoice(ctx context.Context, invoiceId int64) (*http.Response, error) {
+func (s *InvoiceService) Delete(ctx context.Context, invoiceId int64) (*http.Response, error) {
 	u := fmt.Sprintf("invoices/%d", invoiceId)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {

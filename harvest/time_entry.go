@@ -25,6 +25,7 @@ type TimeEntry struct {
 	ExternalReference *ExternalReference     `json:"external_reference,omitempty"` // An object containing the id, group_id, permalink, service, and service_icon_url of the associated external reference.
 	Invoice           *Invoice               `json:"invoice,omitempty"`            // Once the time entry has been invoiced, this field will include the associated invoice’s id and number.
 	Hours             *float64               `json:"hours,omitempty"`              // Number of (decimal time) hours tracked in this time entry.
+	RoundedHours      *float64               `json:"rounded_hours,omitempty"`      // Number of (decimal time) hours tracked in this time entry used in summary reports and invoices. This value is rounded according to the Time Rounding setting in your Preferences.
 	Notes             *string                `json:"notes,omitempty"`              // Notes attached to the time entry.
 	IsLocked          *bool                  `json:"is_locked,omitempty"`          // Whether or not the time entry has been locked.
 	LockedReason      *string                `json:"locked_reason,omitempty"`      // Why the time entry has been locked.

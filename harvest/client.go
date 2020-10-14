@@ -101,9 +101,9 @@ func (s *ClientService) Get(ctx context.Context, clientId int64) (*Client, *http
 	return client, resp, nil
 }
 
-// CreateClient creates a new client object.
+// Create creates a new client object.
 // Returns a client object and a 201 Created response code if the call succeeded.
-func (s *ClientService) CreateClient(ctx context.Context, data *ClientCreateRequest) (*Client, *http.Response, error) {
+func (s *ClientService) Create(ctx context.Context, data *ClientCreateRequest) (*Client, *http.Response, error) {
 	u := "clients"
 
 	req, err := s.client.NewRequest("POST", u, data)
@@ -120,9 +120,9 @@ func (s *ClientService) CreateClient(ctx context.Context, data *ClientCreateRequ
 	return client, resp, nil
 }
 
-// UpdateClient updates the specific client by setting the values of the parameters passed.
+// Update updates the specific client by setting the values of the parameters passed.
 // Any parameters not provided will be left unchanged. Returns a client object and a 200 OK response code if the call succeeded.
-func (s *ClientService) UpdateClient(ctx context.Context, clientId int64, data *ClientUpdateRequest) (*Client, *http.Response, error) {
+func (s *ClientService) Update(ctx context.Context, clientId int64, data *ClientUpdateRequest) (*Client, *http.Response, error) {
 	u := fmt.Sprintf("clients/%d", clientId)
 
 	req, err := s.client.NewRequest("PATCH", u, data)
@@ -139,9 +139,9 @@ func (s *ClientService) UpdateClient(ctx context.Context, clientId int64, data *
 	return client, resp, nil
 }
 
-// DeleteClient deletes a specific client. Deleting a client is only possible if it has no projects, invoices, or estimates associated with it.
+// Delete deletes a specific client. Deleting a client is only possible if it has no projects, invoices, or estimates associated with it.
 // Returns a 200 OK response code if the call succeeded.
-func (s *ClientService) DeleteClient(ctx context.Context, clientId int64) (*http.Response, error) {
+func (s *ClientService) Delete(ctx context.Context, clientId int64) (*http.Response, error) {
 	u := fmt.Sprintf("clients/%d", clientId)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {

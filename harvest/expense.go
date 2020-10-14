@@ -133,7 +133,7 @@ func (s *ExpenseService) Get(ctx context.Context, expenseId int64) (*Expense, *h
 	return expense, resp, nil
 }
 
-func (s *ExpenseService) CreateExpense(ctx context.Context, data *ExpenseCreateRequest) (*Expense, *http.Response, error) {
+func (s *ExpenseService) Create(ctx context.Context, data *ExpenseCreateRequest) (*Expense, *http.Response, error) {
 	u := "expenses"
 
 	req, err := s.client.NewRequest("POST", u, data)
@@ -150,7 +150,7 @@ func (s *ExpenseService) CreateExpense(ctx context.Context, data *ExpenseCreateR
 	return expense, resp, nil
 }
 
-func (s *ExpenseService) UpdateExpense(ctx context.Context, expenseId int64, data *ExpenseUpdateRequest) (*Expense, *http.Response, error) {
+func (s *ExpenseService) Update(ctx context.Context, expenseId int64, data *ExpenseUpdateRequest) (*Expense, *http.Response, error) {
 	u := fmt.Sprintf("expenses/%d", expenseId)
 
 	req, err := s.client.NewRequest("PATCH", u, data)
@@ -167,7 +167,7 @@ func (s *ExpenseService) UpdateExpense(ctx context.Context, expenseId int64, dat
 	return expense, resp, nil
 }
 
-func (s *ExpenseService) DeleteExpense(ctx context.Context, expenseId int64) (*http.Response, error) {
+func (s *ExpenseService) Delete(ctx context.Context, expenseId int64) (*http.Response, error) {
 	u := fmt.Sprintf("expenses/%d", expenseId)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {

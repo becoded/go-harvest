@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/go-querystring/query"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDate_String(t *testing.T) {
@@ -34,9 +35,7 @@ func TestDate_String(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		if tt.input.String() != tt.want {
-			t.Errorf("%q. String() = %v, response %v", tt.name, tt.input.String(), tt.want)
-		}
+		assert.Equal(t,  tt.want, tt.input.String())
 	}
 }
 

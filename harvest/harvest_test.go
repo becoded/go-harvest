@@ -12,6 +12,8 @@ import (
 	"os"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -63,9 +65,8 @@ func testFormValues(t *testing.T, r *http.Request, values values) {
 		want.Set(k, v)
 	}
 
-	if err := r.ParseForm(); err != nil {
-		t.Error(err)
-	}
+	err := r.ParseForm()
+	assert.NoError(t, err)
 
 	if got := r.Form; !reflect.DeepEqual(got, want) {
 		t.Errorf("Request parameters: %v, response %v", got, want)
@@ -73,15 +74,13 @@ func testFormValues(t *testing.T, r *http.Request, values values) {
 }
 
 func testHeader(t *testing.T, r *http.Request, header string, want string) { //nolint: deadcode,unused
-	if got := r.Header.Get(header); got != want {
-		t.Errorf("Header.Get(%q) returned %q, response %q", header, got, want)
-	}
+	got := r.Header.Get(header)
+	assert.Equal(t, want, got)
 }
 
 func testURLParseError(t *testing.T, err error) {
-	if err == nil {
-		t.Errorf("Expected error to be returned")
-	}
+	assert.Error(t, err, "Expected error to be returned")
+
 	if err, ok := err.(*url.Error); !ok || err.Op != "parse" {
 		t.Errorf("Expected URL parse error, got %+v", err)
 	}
@@ -89,26 +88,20 @@ func testURLParseError(t *testing.T, err error) {
 
 func testBody(t *testing.T, r *http.Request, want string) {
 	b, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		t.Errorf("Error reading request body: %v", err)
-	}
-	if got := string(b); got != want {
-		t.Errorf("request Body is %s, response %s", got, want)
-	}
+	assert.NoError(t, err, "error reading request body")
+
+	assert.Equal(t, want, string(b))
 }
 
 // Helper function to test that a value is marshalled to JSON as expected.
 func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: deadcode,unused
 	j, err := json.Marshal(v)
-	if err != nil {
-		t.Errorf("Unable to marshal JSON for %v", v)
-	}
+	assert.NoError(t, err, "unable to marshal JSON")
+
 
 	w := new(bytes.Buffer)
 	err = json.Compact(w, []byte(want))
-	if err != nil {
-		t.Errorf("String is not valid json: %s", want)
-	}
+	assert.NoError(t, err,"string is not valid json: %s", want)
 
 	if w.String() != string(j) {
 		t.Errorf("json.Marshal(%q) returned %s, response %s", v, j, w)
@@ -116,9 +109,8 @@ func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: deadc
 
 	// now go the other direction and make sure things unmarshal as expected
 	u := reflect.ValueOf(v).Interface()
-	if err := json.Unmarshal([]byte(want), u); err != nil {
-		t.Errorf("Unable to unmarshal JSON for %v: %v", want, err)
-	}
+	err = json.Unmarshal([]byte(want), u)
+	assert.NoError(t, err, "unable to unmarshal JSON")
 
 	if !reflect.DeepEqual(v, u) {
 		t.Errorf("json.Unmarshal(%q) returned %s, response %s", want, u, v)

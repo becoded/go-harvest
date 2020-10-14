@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCompanyService_Get(t *testing.T) {
@@ -19,9 +20,7 @@ func TestCompanyService_Get(t *testing.T) {
 	})
 
 	company, _, err := service.Company.Get(context.Background())
-	if err != nil {
-		t.Errorf("Company.Get returned error: %v", err)
-	}
+	assert.NoError(t, err)
 
 	want := &Company{
 		BaseUri:              String("https://organisation.harvestapp.com"),
@@ -42,7 +41,5 @@ func TestCompanyService_Get(t *testing.T) {
 		ApprovalFeature:      Bool(false),
 	}
 
-	if !reflect.DeepEqual(company, want) {
-		t.Errorf("Company.Get returned %+v, response %+v", company, want)
-	}
+	assert.ObjectsAreEqual(want, company)
 }
