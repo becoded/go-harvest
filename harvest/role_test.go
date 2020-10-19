@@ -40,7 +40,7 @@ func TestRoleService_CreateRole(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	assert.ObjectsAreEqual(want, role)
+	assert.Equal(t, want, role)
 }
 
 func TestRoleService_DeleteRole(t *testing.T) {
@@ -84,7 +84,7 @@ func TestRoleService_GetRole(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	assert.ObjectsAreEqual(want, role)
+	assert.Equal(t, want, role)
 }
 
 func TestRoleService_ListRoles(t *testing.T) {
@@ -140,7 +140,7 @@ func TestRoleService_ListRoles(t *testing.T) {
 		},
 	}
 
-	assert.ObjectsAreEqual(want, role)
+	assert.Equal(t, want, role)
 }
 
 func TestRoleService_UpdateRole(t *testing.T) {
@@ -173,5 +173,5 @@ func TestRoleService_UpdateRole(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	assert.ObjectsAreEqual(want, role)
+	assert.Equal(t, want, role)
 }

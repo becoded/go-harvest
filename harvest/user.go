@@ -138,7 +138,7 @@ func (s *UserService) Get(ctx context.Context, userId int64) (*User, *http.Respo
 	return user, resp, nil
 }
 
-func (s *UserService) Current(ctx context.Context, userId int64) (*User, *http.Response, error) {
+func (s *UserService) Current(ctx context.Context) (*User, *http.Response, error) {
 	u := "users/me"
 
 	req, err := s.client.NewRequest("GET", u, nil)

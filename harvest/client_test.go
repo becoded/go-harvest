@@ -67,7 +67,7 @@ func TestClientService_List(t *testing.T) {
 		},
 	}
 
-	assert.ObjectsAreEqual(want, clientList)
+	assert.Equal(t, want, clientList)
 }
 
 func TestClientService_Get(t *testing.T) {
@@ -98,7 +98,7 @@ func TestClientService_Get(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	assert.ObjectsAreEqual(want, client)
+	assert.Equal(t, want, client)
 }
 
 func TestClientService_CreateClient(t *testing.T) {
@@ -135,7 +135,7 @@ func TestClientService_CreateClient(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	assert.ObjectsAreEqual(want, client)
+	assert.Equal(t, want, client)
 }
 
 func TestClientService_UpdateClient(t *testing.T) {
@@ -174,7 +174,7 @@ func TestClientService_UpdateClient(t *testing.T) {
 		UpdatedAt: &updatedOne,
 	}
 
-	assert.ObjectsAreEqual(want, client)
+	assert.Equal(t, want, client)
 }
 
 func TestClientService_DeleteClient(t *testing.T) {

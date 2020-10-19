@@ -98,10 +98,9 @@ func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: deadc
 	j, err := json.Marshal(v)
 	assert.NoError(t, err, "unable to marshal JSON")
 
-
 	w := new(bytes.Buffer)
 	err = json.Compact(w, []byte(want))
-	assert.NoError(t, err,"string is not valid json: %s", want)
+	assert.NoError(t, err, "string is not valid json: %s", want)
 
 	if w.String() != string(j) {
 		t.Errorf("json.Marshal(%q) returned %s, response %s", v, j, w)

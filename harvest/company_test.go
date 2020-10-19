@@ -41,5 +41,5 @@ func TestCompanyService_Get(t *testing.T) {
 		ApprovalFeature:      Bool(false),
 	}
 
-	assert.ObjectsAreEqual(want, company)
+	assert.Equal(t, want, company)
 }

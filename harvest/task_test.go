@@ -271,7 +271,7 @@ func TestTaskService_List(t *testing.T) {
 		},
 	}
 
-	assert.ObjectsAreEqual(want, taskList)
+	assert.Equal(t, want, taskList)
 }
 
 func TestTaskService_Update(t *testing.T) {
@@ -310,5 +310,5 @@ func TestTaskService_Update(t *testing.T) {
 		UpdatedAt:         &updatedOne,
 	}
 
-	assert.ObjectsAreEqual(want, task)
+	assert.Equal(t, want, task)
 }
