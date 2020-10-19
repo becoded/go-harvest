@@ -35,7 +35,7 @@ func TestDate_String(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		assert.Equal(t,  tt.want, tt.input.String())
+		assert.Equal(t, tt.want, tt.input.String())
 	}
 }
 
