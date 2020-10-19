@@ -852,7 +852,7 @@ func TestTimesheetService_UpdateTimeEntry(t *testing.T) {
 	mux.HandleFunc("/time_entries/636718192", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"project_id":1234,"task_id":2345,"spent_date":"2017-03-21T00:00:00+01:00","started_time":"11:40am","ended_time":"12:45pm","hours":1,"notes":"new notes"}`+"\n")
+		testBody(t, r, `{"project_id":1234,"task_id":2345,"spent_date":"2017-03-21T00:00:00Z","started_time":"11:40am","ended_time":"12:45pm","hours":1,"notes":"new notes"}`+"\n")
 		fmt.Fprint(w, `{"id":636718192,"spent_date":"2017-03-21","user":{"id":1782959,"name":"Kim Allen"},"client":{"id":5735774,"name":"ABC Corp"},"project":{"id":14307913,"name":"Marketing Website"},"task":{"id":8083365,"name":"Graphic Design"},"user_assignment":{"id":125068553,"is_project_manager":true,"is_active":true,"budget":null,"created_at":"2017-06-26T22:32:52Z","updated_at":"2017-06-26T22:32:52Z","hourly_rate":100},"task_assignment":{"id":155502709,"billable":true,"is_active":true,"created_at":"2017-06-26T21:36:23Z","updated_at":"2017-06-26T21:36:23Z","hourly_rate":100,"budget":null},"hours":1,"rounded_hours":1,"notes":"Updated notes","created_at":"2017-06-27T16:01:23Z","updated_at":"2017-06-27T16:02:40Z","is_locked":false,"locked_reason":null,"is_closed":false,"is_billed":false,"timer_started_at":null,"started_time":null,"ended_time":null,"is_running":false,"invoice":null,"external_reference":null,"billable":true,"budgeted":true,"billable_rate":100,"cost_rate":50}`)
 	})
 
