@@ -210,7 +210,7 @@ func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}
 
 	defer func() {
 		// Drain up to 512 bytes and close the body to let the Transport reuse the connection
-		if _, err := io.CopyN(ioutil.Discard, resp.Body, 512); err != nil {
+		if _, err := io.CopyN(ioutil.Discard, resp.Body, 512); err != nil && err != io.EOF {
 			logrus.Error(err)
 		}
 
