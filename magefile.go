@@ -26,7 +26,7 @@ type (
 )
 
 var Aliases = map[string]interface{}{
-	"test":    Test.Unit,
+	"test": Test.Unit,
 }
 
 // Show dependencies, useful tips.
@@ -155,7 +155,6 @@ func getPackages() ([]string, error) {
 
 	return pkgPaths, nil
 }
-
 
 func test(args ...string) error {
 	a := []string{"test", "./...", "-test.short", "-race"}
