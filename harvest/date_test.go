@@ -91,8 +91,8 @@ func TestDate_UnmarshalJSONParse(t *testing.T) {
 
 func TestDate_UnmarshalJSON(t *testing.T) {
 	type foo struct {
-		ID   *int64 `json:"id"`
-		Date *harvest.Date  `json:"date"`
+		ID   *int64        `json:"id"`
+		Date *harvest.Date `json:"date"`
 	}
 
 	type args struct {
@@ -148,8 +148,8 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 
 func TestDate_EncodeValues(t *testing.T) {
 	type foo struct {
-		Query *string `url:"query,omitempty"`
-		Date  *harvest.Date   `url:"date,omitempty"`
+		Query *string       `url:"query,omitempty"`
+		Date  *harvest.Date `url:"date,omitempty"`
 	}
 
 	tests := []struct {
