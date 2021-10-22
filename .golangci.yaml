@@ -1,0 +1,89 @@
+linters:
+  enable:
+    - asciicheck
+    - bodyclose
+    - deadcode
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - funlen
+    - gci
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - goerr113
+    - gofmt
+    - gofumpt
+    - goheader
+    - goimports
+    - revive
+    - gomnd
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - nestif
+    - nlreturn
+    - noctx
+    - nolintlint
+    - paralleltest
+    - prealloc
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - structcheck
+    - stylecheck
+    - testpackage
+    - tparallel
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - whitespace
+    - wsl
+
+linters-settings:
+  govet:
+    check-shadowing: true
+    enable:
+      - fieldalignment
+  golint:
+    min-confidence: 0
+  wsl:
+    allow-cuddle-declarations: true
+  gci:
+    local-prefixes: gitlab.showpad.io/showpad/file-service
+  goimports:
+    local-prefixes: gitlab.showpad.io/showpad/file-service
+issues:
+  exclude:
+    - 'shadow: declaration of "err" shadows declaration at line'
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - funlen
+        - bodyclose
+        - dupl
+        - goerr113
+    - path: _test\.go
+      linters:
+        - govet
+      text: "fieldalignment:"
+    - linters:
+        - lll
+      source: "^//go:generate "

@@ -1,4 +1,4 @@
-package harvest
+package harvest_test
 
 import (
 	"encoding/json"
@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/becoded/go-harvest/harvest"
 	"github.com/google/go-querystring/query"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,22 +15,22 @@ import (
 func TestDate_String(t *testing.T) {
 	tests := []struct {
 		name  string
-		input Date
+		input harvest.Date
 		want  string
 	}{
 		{
 			name:  "2nd of January",
-			input: Date{Time: time.Date(2006, time.January, 2, 0, 0, 0, 0, time.Local)},
+			input: harvest.Date{Time: time.Date(2006, time.January, 2, 0, 0, 0, 0, time.Local)},
 			want:  "2006-01-02",
 		},
 		{
 			name:  "31th of December",
-			input: Date{Time: time.Date(2006, time.December, 31, 0, 0, 0, 0, time.Local)},
+			input: harvest.Date{Time: time.Date(2006, time.December, 31, 0, 0, 0, 0, time.Local)},
 			want:  "2006-12-31",
 		},
 		{
 			name:  "6th of May",
-			input: Date{Time: time.Date(2016, time.May, 6, 0, 0, 0, 0, time.Local)},
+			input: harvest.Date{Time: time.Date(2016, time.May, 6, 0, 0, 0, 0, time.Local)},
 			want:  "2016-05-06",
 		},
 	}
@@ -46,40 +47,40 @@ func TestDate_UnmarshalJSONParse(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want Date
+		want harvest.Date
 		err  error
 	}{
 		{
 			name: "2nd of January",
 			args: args{"2006-01-02"},
-			want: Date{Time: time.Date(2006, time.January, 2, 0, 0, 0, 0, time.Local)},
+			want: harvest.Date{Time: time.Date(2006, time.January, 2, 0, 0, 0, 0, time.Local)},
 			err:  nil,
 		},
 		{
 			name: "31th of December",
 			args: args{"2006-12-31"},
-			want: Date{Time: time.Date(2006, time.December, 31, 0, 0, 0, 0, time.Local)},
+			want: harvest.Date{Time: time.Date(2006, time.December, 31, 0, 0, 0, 0, time.Local)},
 			err:  nil,
 		},
 		{
 			name: "With quotes",
 			args: args{"\"2006-04-05\""},
-			want: Date{Time: time.Date(2006, time.April, 5, 0, 0, 0, 0, time.Local)},
+			want: harvest.Date{Time: time.Date(2006, time.April, 5, 0, 0, 0, 0, time.Local)},
 			err:  nil,
 		},
 		{
 			name: "empty",
 			args: args{""},
-			err:  DateParseError,
+			err:  harvest.DateParseError,
 		},
 		{
 			name: "Totally invalid",
 			args: args{"gibberish"},
-			err:  DateParseError,
+			err:  harvest.DateParseError,
 		},
 	}
 	for _, tt := range tests {
-		tm := Date{}
+		tm := harvest.Date{}
 		if gotErr := tm.UnmarshalJSON([]byte(tt.args.str)); gotErr != tt.err {
 			t.Errorf("%q. UnmarshalJSON() error = %v, response %v", tt.name, gotErr, tt.err)
 		} else if !tm.Equal(tt.want) {
@@ -91,7 +92,7 @@ func TestDate_UnmarshalJSONParse(t *testing.T) {
 func TestDate_UnmarshalJSON(t *testing.T) {
 	type foo struct {
 		ID   *int64 `json:"id"`
-		Date *Date  `json:"date"`
+		Date *harvest.Date  `json:"date"`
 	}
 
 	type args struct {
@@ -108,8 +109,8 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 			name: "Typical json",
 			args: args{`{"id": 123, "date": "2019-01-02"}`},
 			want: foo{
-				ID:   Int64(123),
-				Date: &Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
+				ID:   harvest.Int64(123),
+				Date: &harvest.Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
 			},
 			err: nil,
 		},
@@ -117,7 +118,7 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 			name: "null time",
 			args: args{`{"id": 123, "date": null}`},
 			want: foo{
-				ID:   Int64(123),
+				ID:   harvest.Int64(123),
 				Date: nil,
 			},
 			err: nil,
@@ -125,7 +126,7 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 		{
 			name: "Totally invalid",
 			args: args{`{"id": 123, "date": "gibberish"}`},
-			err:  DateParseError,
+			err:  harvest.DateParseError,
 		},
 	}
 
@@ -148,7 +149,7 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 func TestDate_EncodeValues(t *testing.T) {
 	type foo struct {
 		Query *string `url:"query,omitempty"`
-		Date  *Date   `url:"date,omitempty"`
+		Date  *harvest.Date   `url:"date,omitempty"`
 	}
 
 	tests := []struct {
@@ -159,8 +160,8 @@ func TestDate_EncodeValues(t *testing.T) {
 		{
 			name: "All fields filled in",
 			args: &foo{
-				Query: String("foo"),
-				Date:  &Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
+				Query: harvest.String("foo"),
+				Date:  &harvest.Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
 			},
 			want: url.Values{
 				"query": []string{"foo"},
@@ -170,7 +171,7 @@ func TestDate_EncodeValues(t *testing.T) {
 		{
 			name: "No query",
 			args: &foo{
-				Date: &Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
+				Date: &harvest.Date{Time: time.Date(2019, time.January, 2, 0, 0, 0, 0, time.Local)},
 			},
 			want: url.Values{
 				"date": []string{"2019-01-02"},
@@ -179,7 +180,7 @@ func TestDate_EncodeValues(t *testing.T) {
 		{
 			name: "No date",
 			args: &foo{
-				Query: String("foo"),
+				Query: harvest.String("foo"),
 			},
 			want: url.Values{
 				"query": []string{"foo"},
