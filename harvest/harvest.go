@@ -19,10 +19,12 @@ import (
 )
 
 const (
-	libraryVersion   = "1"
-	defaultBaseURL   = "https://api.harvestapp.com/v2/"
-	userAgent        = "becoded/go-harvest/v" + libraryVersion
-	defaultMediaType = "application/json"
+	LibraryVersion   = "1"
+	DefaultBaseURL   = "https://api.harvestapp.com/v2/"
+	UserAgent        = "becoded/go-harvest/v" + LibraryVersion
+	DefaultMediaType = "application/json"
+	baseDecimal      = 10
+	bitSize64        = 64
 )
 
 // A HarvestClient manages communication with the Harvest API.
@@ -33,7 +35,7 @@ type HarvestClient struct {
 	// BaseURL should always be specified with a trailing slash.
 	BaseURL *url.URL
 
-	AccountId string
+	AccountID string
 
 	// User agent used when communicating with the Harvest API.
 	UserAgent string
@@ -50,7 +52,7 @@ type HarvestClient struct {
 	Invoice   *InvoiceService
 	Timesheet *TimesheetService
 	Role      *RoleService
-	//Retainer	*RetainerService
+	// Retainer	*RetainerService
 }
 
 type service struct {
@@ -104,6 +106,7 @@ func addOptions(s string, opt interface{}) (string, error) {
 	}
 
 	u.RawQuery = qs.Encode()
+
 	return u.String(), nil
 }
 
@@ -115,9 +118,10 @@ func NewHarvestClient(httpClient *http.Client) *HarvestClient {
 	if httpClient == nil {
 		httpClient = &http.Client{}
 	}
-	baseURL, _ := url.Parse(defaultBaseURL)
 
-	c := &HarvestClient{client: httpClient, BaseURL: baseURL, UserAgent: userAgent}
+	baseURL, _ := url.Parse(DefaultBaseURL)
+
+	c := &HarvestClient{client: httpClient, BaseURL: baseURL, UserAgent: UserAgent}
 	c.common.client = c
 	c.Client = (*ClientService)(&c.common)
 	c.Company = (*CompanyService)(&c.common)
@@ -137,41 +141,49 @@ func NewHarvestClient(httpClient *http.Client) *HarvestClient {
 // Relative URLs should always be specified without a preceding slash. If
 // specified, the value pointed to by body is JSON encoded and included as the
 // request body.
-func (c *HarvestClient) NewRequest(method, urlStr string, body interface{}) (*http.Request, error) {
+func (c *HarvestClient) NewRequest(
+	ctx context.Context,
+	method,
+	urlStr string,
+	body interface{},
+) (*http.Request, error) {
 	if !strings.HasSuffix(c.BaseURL.Path, "/") {
 		return nil, fmt.Errorf("BaseURL must have a trailing slash, but %q does not", c.BaseURL)
 	}
+
 	u, err := c.BaseURL.Parse(urlStr)
 	if err != nil {
 		return nil, err
 	}
 
 	var buf io.ReadWriter
+
 	if body != nil {
 		buf = new(bytes.Buffer)
 		enc := json.NewEncoder(buf)
 		enc.SetEscapeHTML(false)
+
 		err := enc.Encode(body)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	req, err := http.NewRequest(method, u.String(), buf)
+	req, err := http.NewRequestWithContext(ctx, method, u.String(), buf)
 	if err != nil {
 		return nil, err
 	}
 
 	if body != nil {
-		req.Header.Set("Content-Type", defaultMediaType)
+		req.Header.Set("Content-Type", DefaultMediaType)
 	}
 	// req.Header.Set("Accept", mediaTypeV3)
 	if c.UserAgent != "" {
 		req.Header.Set("User-Agent", c.UserAgent)
 	}
 
-	if c.AccountId != "" {
-		req.Header.Set("Harvest-Account-Id", c.AccountId)
+	if c.AccountID != "" {
+		req.Header.Set("Harvest-Account-ID", c.AccountID)
 	}
 
 	return req, nil
@@ -201,6 +213,7 @@ func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}
 		if e, ok := err.(*url.Error); ok {
 			if url, err := url.Parse(e.URL); err == nil {
 				e.URL = sanitizeURL(url).String()
+
 				return nil, e
 			}
 		}
@@ -232,8 +245,7 @@ func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}
 				return resp, err
 			}
 		} else {
-			err = json.NewDecoder(resp.Body).Decode(v)
-			if err == io.EOF {
+			if err = json.NewDecoder(resp.Body).Decode(v); err == io.EOF {
 				err = nil // ignore EOF errors caused by empty response body
 			}
 		}
@@ -273,13 +285,11 @@ type RateLimitError struct {
 
 func (r *RateLimitError) Error() string {
 	return "Rate limit"
-	/*return fmt.Sprintf("%v %v: %d %v %v",
-	r.Response.Request.Method, sanitizeURL(r.Response.Request.URL),
-	r.Response.StatusCode, r.Message, formatRateReset(r.Rate.Reset.Time.Sub(time.Now())))*/
 }
 
 // AbuseRateLimitError occurs when Harvest returns 429 Too many requests response with the
-// "documentation_url" field value equal to "https://help.getharvest.com/api-v2/introduction/overview/general/#rate-limiting".
+// "documentation_url" field value equal to
+// "https://help.getharvest.com/api-v2/introduction/overview/general/#rate-limiting".
 type AbuseRateLimitError struct {
 	Response *http.Response // HTTP response that caused this error
 	Message  string         `json:"message"` // error message
@@ -302,11 +312,13 @@ func sanitizeURL(uri *url.URL) *url.URL {
 	if uri == nil {
 		return nil
 	}
+
 	params := uri.Query()
 	if len(params.Get("client_secret")) > 0 {
 		params.Set("client_secret", "REDACTED")
 		uri.RawQuery = params.Encode()
 	}
+
 	return uri
 }
 
@@ -314,10 +326,14 @@ func sanitizeURL(uri *url.URL) *url.URL {
 An Error reports more details on an individual error in an ErrorResponse.
 */
 type Error struct {
-	Resource string `json:"resource"` // resource on which the error occurred
-	Field    string `json:"field"`    // field on which the error occurred
-	Code     string `json:"code"`     // validation error code
-	Message  string `json:"message"`  // Message describing the error. Errors with Code == "custom" will always have this set.
+	// resource on which the error occurred
+	Resource string `json:"resource"`
+	// field on which the error occurred
+	Field string `json:"field"`
+	// validation error code
+	Code string `json:"code"`
+	// Message describing the error. Errors with Code == "custom" will always have this set.
+	Message string `json:"message"`
 }
 
 func (e *Error) Error() string {
@@ -338,27 +354,32 @@ func CheckResponse(r *http.Response) error {
 	if c := r.StatusCode; 200 <= c && c <= 299 {
 		return nil
 	}
+
 	errorResponse := &ErrorResponse{Response: r}
+
 	data, err := ioutil.ReadAll(r.Body)
 	if err == nil && data != nil {
 		if err := json.Unmarshal(data, errorResponse); err != nil {
 			logrus.Error(err)
 		}
 	}
+
 	switch {
 	case r.StatusCode == http.StatusTooManyRequests:
 		abuseRateLimitError := &AbuseRateLimitError{
 			Response: errorResponse.Response,
 			Message:  errorResponse.Message,
 		}
+
 		if v := r.Header["Retry-After"]; len(v) > 0 {
 			// The "Retry-After" header value will be
 			// an integer which represents the number of seconds that one should
 			// wait before resuming making requests.
-			retryAfterSeconds, _ := strconv.ParseInt(v[0], 10, 64) // Error handling is noop.
+			retryAfterSeconds, _ := strconv.ParseInt(v[0], baseDecimal, bitSize64) // Error handling is noop.
 			retryAfter := time.Duration(retryAfterSeconds) * time.Second
 			abuseRateLimitError.RetryAfter = &retryAfter
 		}
+
 		return abuseRateLimitError
 	default:
 		return errorResponse

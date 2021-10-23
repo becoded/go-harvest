@@ -10,36 +10,57 @@ import (
 // Harvest API docs: https://help.getharvest.com/api-v2/estimates-api/estimates/estimate-messages/
 
 type EstimateMessage struct {
-	Id            *int64                      `json:"id,omitempty"`              // Unique ID for the message.
-	SentBy        *string                     `json:"sent_by,omitempty"`         // Name of the user that created the message.
-	SentByEmail   *string                     `json:"sent_by_email,omitempty"`   // Email of the user that created the message.
-	SentFrom      *string                     `json:"sent_from,omitempty"`       // Name of the user that the message was sent from.
-	SentFromEmail *string                     `json:"sent_from_email,omitempty"` // Email of the user that message was sent from.
-	Recipients    *[]EstimateMessageRecipient `json:"recipients,omitempty"`      // Array of estimate message recipients.
-	Subject       *string                     `json:"subject,omitempty"`         // The message subject.
-	Body          *string                     `json:"body,omitempty"`            // The message body.
-	SendMeACopy   *bool                       `json:"send_me_a_copy,omitempty"`  // Whether to email a copy of the message to the current user.
-	EventType     *bool                       `json:"event_type,omitempty"`      // The type of estimate event that occurred with the message: send, accept, decline, re-open, view, or invoice.
-	CreatedAt     *time.Time                  `json:"created_at,omitempty"`      // Date and time the message was created.
-	UpdatedAt     *time.Time                  `json:"updated_at,omitempty"`      // Date and time the message was last updated.
+	// Unique ID for the message.
+	ID *int64 `json:"id,omitempty"`
+	// Name of the user that created the message.
+	SentBy *string `json:"sent_by,omitempty"`
+	// Email of the user that created the message.
+	SentByEmail *string `json:"sent_by_email,omitempty"`
+	// Name of the user that the message was sent from.
+	SentFrom *string `json:"sent_from,omitempty"`
+	// Email of the user that message was sent from.
+	SentFromEmail *string `json:"sent_from_email,omitempty"`
+	// Array of estimate message recipients.
+	Recipients *[]EstimateMessageRecipient `json:"recipients,omitempty"`
+	// The message subject.
+	Subject *string `json:"subject,omitempty"`
+	// The message body.
+	Body *string `json:"body,omitempty"`
+	// Whether to email a copy of the message to the current user.
+	SendMeACopy *bool `json:"send_me_a_copy,omitempty"`
+	// The type of estimate event that occurred with the message: send, accept, decline, re-open, view, or invoice.
+	EventType *bool `json:"event_type,omitempty"`
+	// Date and time the message was created.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	// Date and time the message was last updated.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 type EstimateMessageRecipient struct {
-	Name  *string `json:"name,omitempty"`  // Name of the message recipient.
-	Email *string `json:"email,omitempty"` // Email of the message recipient.
+	// Name of the message recipient.
+	Name *string `json:"name,omitempty"`
+	// Email of the message recipient.
+	Email *string `json:"email,omitempty"`
 }
 
 type EstimateMessageCreateRequest struct {
-	Recipients  *[]EstimateMessageRecipientCreateRequest `json:"recipients,omitempty"`     // required	Array of recipient parameters. See below for details.
-	Subject     *string                                  `json:"subject,omitempty"`        // optional	The message subject.
-	Body        *string                                  `json:"body,omitempty"`           // optional	The message body.
-	SendMeACopy *bool                                    `json:"send_me_a_copy,omitempty"` // optional	If set to true, a copy of the message email will be sent to the current user. Defaults to false.
-	EventType   *string                                  `json:"event_type,omitempty"`     // optional	If provided, runs an event against the estimate. Options: “accept”, “decline”, “re-open”, or “send”.
+	// required	Array of recipient parameters. See below for details.
+	Recipients *[]EstimateMessageRecipientCreateRequest `json:"recipients,omitempty"`
+	// optional	The message subject.
+	Subject *string `json:"subject,omitempty"`
+	// optional	The message body.
+	Body *string `json:"body,omitempty"`
+	// optional	If set to true, a copy of the message email will be sent to the current user. Defaults to false.
+	SendMeACopy *bool `json:"send_me_a_copy,omitempty"`
+	// optional	If provided, runs an event against the estimate. Options: “accept”, “decline”, “re-open”, or “send”.
+	EventType *string `json:"event_type,omitempty"`
 }
 
 type EstimateMessageRecipientCreateRequest struct {
-	Name  *string `json:"name,omitempty"` // optional	Name of the message recipient.
-	Email *string `json:"email"`          // required	Email of the message recipient.
+	// optional	Name of the message recipient.
+	Name *string `json:"name,omitempty"`
+	// required	Email of the message recipient.
+	Email *string `json:"email"`
 }
 
 type EstimateMessageList struct {
@@ -66,19 +87,25 @@ type EstimateEventTypeRequest struct {
 	EventType string `json:"event_type"`
 }
 
-func (s *EstimateService) ListEstimateMessages(ctx context.Context, estimateId int64, opt *EstimateMessageListOptions) (*EstimateList, *http.Response, error) {
-	u := fmt.Sprintf("estimates/%d/messages", estimateId)
+func (s *EstimateService) ListEstimateMessages(
+	ctx context.Context,
+	estimateID int64,
+	opt *EstimateMessageListOptions,
+) (*EstimateList, *http.Response, error) {
+	u := fmt.Sprintf("estimates/%d/messages", estimateID)
+
 	u, err := addOptions(u, opt)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	estimateList := new(EstimateList)
+
 	resp, err := s.client.Do(ctx, req, &estimateList)
 	if err != nil {
 		return nil, resp, err
@@ -87,15 +114,19 @@ func (s *EstimateService) ListEstimateMessages(ctx context.Context, estimateId i
 	return estimateList, resp, nil
 }
 
-func (s *EstimateService) CreateEstimateMessage(ctx context.Context, data *EstimateMessageCreateRequest) (*EstimateMessage, *http.Response, error) {
+func (s *EstimateService) CreateEstimateMessage(
+	ctx context.Context,
+	data *EstimateMessageCreateRequest,
+) (*EstimateMessage, *http.Response, error) {
 	u := "invoices"
 
-	req, err := s.client.NewRequest("POST", u, data)
+	req, err := s.client.NewRequest(ctx, "POST", u, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	estimateMessage := new(EstimateMessage)
+
 	resp, err := s.client.Do(ctx, req, estimateMessage)
 	if err != nil {
 		return nil, resp, err
@@ -104,9 +135,14 @@ func (s *EstimateService) CreateEstimateMessage(ctx context.Context, data *Estim
 	return estimateMessage, resp, nil
 }
 
-func (s *EstimateService) DeleteEstimateMessage(ctx context.Context, estimateId, estimateMessageId int64) (*http.Response, error) {
-	u := fmt.Sprintf("estimates/%d/messages/%d", estimateId, estimateMessageId)
-	req, err := s.client.NewRequest("DELETE", u, nil)
+func (s *EstimateService) DeleteEstimateMessage(
+	ctx context.Context,
+	estimateID,
+	estimateMessageID int64,
+) (*http.Response, error) {
+	u := fmt.Sprintf("estimates/%d/messages/%d", estimateID, estimateMessageID)
+
+	req, err := s.client.NewRequest(ctx, "DELETE", u, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -114,31 +150,48 @@ func (s *EstimateService) DeleteEstimateMessage(ctx context.Context, estimateId,
 	return s.client.Do(ctx, req, nil)
 }
 
-func (s *EstimateService) MarkAsSent(ctx context.Context, estimateId int64) (*EstimateMessage, *http.Response, error) {
-	return s.SendEvent(ctx, estimateId, &EstimateEventTypeRequest{EventType: "send"})
-
+func (s *EstimateService) MarkAsSent(
+	ctx context.Context,
+	estimateID int64,
+) (*EstimateMessage, *http.Response, error) {
+	return s.SendEvent(ctx, estimateID, &EstimateEventTypeRequest{EventType: "send"})
 }
 
-func (s *EstimateService) MarkAsAccepted(ctx context.Context, estimateId int64) (*EstimateMessage, *http.Response, error) {
-	return s.SendEvent(ctx, estimateId, &EstimateEventTypeRequest{EventType: "accept"})
+func (s *EstimateService) MarkAsAccepted(
+	ctx context.Context,
+	estimateID int64,
+) (*EstimateMessage, *http.Response, error) {
+	return s.SendEvent(ctx, estimateID, &EstimateEventTypeRequest{EventType: "accept"})
 }
 
-func (s *EstimateService) MarkAsDeclined(ctx context.Context, estimateId int64) (*EstimateMessage, *http.Response, error) {
-	return s.SendEvent(ctx, estimateId, &EstimateEventTypeRequest{EventType: "decline"})
+func (s *EstimateService) MarkAsDeclined(
+	ctx context.Context,
+	estimateID int64,
+) (*EstimateMessage, *http.Response, error) {
+	return s.SendEvent(ctx, estimateID, &EstimateEventTypeRequest{EventType: "decline"})
 }
 
-func (s *EstimateService) MarkAsReopen(ctx context.Context, estimateId int64) (*EstimateMessage, *http.Response, error) {
-	return s.SendEvent(ctx, estimateId, &EstimateEventTypeRequest{EventType: "re-open"})
+func (s *EstimateService) MarkAsReopen(
+	ctx context.Context,
+	estimateID int64,
+) (*EstimateMessage, *http.Response, error) {
+	return s.SendEvent(ctx, estimateID, &EstimateEventTypeRequest{EventType: "re-open"})
 }
 
-func (s *EstimateService) SendEvent(ctx context.Context, estimateId int64, data *EstimateEventTypeRequest) (*EstimateMessage, *http.Response, error) {
-	u := fmt.Sprintf("estimates/%d/messages", estimateId)
-	req, err := s.client.NewRequest("POST", u, data)
+func (s *EstimateService) SendEvent(
+	ctx context.Context,
+	estimateID int64,
+	data *EstimateEventTypeRequest,
+) (*EstimateMessage, *http.Response, error) {
+	u := fmt.Sprintf("estimates/%d/messages", estimateID)
+
+	req, err := s.client.NewRequest(ctx, "POST", u, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	estimateMessage := new(EstimateMessage)
+
 	resp, err := s.client.Do(ctx, req, estimateMessage)
 	if err != nil {
 		return nil, resp, err

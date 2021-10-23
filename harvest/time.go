@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var TimeParseError = errors.New(`TimeParseError: should be a string formatted as "15:04"`)
+var ErrTimeParse = errors.New(`ErrTimeParse: should be a string formatted as "15:04"`)
 
 type Time struct {
 	time.Time
@@ -28,24 +28,28 @@ func (t *Time) UnmarshalJSON(data []byte) (err error) {
 	for _, layout := range layouts {
 		resp, err := time.ParseInLocation(layout, str, time.Local)
 		if err == nil {
-			(*t).Time = resp
+			t.Time = resp
+
 			return nil
 		}
 	}
-	return TimeParseError
+
+	return ErrTimeParse
 }
 
 func (t *Time) MarshalJSON() ([]byte, error) {
 	buffer := bytes.NewBufferString(fmt.Sprintf("\"%s\"", t.String()))
+
 	return buffer.Bytes(), nil
 }
 
 func (t *Time) EncodeValues(key string, v *url.Values) error {
 	v.Add(key, t.String())
+
 	return nil
 }
 
-// Equal reports whether t and u are equal based on time.Equal
+// Equal reports whether t and u are equal based on time.Equal.
 func (t Time) Equal(u Time) bool {
 	return t.Time.Equal(u.Time)
 }

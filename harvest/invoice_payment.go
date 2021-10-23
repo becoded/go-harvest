@@ -10,20 +10,30 @@ import (
 // Harvest API docs: https://help.getharvest.com/api-v2/invoices-api/invoices/invoice-payments/
 
 type InvoicePayment struct {
-	Id              *int64          `json:"id,omitempty"`                // Unique ID for the payment.
-	Amount          *string         `json:"amount,omitempty"`            // The amount of the payment.
-	PaidAt          *time.Time      `json:"paid_at,omitempty"`           // Date and time the payment was made.
-	RecordedBy      *string         `json:"recorded_by,omitempty"`       // The name of the person who recorded the payment.
-	RecordedByEmail *string         `json:"recorded_by_email,omitempty"` // The email of the person who recorded the payment.
-	Notes           *string         `json:"notes,omitempty"`             // Any notes associated with the payment.
-	TransactionId   *string         `json:"transaction_id,omitempty"`    // Either the card authorization or PayPal transaction ID.
-	PaymentGateway  *PaymentGateway `json:"payment_gateway,omitempty"`   // The payment gateway id and name used to process the payment.
-	CreatedAt       *time.Time      `json:"created_at,omitempty"`        // Date and time the payment was recorded.
-	UpdatedAt       *time.Time      `json:"updated_at,omitempty"`        // Date and time the payment was last updated.
+	// Unique ID for the payment.
+	ID *int64 `json:"id,omitempty"`
+	// The amount of the payment.
+	Amount *string `json:"amount,omitempty"`
+	// Date and time the payment was made.
+	PaidAt *time.Time `json:"paid_at,omitempty"`
+	// The name of the person who recorded the payment.
+	RecordedBy *string `json:"recorded_by,omitempty"`
+	// The email of the person who recorded the payment.
+	RecordedByEmail *string `json:"recorded_by_email,omitempty"`
+	// Any notes associated with the payment.
+	Notes *string `json:"notes,omitempty"`
+	// Either the card authorization or PayPal transaction ID.
+	TransactionID *string `json:"transaction_id,omitempty"`
+	// The payment gateway id and name used to process the payment.
+	PaymentGateway *PaymentGateway `json:"payment_gateway,omitempty"`
+	// Date and time the payment was recorded.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	// Date and time the payment was last updated.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 type PaymentGateway struct {
-	Id   *int64  `json:"id,omitempty"`
+	ID   *int64  `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
 }
 
@@ -34,10 +44,14 @@ type InvoicePaymentList struct {
 }
 
 type InvoicePaymentRequest struct {
-	Amount   *float64   `json:"amount"`              // required The amount of the payment.
-	PaidAt   *time.Time `json:"paid_at,omitempty"`   // optional Date and time the payment was made. Pass either paid_at or paid_date, but not both.
-	PaidDate *Date      `json:"paid_date,omitempty"` // optional	Date the payment was made. Pass either paid_at or paid_date, but not both.
-	Notes    *string    `json:"notes,omitempty"`     // optional Any notes to be associated with the payment.
+	// required The amount of the payment.
+	Amount *float64 `json:"amount"`
+	// optional Date and time the payment was made. Pass either paid_at or paid_date, but not both.
+	PaidAt *time.Time `json:"paid_at,omitempty"`
+	// optional	Date the payment was made. Pass either paid_at or paid_date, but not both.
+	PaidDate *Date `json:"paid_date,omitempty"`
+	// optional Any notes to be associated with the payment.
+	Notes *string `json:"notes,omitempty"`
 }
 
 func (p InvoicePayment) String() string {
@@ -59,19 +73,25 @@ type InvoicePaymentListOptions struct {
 	ListOptions
 }
 
-func (s *InvoiceService) ListPayments(ctx context.Context, invoiceId int64, opt *InvoicePaymentListOptions) (*InvoicePaymentList, *http.Response, error) {
-	u := fmt.Sprintf("invoices/%d/payments", invoiceId)
+func (s *InvoiceService) ListPayments(
+	ctx context.Context,
+	invoiceID int64,
+	opt *InvoicePaymentListOptions,
+) (*InvoicePaymentList, *http.Response, error) {
+	u := fmt.Sprintf("invoices/%d/payments", invoiceID)
+
 	u, err := addOptions(u, opt)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	invoicePaymentList := new(InvoicePaymentList)
+
 	resp, err := s.client.Do(ctx, req, &invoicePaymentList)
 	if err != nil {
 		return nil, resp, err
@@ -80,15 +100,20 @@ func (s *InvoiceService) ListPayments(ctx context.Context, invoiceId int64, opt 
 	return invoicePaymentList, resp, nil
 }
 
-func (s *InvoiceService) CreatePayment(ctx context.Context, invoiceId int64, data *InvoicePaymentRequest) (*InvoicePayment, *http.Response, error) {
-	u := fmt.Sprintf("invoices/%d/payments", invoiceId)
+func (s *InvoiceService) CreatePayment(
+	ctx context.Context,
+	invoiceID int64,
+	data *InvoicePaymentRequest,
+) (*InvoicePayment, *http.Response, error) {
+	u := fmt.Sprintf("invoices/%d/payments", invoiceID)
 
-	req, err := s.client.NewRequest("POST", u, data)
+	req, err := s.client.NewRequest(ctx, "POST", u, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	invoicePayment := new(InvoicePayment)
+
 	resp, err := s.client.Do(ctx, req, invoicePayment)
 	if err != nil {
 		return nil, resp, err
@@ -97,9 +122,14 @@ func (s *InvoiceService) CreatePayment(ctx context.Context, invoiceId int64, dat
 	return invoicePayment, resp, nil
 }
 
-func (s *InvoiceService) DeleteInvoicePayment(ctx context.Context, invoiceId, invoicePaymentId int64) (*http.Response, error) {
-	u := fmt.Sprintf("invoices/%d/payments/%d", invoiceId, invoicePaymentId)
-	req, err := s.client.NewRequest("DELETE", u, nil)
+func (s *InvoiceService) DeleteInvoicePayment(
+	ctx context.Context,
+	invoiceID,
+	invoicePaymentID int64,
+) (*http.Response, error) {
+	u := fmt.Sprintf("invoices/%d/payments/%d", invoiceID, invoicePaymentID)
+
+	req, err := s.client.NewRequest(ctx, "DELETE", u, nil)
 	if err != nil {
 		return nil, err
 	}

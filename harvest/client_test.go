@@ -1,4 +1,4 @@
-package harvest
+package harvest_test
 
 import (
 	"context"
@@ -7,12 +7,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestClientService_List(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/clients", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
@@ -20,7 +23,7 @@ func TestClientService_List(t *testing.T) {
 		fmt.Fprint(w, `{"clients":[{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"},{"id":2,"name":"Client 2","is_active":false,"address":"Address line 2","statement_key":"0987654321","created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z","currency":"EUR"}],"per_page":100,"total_pages":1,"total_entries":2,"next_page":null,"previous_page":null,"page":1,"links":{"first":"https://api.harvestapp.com/v2/clients?page=1&per_page=100","next":null,"previous":null,"last":"https://api.harvestapp.com/v2/clients?page=1&per_page=100"}}`)
 	})
 
-	clientList, _, err := service.Client.List(context.Background(), &ClientListOptions{})
+	clientList, _, err := service.Client.List(context.Background(), &harvest.ClientListOptions{})
 	assert.NoError(t, err)
 
 	createdOne := time.Date(
@@ -32,37 +35,38 @@ func TestClientService_List(t *testing.T) {
 	updatedTwo := time.Date(
 		2018, 4, 30, 12, 13, 14, 0, time.UTC)
 
-	want := &ClientList{
-		Clients: []*Client{
+	want := &harvest.ClientList{
+		Clients: []*harvest.Client{
 			{
-				Id:        Int64(1),
-				Name:      String("Client 1"),
-				IsActive:  Bool(true),
-				Address:   String("Address line 1"),
-				Currency:  String("EUR"),
+				ID:        harvest.Int64(1),
+				Name:      harvest.String("Client 1"),
+				IsActive:  harvest.Bool(true),
+				Address:   harvest.String("Address line 1"),
+				Currency:  harvest.String("EUR"),
 				CreatedAt: &createdOne,
 				UpdatedAt: &updatedOne,
 			}, {
-				Id:        Int64(2),
-				Name:      String("Client 2"),
-				IsActive:  Bool(false),
-				Address:   String("Address line 2"),
-				Currency:  String("EUR"),
+				ID:        harvest.Int64(2),
+				Name:      harvest.String("Client 2"),
+				IsActive:  harvest.Bool(false),
+				Address:   harvest.String("Address line 2"),
+				Currency:  harvest.String("EUR"),
 				CreatedAt: &createdTwo,
 				UpdatedAt: &updatedTwo,
-			}},
-		Pagination: Pagination{
-			PerPage:      Int(100),
-			TotalPages:   Int(1),
-			TotalEntries: Int(2),
+			},
+		},
+		Pagination: harvest.Pagination{
+			PerPage:      harvest.Int(100),
+			TotalPages:   harvest.Int(1),
+			TotalEntries: harvest.Int(2),
 			NextPage:     nil,
 			PreviousPage: nil,
-			Page:         Int(1),
-			Links: &PageLinks{
-				First:    String("https://api.harvestapp.com/v2/clients?page=1&per_page=100"),
+			Page:         harvest.Int(1),
+			Links: &harvest.PageLinks{
+				First:    harvest.String("https://api.harvestapp.com/v2/clients?page=1&per_page=100"),
 				Next:     nil,
 				Previous: nil,
-				Last:     String("https://api.harvestapp.com/v2/clients?page=1&per_page=100"),
+				Last:     harvest.String("https://api.harvestapp.com/v2/clients?page=1&per_page=100"),
 			},
 		},
 	}
@@ -71,8 +75,10 @@ func TestClientService_List(t *testing.T) {
 }
 
 func TestClientService_Get(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/clients/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
@@ -88,12 +94,12 @@ func TestClientService_Get(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &Client{
-		Id:        Int64(1),
-		Name:      String("Client 1"),
-		IsActive:  Bool(true),
-		Address:   String("Address line 1"),
-		Currency:  String("EUR"),
+	want := &harvest.Client{
+		ID:        harvest.Int64(1),
+		Name:      harvest.String("Client 1"),
+		IsActive:  harvest.Bool(true),
+		Address:   harvest.String("Address line 1"),
+		Currency:  harvest.String("EUR"),
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
 	}
@@ -102,8 +108,10 @@ func TestClientService_Get(t *testing.T) {
 }
 
 func TestClientService_CreateClient(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/clients", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
@@ -112,11 +120,11 @@ func TestClientService_CreateClient(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"}`)
 	})
 
-	client, _, err := service.Client.Create(context.Background(), &ClientCreateRequest{
-		Name:     String("Client new"),
-		IsActive: Bool(true),
-		Address:  String("Address line 1"),
-		Currency: String("EUR"),
+	client, _, err := service.Client.Create(context.Background(), &harvest.ClientCreateRequest{
+		Name:     harvest.String("Client new"),
+		IsActive: harvest.Bool(true),
+		Address:  harvest.String("Address line 1"),
+		Currency: harvest.String("EUR"),
 	})
 	assert.NoError(t, err)
 
@@ -125,12 +133,12 @@ func TestClientService_CreateClient(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &Client{
-		Id:        Int64(1),
-		Name:      String("Client 1"),
-		IsActive:  Bool(true),
-		Address:   String("Address line 1"),
-		Currency:  String("EUR"),
+	want := &harvest.Client{
+		ID:        harvest.Int64(1),
+		Name:      harvest.String("Client 1"),
+		IsActive:  harvest.Bool(true),
+		Address:   harvest.String("Address line 1"),
+		Currency:  harvest.String("EUR"),
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
 	}
@@ -139,8 +147,10 @@ func TestClientService_CreateClient(t *testing.T) {
 }
 
 func TestClientService_UpdateClient(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/clients/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
@@ -149,11 +159,11 @@ func TestClientService_UpdateClient(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"}`)
 	})
 
-	client, _, err := service.Client.Update(context.Background(), 1, &ClientUpdateRequest{
-		Name:     String("Client new"),
-		IsActive: Bool(true),
-		Address:  String("Address line 1"),
-		Currency: String("EUR"),
+	client, _, err := service.Client.Update(context.Background(), 1, &harvest.ClientUpdateRequest{
+		Name:     harvest.String("Client new"),
+		IsActive: harvest.Bool(true),
+		Address:  harvest.String("Address line 1"),
+		Currency: harvest.String("EUR"),
 	})
 	if err != nil {
 		t.Errorf("UpdateClient returned error: %v", err)
@@ -164,12 +174,12 @@ func TestClientService_UpdateClient(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &Client{
-		Id:        Int64(1),
-		Name:      String("Client 1"),
-		IsActive:  Bool(true),
-		Address:   String("Address line 1"),
-		Currency:  String("EUR"),
+	want := &harvest.Client{
+		ID:        harvest.Int64(1),
+		Name:      harvest.String("Client 1"),
+		IsActive:  harvest.Bool(true),
+		Address:   harvest.String("Address line 1"),
+		Currency:  harvest.String("EUR"),
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
 	}
@@ -178,8 +188,10 @@ func TestClientService_UpdateClient(t *testing.T) {
 }
 
 func TestClientService_DeleteClient(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/clients/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "DELETE")

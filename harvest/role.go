@@ -14,9 +14,9 @@ import (
 type RoleService service
 
 type Role struct {
-	Id        *int64     `json:"id,omitempty"`         // Unique ID for the role.
+	ID        *int64     `json:"id,omitempty"`         // Unique ID for the role.
 	Name      *string    `json:"name,omitempty"`       // The name of the role.
-	UserIds   *[]int64   `json:"user_ids,omitempty"`   // of integers	The IDs of the users assigned to this role.
+	UserIDs   *[]int64   `json:"user_ids,omitempty"`   // of integers	The IDs of the users assigned to this role.
 	CreatedAt *time.Time `json:"created_at,omitempty"` // Date and time the role was created.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"` // Date and time the role was last updated.
 }
@@ -51,17 +51,19 @@ type RoleUpdateRequest struct {
 
 func (s *RoleService) List(ctx context.Context, opt *RoleListOptions) (*RoleList, *http.Response, error) {
 	u := "roles"
+
 	u, err := addOptions(u, opt)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	roleList := new(RoleList)
+
 	resp, err := s.client.Do(ctx, req, &roleList)
 	if err != nil {
 		return nil, resp, err
@@ -70,14 +72,16 @@ func (s *RoleService) List(ctx context.Context, opt *RoleListOptions) (*RoleList
 	return roleList, resp, nil
 }
 
-func (s *RoleService) Get(ctx context.Context, roleId int64) (*Role, *http.Response, error) {
-	u := fmt.Sprintf("roles/%d", roleId)
-	req, err := s.client.NewRequest("GET", u, nil)
+func (s *RoleService) Get(ctx context.Context, roleID int64) (*Role, *http.Response, error) {
+	u := fmt.Sprintf("roles/%d", roleID)
+
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	role := new(Role)
+
 	resp, err := s.client.Do(ctx, req, role)
 	if err != nil {
 		return nil, resp, err
@@ -89,12 +93,13 @@ func (s *RoleService) Get(ctx context.Context, roleId int64) (*Role, *http.Respo
 func (s *RoleService) Create(ctx context.Context, data *RoleCreateRequest) (*Role, *http.Response, error) {
 	u := "roles"
 
-	req, err := s.client.NewRequest("POST", u, data)
+	req, err := s.client.NewRequest(ctx, "POST", u, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	role := new(Role)
+
 	resp, err := s.client.Do(ctx, req, role)
 	if err != nil {
 		return nil, resp, err
@@ -103,15 +108,20 @@ func (s *RoleService) Create(ctx context.Context, data *RoleCreateRequest) (*Rol
 	return role, resp, nil
 }
 
-func (s *RoleService) Update(ctx context.Context, roleId int64, data *RoleUpdateRequest) (*Role, *http.Response, error) {
-	u := fmt.Sprintf("roles/%d", roleId)
+func (s *RoleService) Update(
+	ctx context.Context,
+	roleID int64,
+	data *RoleUpdateRequest,
+) (*Role, *http.Response, error) {
+	u := fmt.Sprintf("roles/%d", roleID)
 
-	req, err := s.client.NewRequest("PATCH", u, data)
+	req, err := s.client.NewRequest(ctx, "PATCH", u, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	role := new(Role)
+
 	resp, err := s.client.Do(ctx, req, role)
 	if err != nil {
 		return nil, resp, err
@@ -120,9 +130,10 @@ func (s *RoleService) Update(ctx context.Context, roleId int64, data *RoleUpdate
 	return role, resp, nil
 }
 
-func (s *RoleService) Delete(ctx context.Context, roleId int64) (*http.Response, error) {
-	u := fmt.Sprintf("roles/%d", roleId)
-	req, err := s.client.NewRequest("DELETE", u, nil)
+func (s *RoleService) Delete(ctx context.Context, roleID int64) (*http.Response, error) {
+	u := fmt.Sprintf("roles/%d", roleID)
+
+	req, err := s.client.NewRequest(ctx, "DELETE", u, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -21,6 +21,7 @@ func Stringify(message interface{}) string {
 	var buf bytes.Buffer
 	v := reflect.ValueOf(message)
 	stringifyValue(&buf, v)
+
 	return buf.String()
 }
 
@@ -44,6 +45,7 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 		if _, err := w.Write([]byte{'['}); err != nil {
 			logrus.Error(err)
 		}
+
 		for i := 0; i < v.Len(); i++ {
 			if i > 0 {
 				if _, err := w.Write([]byte{' '}); err != nil {
@@ -57,6 +59,7 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 		if _, err := w.Write([]byte{']'}); err != nil {
 			logrus.Error(err)
 		}
+
 		return
 	case reflect.Struct:
 		if v.Type().Name() != "" {
@@ -69,9 +72,11 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 		switch v.Type() {
 		case dateType:
 			fmt.Fprintf(w, "{%s}", v.Interface())
+
 			return
 		case dateTimeType:
 			fmt.Fprintf(w, "{%s}", v.Interface())
+
 			return
 		}
 
@@ -80,11 +85,13 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 		}
 
 		var sep bool
+
 		for i := 0; i < v.NumField(); i++ {
 			fv := v.Field(i)
 			if fv.Kind() == reflect.Ptr && fv.IsNil() {
 				continue
 			}
+
 			if fv.Kind() == reflect.Slice && fv.IsNil() {
 				continue
 			}
@@ -100,9 +107,11 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 			if _, err := w.Write([]byte(v.Type().Field(i).Name)); err != nil {
 				logrus.Error(err)
 			}
+
 			if _, err := w.Write([]byte{':'}); err != nil {
 				logrus.Error(err)
 			}
+
 			stringifyValue(w, fv)
 		}
 

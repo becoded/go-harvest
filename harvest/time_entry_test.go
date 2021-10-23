@@ -1,4 +1,4 @@
-package harvest
+package harvest_test
 
 import (
 	"context"
@@ -8,12 +8,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTimesheetService_CreateTimeEntryViaDuration(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
@@ -24,13 +27,13 @@ func TestTimesheetService_CreateTimeEntryViaDuration(t *testing.T) {
 
 	spentDate := time.Date(2018, 3, 30, 22, 24, 10, 0, time.UTC)
 
-	taskList, _, err := service.Timesheet.CreateTimeEntryViaDuration(context.Background(), &TimeEntryCreateViaDuration{
-		UserId:    Int64(1),
-		ProjectId: Int64(2),
-		TaskId:    Int64(3),
-		SpentDate: DateP(Date{spentDate}),
-		Hours:     Float64(1.2),
-		Notes:     String("Writing tests"),
+	taskList, _, err := service.Timesheet.CreateTimeEntryViaDuration(context.Background(), &harvest.TimeEntryCreateViaDuration{
+		UserID:    harvest.Int64(1),
+		ProjectID: harvest.Int64(2),
+		TaskID:    harvest.Int64(3),
+		SpentDate: harvest.DateP(harvest.Date{spentDate}),
+		Hours:     harvest.Float64(1.2),
+		Notes:     harvest.String("Writing tests"),
 	})
 	if err != nil {
 		t.Errorf("CreateTimeEntryViaDuration task returned error: %v", err)
@@ -41,8 +44,8 @@ func TestTimesheetService_CreateTimeEntryViaDuration(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &TimeEntry{
-		Id:                Int64(1),
+	want := &harvest.TimeEntry{
+		ID:                harvest.Int64(1),
 		SpentDate:         nil,
 		User:              nil,
 		UserAssignment:    nil,
@@ -76,8 +79,10 @@ func TestTimesheetService_CreateTimeEntryViaDuration(t *testing.T) {
 }
 
 func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	// https://help.getharvest.com/api-v2/timesheets-api/timesheets/time-entries/#create-a-time-entry-via-start-and-end-time
 
@@ -90,14 +95,14 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 
 	spentDate := time.Date(2017, 3, 21, 22, 24, 10, 0, time.UTC)
 
-	taskList, _, err := service.Timesheet.CreateTimeEntryViaStartEndTime(context.Background(), &TimeEntryCreateViaStartEndTime{
-		UserId:      Int64(1782959),
-		ProjectId:   Int64(14307913),
-		TaskId:      Int64(8083365),
-		SpentDate:   DateP(Date{spentDate}),
-		StartedTime: TimeP(Time{time.Date(0, 1, 1, 8, 00, 00, 0, time.UTC)}),
-		EndedTime:   TimeP(Time{time.Date(0, 1, 1, 9, 00, 00, 0, time.UTC)}),
-		Notes:       String("Writing tests"),
+	taskList, _, err := service.Timesheet.CreateTimeEntryViaStartEndTime(context.Background(), &harvest.TimeEntryCreateViaStartEndTime{
+		UserID:      harvest.Int64(1782959),
+		ProjectID:   harvest.Int64(14307913),
+		TaskID:      harvest.Int64(8083365),
+		SpentDate:   harvest.DateP(harvest.Date{spentDate}),
+		StartedTime: harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 8, 0o0, 0o0, 0, time.UTC)}),
+		EndedTime:   harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 9, 0o0, 0o0, 0, time.UTC)}),
+		Notes:       harvest.String("Writing tests"),
 	})
 	if err != nil {
 		t.Errorf("CreateTimeEntry task returned error: %v", err)
@@ -108,8 +113,8 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &TimeEntry{
-		Id:        Int64(1),
+	want := &harvest.TimeEntry{
+		ID:        harvest.Int64(1),
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
 	}
@@ -118,8 +123,10 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 }
 
 func TestTimesheetService_DeleteTimeEntry(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/time_entries/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "DELETE")
@@ -135,8 +142,10 @@ func TestTimesheetService_DeleteTimeEntry(t *testing.T) {
 }
 
 func TestTimesheetService_GetTimeEntry(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/time_entries/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
@@ -154,8 +163,8 @@ func TestTimesheetService_GetTimeEntry(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &TimeEntry{
-		Id:        Int64(1),
+	want := &harvest.TimeEntry{
+		ID:        harvest.Int64(1),
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
 	}
@@ -164,8 +173,10 @@ func TestTimesheetService_GetTimeEntry(t *testing.T) {
 }
 
 func TestTimesheetService_ListTimeEntries(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
@@ -422,252 +433,251 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 }`)
 	})
 
-	taskList, _, err := service.Timesheet.List(context.Background(), &TimeEntryListOptions{})
+	taskList, _, err := service.Timesheet.List(context.Background(), &harvest.TimeEntryListOptions{})
 	assert.NoError(t, err)
 
-	want := &TimeEntryList{
-		TimeEntries: []*TimeEntry{
+	want := &harvest.TimeEntryList{
+		TimeEntries: []*harvest.TimeEntry{
 			{
-				Id: Int64(636709355),
-				SpentDate: DateP(Date{time.Date(
+				ID: harvest.Int64(636709355),
+				SpentDate: harvest.DateP(harvest.Date{time.Date(
 					2017, 3, 2, 0, 0, 0, 0, time.Local)}),
-				User: &User{
-					Id: Int64(1782959),
+				User: &harvest.User{
+					ID: harvest.Int64(1782959),
 				},
-				Client: &Client{
-					Id:   Int64(5735774),
-					Name: String("ABC Corp"),
+				Client: &harvest.Client{
+					ID:   harvest.Int64(5735774),
+					Name: harvest.String("ABC Corp"),
 				},
-				Project: &Project{
-					Id:   Int64(14307913),
-					Name: String("Marketing Website"),
+				Project: &harvest.Project{
+					ID:   harvest.Int64(14307913),
+					Name: harvest.String("Marketing Website"),
 				},
-				Task: &Task{
-					Id:   Int64(8083365),
-					Name: String("Graphic Design"),
+				Task: &harvest.Task{
+					ID:   harvest.Int64(8083365),
+					Name: harvest.String("Graphic Design"),
 				},
-				UserAssignment: &ProjectUserAssignment{
-					Id:               Int64(125068553),
+				UserAssignment: &harvest.ProjectUserAssignment{
+					ID:               harvest.Int64(125068553),
 					User:             nil,
-					IsActive:         Bool(true),
-					IsProjectManager: Bool(true),
-					HourlyRate:       Float64(100),
+					IsActive:         harvest.Bool(true),
+					IsProjectManager: harvest.Bool(true),
+					HourlyRate:       harvest.Float64(100),
 					Budget:           nil,
-					CreatedAt:        TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
-					UpdatedAt:        TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
+					CreatedAt:        harvest.TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
+					UpdatedAt:        harvest.TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
 				},
-				TaskAssignment: &ProjectTaskAssignment{
-					Id:         Int64(155502709),
+				TaskAssignment: &harvest.ProjectTaskAssignment{
+					ID:         harvest.Int64(155502709),
 					Task:       nil,
-					IsActive:   Bool(true),
-					Billable:   Bool(true),
-					HourlyRate: Float64(100),
+					IsActive:   harvest.Bool(true),
+					Billable:   harvest.Bool(true),
+					HourlyRate: harvest.Float64(100),
 					Budget:     nil,
-					CreatedAt:  TimeTimeP(time.Date(2017, 6, 26, 21, 36, 23, 0, time.UTC)),
-					UpdatedAt:  TimeTimeP(time.Date(2017, 6, 26, 21, 36, 23, 0, time.UTC)),
+					CreatedAt:  harvest.TimeTimeP(time.Date(2017, 6, 26, 21, 36, 23, 0, time.UTC)),
+					UpdatedAt:  harvest.TimeTimeP(time.Date(2017, 6, 26, 21, 36, 23, 0, time.UTC)),
 				},
 				ExternalReference: nil,
 				Invoice:           nil,
-				Hours:             Float64(2.11),
-				RoundedHours:      Float64(2.25),
-				Notes:             String("Adding CSS styling"),
-				IsLocked:          Bool(true),
-				LockedReason:      String("Item Approved and Locked for this Time Period"),
-				IsClosed:          Bool(true),
-				IsBilled:          Bool(false),
+				Hours:             harvest.Float64(2.11),
+				RoundedHours:      harvest.Float64(2.25),
+				Notes:             harvest.String("Adding CSS styling"),
+				IsLocked:          harvest.Bool(true),
+				LockedReason:      harvest.String("Item Approved and Locked for this Time Period"),
+				IsClosed:          harvest.Bool(true),
+				IsBilled:          harvest.Bool(false),
 				TimerStartedAt:    nil,
-				StartedTime:       TimeP(Time{time.Date(0, 1, 1, 15, 00, 00, 0, time.Local)}),
-				EndedTime:         TimeP(Time{time.Date(0, 1, 1, 17, 00, 00, 0, time.Local)}),
-				IsRunning:         Bool(false),
-				Billable:          Bool(true),
-				Budgeted:          Bool(true),
-				BillableRate:      Float64(100),
-				CostRate:          Float64(50),
-				CreatedAt:         TimeTimeP(time.Date(2017, 6, 27, 15, 50, 15, 0, time.UTC)),
-				UpdatedAt:         TimeTimeP(time.Date(2017, 6, 27, 16, 47, 14, 0, time.UTC)),
+				StartedTime:       harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 15, 0o0, 0o0, 0, time.Local)}),
+				EndedTime:         harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 17, 0o0, 0o0, 0, time.Local)}),
+				IsRunning:         harvest.Bool(false),
+				Billable:          harvest.Bool(true),
+				Budgeted:          harvest.Bool(true),
+				BillableRate:      harvest.Float64(100),
+				CostRate:          harvest.Float64(50),
+				CreatedAt:         harvest.TimeTimeP(time.Date(2017, 6, 27, 15, 50, 15, 0, time.UTC)),
+				UpdatedAt:         harvest.TimeTimeP(time.Date(2017, 6, 27, 16, 47, 14, 0, time.UTC)),
 			}, {
-				Id: Int64(636708723),
-				SpentDate: DateP(Date{time.Date(
+				ID: harvest.Int64(636708723),
+				SpentDate: harvest.DateP(harvest.Date{time.Date(
 					2017, 3, 1, 0, 0, 0, 0, time.Local)}),
-				User: &User{
-					Id: Int64(1782959),
+				User: &harvest.User{
+					ID: harvest.Int64(1782959),
 				},
-				Client: &Client{
-					Id:   Int64(5735776),
-					Name: String("123 Industries"),
+				Client: &harvest.Client{
+					ID:   harvest.Int64(5735776),
+					Name: harvest.String("123 Industries"),
 				},
-				Project: &Project{
-					Id:   Int64(14308069),
-					Name: String("Online Store - Phase 1"),
+				Project: &harvest.Project{
+					ID:   harvest.Int64(14308069),
+					Name: harvest.String("Online Store - Phase 1"),
 				},
-				Task: &Task{
-					Id:   Int64(8083366),
-					Name: String("Programming"),
+				Task: &harvest.Task{
+					ID:   harvest.Int64(8083366),
+					Name: harvest.String("Programming"),
 				},
-				UserAssignment: &ProjectUserAssignment{
-					Id:               Int64(125068554),
-					IsActive:         Bool(true),
-					IsProjectManager: Bool(true),
-					HourlyRate:       Float64(100),
-					CreatedAt:        TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
-					UpdatedAt:        TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
+				UserAssignment: &harvest.ProjectUserAssignment{
+					ID:               harvest.Int64(125068554),
+					IsActive:         harvest.Bool(true),
+					IsProjectManager: harvest.Bool(true),
+					HourlyRate:       harvest.Float64(100),
+					CreatedAt:        harvest.TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
+					UpdatedAt:        harvest.TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
 				},
-				TaskAssignment: &ProjectTaskAssignment{
-					Id:         Int64(155505014),
-					IsActive:   Bool(true),
-					Billable:   Bool(true),
-					HourlyRate: Float64(100),
-					CreatedAt:  TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
-					UpdatedAt:  TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
+				TaskAssignment: &harvest.ProjectTaskAssignment{
+					ID:         harvest.Int64(155505014),
+					IsActive:   harvest.Bool(true),
+					Billable:   harvest.Bool(true),
+					HourlyRate: harvest.Float64(100),
+					CreatedAt:  harvest.TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
+					UpdatedAt:  harvest.TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
 				},
 
-				Invoice: &Invoice{
-					Id:     Int64(13150403),
-					Number: String("1001"),
+				Invoice: &harvest.Invoice{
+					ID:     harvest.Int64(13150403),
+					Number: harvest.String("1001"),
 				},
-				Hours:        Float64(1.35),
-				RoundedHours: Float64(1.5),
-				Notes:        String("Importing products"),
-				IsLocked:     Bool(true),
-				LockedReason: String("Item Invoiced and Approved and Locked for this Time Period"),
-				IsClosed:     Bool(true),
-				IsBilled:     Bool(true),
-				StartedTime:  TimeP(Time{time.Date(0, 1, 1, 13, 00, 00, 0, time.Local)}),
-				EndedTime:    TimeP(Time{time.Date(0, 1, 1, 14, 00, 00, 0, time.Local)}),
-				IsRunning:    Bool(false),
-
-				Billable:     Bool(true),
-				Budgeted:     Bool(true),
-				BillableRate: Float64(100),
-				CostRate:     Float64(50),
-				CreatedAt:    TimeTimeP(time.Date(2017, 6, 27, 15, 49, 28, 0, time.UTC)),
-				UpdatedAt:    TimeTimeP(time.Date(2017, 6, 27, 16, 47, 14, 0, time.UTC)),
+				Hours:        harvest.Float64(1.35),
+				RoundedHours: harvest.Float64(1.5),
+				Notes:        harvest.String("Importing products"),
+				IsLocked:     harvest.Bool(true),
+				LockedReason: harvest.String("Item Invoiced and Approved and Locked for this Time Period"),
+				IsClosed:     harvest.Bool(true),
+				IsBilled:     harvest.Bool(true),
+				StartedTime:  harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 13, 0o0, 0o0, 0, time.Local)}),
+				EndedTime:    harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 14, 0o0, 0o0, 0, time.Local)}),
+				IsRunning:    harvest.Bool(false),
+				Billable:     harvest.Bool(true),
+				Budgeted:     harvest.Bool(true),
+				BillableRate: harvest.Float64(100),
+				CostRate:     harvest.Float64(50),
+				CreatedAt:    harvest.TimeTimeP(time.Date(2017, 6, 27, 15, 49, 28, 0, time.UTC)),
+				UpdatedAt:    harvest.TimeTimeP(time.Date(2017, 6, 27, 16, 47, 14, 0, time.UTC)),
 			}, {
-				Id: Int64(636708574),
-				SpentDate: DateP(Date{time.Date(
+				ID: harvest.Int64(636708574),
+				SpentDate: harvest.DateP(harvest.Date{time.Date(
 					2017, 3, 1, 0, 0, 0, 0, time.Local)}),
-				User: &User{
-					Id: Int64(1782959),
+				User: &harvest.User{
+					ID: harvest.Int64(1782959),
 				},
-				Client: &Client{
-					Id:   Int64(5735776),
-					Name: String("123 Industries"),
+				Client: &harvest.Client{
+					ID:   harvest.Int64(5735776),
+					Name: harvest.String("123 Industries"),
 				},
-				Project: &Project{
-					Id:   Int64(14308069),
-					Name: String("Online Store - Phase 1"),
+				Project: &harvest.Project{
+					ID:   harvest.Int64(14308069),
+					Name: harvest.String("Online Store - Phase 1"),
 				},
-				Task: &Task{
-					Id:   Int64(8083369),
-					Name: String("Research"),
+				Task: &harvest.Task{
+					ID:   harvest.Int64(8083369),
+					Name: harvest.String("Research"),
 				},
-				UserAssignment: &ProjectUserAssignment{
-					Id:               Int64(125068554),
-					IsActive:         Bool(true),
-					IsProjectManager: Bool(true),
-					HourlyRate:       Float64(100),
-					CreatedAt:        TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
-					UpdatedAt:        TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
+				UserAssignment: &harvest.ProjectUserAssignment{
+					ID:               harvest.Int64(125068554),
+					IsActive:         harvest.Bool(true),
+					IsProjectManager: harvest.Bool(true),
+					HourlyRate:       harvest.Float64(100),
+					CreatedAt:        harvest.TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
+					UpdatedAt:        harvest.TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
 				},
-				TaskAssignment: &ProjectTaskAssignment{
-					Id:         Int64(155505016),
-					IsActive:   Bool(true),
-					Billable:   Bool(false),
-					HourlyRate: Float64(100),
-					CreatedAt:  TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
-					UpdatedAt:  TimeTimeP(time.Date(2017, 6, 26, 21, 54, 06, 0, time.UTC)),
+				TaskAssignment: &harvest.ProjectTaskAssignment{
+					ID:         harvest.Int64(155505016),
+					IsActive:   harvest.Bool(true),
+					Billable:   harvest.Bool(false),
+					HourlyRate: harvest.Float64(100),
+					CreatedAt:  harvest.TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
+					UpdatedAt:  harvest.TimeTimeP(time.Date(2017, 6, 26, 21, 54, 0o6, 0, time.UTC)),
 				},
 
 				Invoice:      nil,
-				Hours:        Float64(1),
-				RoundedHours: Float64(1),
-				Notes:        String("Evaluating 3rd party libraries"),
-				IsLocked:     Bool(true),
-				LockedReason: String("Item Approved and Locked for this Time Period"),
-				IsClosed:     Bool(true),
-				IsBilled:     Bool(false),
-				StartedTime:  TimeP(Time{time.Date(0, 1, 1, 11, 00, 00, 0, time.Local)}),
-				EndedTime:    TimeP(Time{time.Date(0, 1, 1, 12, 00, 00, 0, time.Local)}),
-				IsRunning:    Bool(false),
+				Hours:        harvest.Float64(1),
+				RoundedHours: harvest.Float64(1),
+				Notes:        harvest.String("Evaluating 3rd party libraries"),
+				IsLocked:     harvest.Bool(true),
+				LockedReason: harvest.String("Item Approved and Locked for this Time Period"),
+				IsClosed:     harvest.Bool(true),
+				IsBilled:     harvest.Bool(false),
+				StartedTime:  harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 11, 0o0, 0o0, 0, time.Local)}),
+				EndedTime:    harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 12, 0o0, 0o0, 0, time.Local)}),
+				IsRunning:    harvest.Bool(false),
 
-				Billable:     Bool(false),
-				Budgeted:     Bool(true),
+				Billable:     harvest.Bool(false),
+				Budgeted:     harvest.Bool(true),
 				BillableRate: nil,
-				CostRate:     Float64(50),
-				CreatedAt:    TimeTimeP(time.Date(2017, 6, 27, 15, 49, 17, 0, time.UTC)),
-				UpdatedAt:    TimeTimeP(time.Date(2017, 6, 27, 16, 47, 14, 0, time.UTC)),
+				CostRate:     harvest.Float64(50),
+				CreatedAt:    harvest.TimeTimeP(time.Date(2017, 6, 27, 15, 49, 17, 0, time.UTC)),
+				UpdatedAt:    harvest.TimeTimeP(time.Date(2017, 6, 27, 16, 47, 14, 0, time.UTC)),
 			}, {
-				Id: Int64(636707831),
-				SpentDate: DateP(Date{time.Date(
+				ID: harvest.Int64(636707831),
+				SpentDate: harvest.DateP(harvest.Date{time.Date(
 					2017, 3, 1, 0, 0, 0, 0, time.Local)}),
-				User: &User{
-					Id: Int64(1782959),
+				User: &harvest.User{
+					ID: harvest.Int64(1782959),
 				},
-				Client: &Client{
-					Id:   Int64(5735776),
-					Name: String("123 Industries"),
+				Client: &harvest.Client{
+					ID:   harvest.Int64(5735776),
+					Name: harvest.String("123 Industries"),
 				},
-				Project: &Project{
-					Id:   Int64(14308069),
-					Name: String("Online Store - Phase 1"),
+				Project: &harvest.Project{
+					ID:   harvest.Int64(14308069),
+					Name: harvest.String("Online Store - Phase 1"),
 				},
-				Task: &Task{
-					Id:   Int64(8083368),
-					Name: String("Project Management"),
+				Task: &harvest.Task{
+					ID:   harvest.Int64(8083368),
+					Name: harvest.String("Project Management"),
 				},
-				UserAssignment: &ProjectUserAssignment{
-					Id:               Int64(125068554),
-					IsActive:         Bool(true),
-					IsProjectManager: Bool(true),
-					HourlyRate:       Float64(100),
-					CreatedAt:        TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
-					UpdatedAt:        TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
+				UserAssignment: &harvest.ProjectUserAssignment{
+					ID:               harvest.Int64(125068554),
+					IsActive:         harvest.Bool(true),
+					IsProjectManager: harvest.Bool(true),
+					HourlyRate:       harvest.Float64(100),
+					CreatedAt:        harvest.TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
+					UpdatedAt:        harvest.TimeTimeP(time.Date(2017, 6, 26, 22, 32, 52, 0, time.UTC)),
 				},
-				TaskAssignment: &ProjectTaskAssignment{
-					Id:         Int64(155505015),
-					IsActive:   Bool(true),
-					Billable:   Bool(true),
-					HourlyRate: Float64(100),
-					CreatedAt:  TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
-					UpdatedAt:  TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
+				TaskAssignment: &harvest.ProjectTaskAssignment{
+					ID:         harvest.Int64(155505015),
+					IsActive:   harvest.Bool(true),
+					Billable:   harvest.Bool(true),
+					HourlyRate: harvest.Float64(100),
+					CreatedAt:  harvest.TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
+					UpdatedAt:  harvest.TimeTimeP(time.Date(2017, 6, 26, 21, 52, 18, 0, time.UTC)),
 				},
 
-				Invoice: &Invoice{
-					Id:     Int64(13150403),
-					Number: String("1001"),
+				Invoice: &harvest.Invoice{
+					ID:     harvest.Int64(13150403),
+					Number: harvest.String("1001"),
 				},
-				Hours:        Float64(2),
-				RoundedHours: Float64(2),
-				Notes:        String("Planning meetings"),
-				IsLocked:     Bool(true),
-				LockedReason: String("Item Invoiced and Approved and Locked for this Time Period"),
-				IsClosed:     Bool(true),
-				IsBilled:     Bool(true),
-				StartedTime:  TimeP(Time{time.Date(0, 1, 1, 9, 00, 00, 0, time.Local)}),
-				EndedTime:    TimeP(Time{time.Date(0, 1, 1, 11, 00, 00, 0, time.Local)}),
-				IsRunning:    Bool(false),
+				Hours:        harvest.Float64(2),
+				RoundedHours: harvest.Float64(2),
+				Notes:        harvest.String("Planning meetings"),
+				IsLocked:     harvest.Bool(true),
+				LockedReason: harvest.String("Item Invoiced and Approved and Locked for this Time Period"),
+				IsClosed:     harvest.Bool(true),
+				IsBilled:     harvest.Bool(true),
+				StartedTime:  harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 9, 0o0, 0o0, 0, time.Local)}),
+				EndedTime:    harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 11, 0o0, 0o0, 0, time.Local)}),
+				IsRunning:    harvest.Bool(false),
 
-				Billable:     Bool(true),
-				Budgeted:     Bool(true),
-				BillableRate: Float64(100),
-				CostRate:     Float64(50),
-				CreatedAt:    TimeTimeP(time.Date(2017, 6, 27, 15, 48, 24, 0, time.UTC)),
-				UpdatedAt:    TimeTimeP(time.Date(2017, 6, 27, 16, 47, 14, 0, time.UTC)),
+				Billable:     harvest.Bool(true),
+				Budgeted:     harvest.Bool(true),
+				BillableRate: harvest.Float64(100),
+				CostRate:     harvest.Float64(50),
+				CreatedAt:    harvest.TimeTimeP(time.Date(2017, 6, 27, 15, 48, 24, 0, time.UTC)),
+				UpdatedAt:    harvest.TimeTimeP(time.Date(2017, 6, 27, 16, 47, 14, 0, time.UTC)),
 			},
 		},
 
-		Pagination: Pagination{
-			PerPage:      Int(100),
-			TotalPages:   Int(1),
-			TotalEntries: Int(4),
+		Pagination: harvest.Pagination{
+			PerPage:      harvest.Int(100),
+			TotalPages:   harvest.Int(1),
+			TotalEntries: harvest.Int(4),
 			NextPage:     nil,
 			PreviousPage: nil,
-			Page:         Int(1),
-			Links: &PageLinks{
-				First:    String("https://api.harvestapp.com/v2/time_entries?page=1&per_page=100"),
+			Page:         harvest.Int(1),
+			Links: &harvest.PageLinks{
+				First:    harvest.String("https://api.harvestapp.com/v2/time_entries?page=1&per_page=100"),
 				Next:     nil,
 				Previous: nil,
-				Last:     String("https://api.harvestapp.com/v2/time_entries?page=1&per_page=100"),
+				Last:     harvest.String("https://api.harvestapp.com/v2/time_entries?page=1&per_page=100"),
 			},
 		},
 	}
@@ -676,8 +686,10 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 }
 
 func TestTimesheetService_RestartTimeEntry(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/time_entries/662202797/restart", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
@@ -700,71 +712,73 @@ func TestTimesheetService_RestartTimeEntry(t *testing.T) {
 
 	timerStartedAt := time.Date(
 		2017, 8, 22, 17, 40, 24, 0, time.UTC)
-	startedTime := Time{time.Date(0, 1, 1, 11, 40, 00, 0, time.Local)}
+	startedTime := harvest.Time{time.Date(0, 1, 1, 11, 40, 0o0, 0, time.Local)}
 
-	want := &TimeEntry{
-		Id:        Int64(662202797),
-		SpentDate: DateP(Date{spentDate}),
-		User: &User{
-			Id: Int64(1795925),
+	want := &harvest.TimeEntry{
+		ID:        harvest.Int64(662202797),
+		SpentDate: harvest.DateP(harvest.Date{spentDate}),
+		User: &harvest.User{
+			ID: harvest.Int64(1795925),
 		},
-		Client: &Client{
-			Id:   Int64(5735776),
-			Name: String("123 Industries"),
+		Client: &harvest.Client{
+			ID:   harvest.Int64(5735776),
+			Name: harvest.String("123 Industries"),
 		},
-		Project: &Project{
-			Id:   Int64(14808188),
-			Name: String("Task Force"),
+		Project: &harvest.Project{
+			ID:   harvest.Int64(14808188),
+			Name: harvest.String("Task Force"),
 		},
-		Task: &Task{
-			Id:   Int64(8083366),
-			Name: String("Programming"),
+		Task: &harvest.Task{
+			ID:   harvest.Int64(8083366),
+			Name: harvest.String("Programming"),
 		},
-		UserAssignment: &ProjectUserAssignment{
-			Id:               Int64(130403296),
-			IsProjectManager: Bool(true),
-			IsActive:         Bool(true),
+		UserAssignment: &harvest.ProjectUserAssignment{
+			ID:               harvest.Int64(130403296),
+			IsProjectManager: harvest.Bool(true),
+			IsActive:         harvest.Bool(true),
 			Budget:           nil,
-			CreatedAt:        TimeTimeP(assignmentTime),
-			UpdatedAt:        TimeTimeP(assignmentTime),
-			HourlyRate:       Float64(100),
+			CreatedAt:        harvest.TimeTimeP(assignmentTime),
+			UpdatedAt:        harvest.TimeTimeP(assignmentTime),
+			HourlyRate:       harvest.Float64(100),
 		},
-		TaskAssignment: &ProjectTaskAssignment{
-			Id:         Int64(160726645),
-			Billable:   Bool(true),
-			IsActive:   Bool(true),
-			CreatedAt:  TimeTimeP(assignmentTime),
-			UpdatedAt:  TimeTimeP(assignmentTime),
-			HourlyRate: Float64(100),
+		TaskAssignment: &harvest.ProjectTaskAssignment{
+			ID:         harvest.Int64(160726645),
+			Billable:   harvest.Bool(true),
+			IsActive:   harvest.Bool(true),
+			CreatedAt:  harvest.TimeTimeP(assignmentTime),
+			UpdatedAt:  harvest.TimeTimeP(assignmentTime),
+			HourlyRate: harvest.Float64(100),
 			Budget:     nil,
 		},
-		Hours:             Float64(0),
-		RoundedHours:      Float64(0),
+		Hours:             harvest.Float64(0),
+		RoundedHours:      harvest.Float64(0),
 		Notes:             nil,
 		CreatedAt:         &createdOne,
 		UpdatedAt:         &updatedOne,
-		IsLocked:          Bool(false),
+		IsLocked:          harvest.Bool(false),
 		LockedReason:      nil,
-		IsClosed:          Bool(false),
-		IsBilled:          Bool(false),
-		TimerStartedAt:    TimeTimeP(timerStartedAt),
-		StartedTime:       TimeP(startedTime),
+		IsClosed:          harvest.Bool(false),
+		IsBilled:          harvest.Bool(false),
+		TimerStartedAt:    harvest.TimeTimeP(timerStartedAt),
+		StartedTime:       harvest.TimeP(startedTime),
 		EndedTime:         nil,
-		IsRunning:         Bool(true),
+		IsRunning:         harvest.Bool(true),
 		Invoice:           nil,
 		ExternalReference: nil,
-		Billable:          Bool(true),
-		Budgeted:          Bool(false),
-		BillableRate:      Float64(100),
-		CostRate:          Float64(75),
+		Billable:          harvest.Bool(true),
+		Budgeted:          harvest.Bool(false),
+		BillableRate:      harvest.Float64(100),
+		CostRate:          harvest.Float64(75),
 	}
 
 	assert.Equal(t, want, timeEntry)
 }
 
 func TestTimesheetService_StopTimeEntry(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/time_entries/662202797/stop", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
@@ -782,72 +796,74 @@ func TestTimesheetService_StopTimeEntry(t *testing.T) {
 
 	assignmentTime := time.Date(2017, 8, 22, 17, 36, 54, 0, time.UTC)
 
-	startedTime := Time{time.Date(0, 1, 1, 11, 37, 00, 0, time.Local)}
-	endedTime := Time{time.Date(0, 1, 1, 11, 38, 00, 0, time.Local)}
+	startedTime := harvest.Time{time.Date(0, 1, 1, 11, 37, 0o0, 0, time.Local)}
+	endedTime := harvest.Time{time.Date(0, 1, 1, 11, 38, 0o0, 0, time.Local)}
 
-	want := &TimeEntry{
-		Id:        Int64(662202797),
-		SpentDate: DateP(Date{spentDate}),
-		User: &User{
-			Id: Int64(1795925),
+	want := &harvest.TimeEntry{
+		ID:        harvest.Int64(662202797),
+		SpentDate: harvest.DateP(harvest.Date{spentDate}),
+		User: &harvest.User{
+			ID: harvest.Int64(1795925),
 		},
-		Client: &Client{
-			Id:   Int64(5735776),
-			Name: String("123 Industries"),
+		Client: &harvest.Client{
+			ID:   harvest.Int64(5735776),
+			Name: harvest.String("123 Industries"),
 		},
-		Project: &Project{
-			Id:   Int64(14808188),
-			Name: String("Task Force"),
+		Project: &harvest.Project{
+			ID:   harvest.Int64(14808188),
+			Name: harvest.String("Task Force"),
 		},
-		Task: &Task{
-			Id:   Int64(8083366),
-			Name: String("Programming"),
+		Task: &harvest.Task{
+			ID:   harvest.Int64(8083366),
+			Name: harvest.String("Programming"),
 		},
-		UserAssignment: &ProjectUserAssignment{
-			Id:               Int64(130403296),
-			IsProjectManager: Bool(true),
-			IsActive:         Bool(true),
+		UserAssignment: &harvest.ProjectUserAssignment{
+			ID:               harvest.Int64(130403296),
+			IsProjectManager: harvest.Bool(true),
+			IsActive:         harvest.Bool(true),
 			Budget:           nil,
-			CreatedAt:        TimeTimeP(assignmentTime),
-			UpdatedAt:        TimeTimeP(assignmentTime),
-			HourlyRate:       Float64(100),
+			CreatedAt:        harvest.TimeTimeP(assignmentTime),
+			UpdatedAt:        harvest.TimeTimeP(assignmentTime),
+			HourlyRate:       harvest.Float64(100),
 		},
-		TaskAssignment: &ProjectTaskAssignment{
-			Id:         Int64(160726645),
-			Billable:   Bool(true),
-			IsActive:   Bool(true),
-			CreatedAt:  TimeTimeP(assignmentTime),
-			UpdatedAt:  TimeTimeP(assignmentTime),
-			HourlyRate: Float64(100),
+		TaskAssignment: &harvest.ProjectTaskAssignment{
+			ID:         harvest.Int64(160726645),
+			Billable:   harvest.Bool(true),
+			IsActive:   harvest.Bool(true),
+			CreatedAt:  harvest.TimeTimeP(assignmentTime),
+			UpdatedAt:  harvest.TimeTimeP(assignmentTime),
+			HourlyRate: harvest.Float64(100),
 			Budget:     nil,
 		},
-		Hours:             Float64(0.02),
-		RoundedHours:      Float64(0.25),
+		Hours:             harvest.Float64(0.02),
+		RoundedHours:      harvest.Float64(0.25),
 		Notes:             nil,
 		CreatedAt:         &createdOne,
 		UpdatedAt:         &updatedOne,
-		IsLocked:          Bool(false),
+		IsLocked:          harvest.Bool(false),
 		LockedReason:      nil,
-		IsClosed:          Bool(false),
-		IsBilled:          Bool(false),
+		IsClosed:          harvest.Bool(false),
+		IsBilled:          harvest.Bool(false),
 		TimerStartedAt:    nil,
-		StartedTime:       TimeP(startedTime),
-		EndedTime:         TimeP(endedTime),
-		IsRunning:         Bool(false),
+		StartedTime:       harvest.TimeP(startedTime),
+		EndedTime:         harvest.TimeP(endedTime),
+		IsRunning:         harvest.Bool(false),
 		Invoice:           nil,
 		ExternalReference: nil,
-		Billable:          Bool(true),
-		Budgeted:          Bool(false),
-		BillableRate:      Float64(100),
-		CostRate:          Float64(75),
+		Billable:          harvest.Bool(true),
+		Budgeted:          harvest.Bool(false),
+		BillableRate:      harvest.Float64(100),
+		CostRate:          harvest.Float64(75),
 	}
 
 	assert.Equal(t, want, timeEntry)
 }
 
 func TestTimesheetService_UpdateTimeEntry(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/time_entries/636718192", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
@@ -857,24 +873,24 @@ func TestTimesheetService_UpdateTimeEntry(t *testing.T) {
 	})
 
 	spentDate := time.Date(2017, 3, 21, 0, 0, 0, 0, time.Local)
-	startedTime := Time{time.Date(0, 1, 1, 11, 40, 00, 0, time.UTC)}
-	endedTime := Time{time.Date(0, 1, 1, 12, 45, 10, 0, time.UTC)}
+	startedTime := harvest.Time{time.Date(0, 1, 1, 11, 40, 0o0, 0, time.UTC)}
+	endedTime := harvest.Time{time.Date(0, 1, 1, 12, 45, 10, 0, time.UTC)}
 
-	timeEntry, _, err := service.Timesheet.UpdateTimeEntry(context.Background(), 636718192, &TimeEntryUpdate{
-		ProjectId:   Int64(1234),
-		TaskId:      Int64(2345),
-		SpentDate:   DateP(Date{spentDate}),
+	timeEntry, _, err := service.Timesheet.UpdateTimeEntry(context.Background(), 636718192, &harvest.TimeEntryUpdate{
+		ProjectID:   harvest.Int64(1234),
+		TaskID:      harvest.Int64(2345),
+		SpentDate:   harvest.DateP(harvest.Date{spentDate}),
 		StartedTime: &startedTime,
 		EndedTime:   &endedTime,
-		Hours:       Float64(1),
-		Notes:       String("new notes"),
+		Hours:       harvest.Float64(1),
+		Notes:       harvest.String("new notes"),
 	})
 	assert.NoError(t, err)
 
 	createdTimeEntry := time.Date(
-		2017, 6, 27, 16, 01, 23, 0, time.UTC)
+		2017, 6, 27, 16, 0o1, 23, 0, time.UTC)
 	updatedTimeEntry := time.Date(
-		2017, 6, 27, 16, 02, 40, 0, time.UTC)
+		2017, 6, 27, 16, 0o2, 40, 0, time.UTC)
 	createdUserAssignment := time.Date(
 		2017, 6, 26, 22, 32, 52, 0, time.UTC)
 	updatedUserAssignment := time.Date(
@@ -884,53 +900,53 @@ func TestTimesheetService_UpdateTimeEntry(t *testing.T) {
 	updatedTaskAssignment := time.Date(
 		2017, 6, 26, 21, 36, 23, 0, time.UTC)
 
-	want := &TimeEntry{
-		Id:        Int64(636718192),
+	want := &harvest.TimeEntry{
+		ID:        harvest.Int64(636718192),
 		CreatedAt: &createdTimeEntry,
 		UpdatedAt: &updatedTimeEntry,
-		SpentDate: DateP(Date{spentDate}),
-		User: &User{
-			Id: Int64(1782959),
+		SpentDate: harvest.DateP(harvest.Date{spentDate}),
+		User: &harvest.User{
+			ID: harvest.Int64(1782959),
 		},
-		Client: &Client{
-			Id:   Int64(5735774),
-			Name: String("ABC Corp"),
+		Client: &harvest.Client{
+			ID:   harvest.Int64(5735774),
+			Name: harvest.String("ABC Corp"),
 		},
-		Project: &Project{
-			Id:   Int64(14307913),
-			Name: String("Marketing Website"),
+		Project: &harvest.Project{
+			ID:   harvest.Int64(14307913),
+			Name: harvest.String("Marketing Website"),
 		},
-		Task: &Task{
-			Id:   Int64(8083365),
-			Name: String("Graphic Design"),
+		Task: &harvest.Task{
+			ID:   harvest.Int64(8083365),
+			Name: harvest.String("Graphic Design"),
 		},
-		UserAssignment: &ProjectUserAssignment{
-			Id:               Int64(125068553),
-			IsProjectManager: Bool(true),
-			IsActive:         Bool(true),
+		UserAssignment: &harvest.ProjectUserAssignment{
+			ID:               harvest.Int64(125068553),
+			IsProjectManager: harvest.Bool(true),
+			IsActive:         harvest.Bool(true),
 			CreatedAt:        &createdUserAssignment,
 			UpdatedAt:        &updatedUserAssignment,
-			HourlyRate:       Float64(100),
+			HourlyRate:       harvest.Float64(100),
 		},
-		TaskAssignment: &ProjectTaskAssignment{
-			Id:         Int64(155502709),
-			Billable:   Bool(true),
-			IsActive:   Bool(true),
+		TaskAssignment: &harvest.ProjectTaskAssignment{
+			ID:         harvest.Int64(155502709),
+			Billable:   harvest.Bool(true),
+			IsActive:   harvest.Bool(true),
 			CreatedAt:  &createdTaskAssignment,
 			UpdatedAt:  &updatedTaskAssignment,
-			HourlyRate: Float64(100),
+			HourlyRate: harvest.Float64(100),
 		},
-		Hours:        Float64(1),
-		RoundedHours: Float64(1),
-		Notes:        String("Updated notes"),
-		IsLocked:     Bool(false),
-		IsClosed:     Bool(false),
-		IsBilled:     Bool(false),
-		IsRunning:    Bool(false),
-		Billable:     Bool(true),
-		Budgeted:     Bool(true),
-		BillableRate: Float64(100),
-		CostRate:     Float64(50),
+		Hours:        harvest.Float64(1),
+		RoundedHours: harvest.Float64(1),
+		Notes:        harvest.String("Updated notes"),
+		IsLocked:     harvest.Bool(false),
+		IsClosed:     harvest.Bool(false),
+		IsBilled:     harvest.Bool(false),
+		IsRunning:    harvest.Bool(false),
+		Billable:     harvest.Bool(true),
+		Budgeted:     harvest.Bool(true),
+		BillableRate: harvest.Float64(100),
+		CostRate:     harvest.Float64(50),
 	}
 
 	assert.Equal(t, want, timeEntry)

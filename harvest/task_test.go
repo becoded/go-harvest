@@ -1,4 +1,4 @@
-package harvest
+package harvest_test
 
 import (
 	"context"
@@ -7,12 +7,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTaskService_Create(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	createdOne := time.Date(
 		2018, 1, 31, 20, 34, 30, 0, time.UTC)
@@ -21,36 +22,36 @@ func TestTaskService_Create(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		args       *TaskCreateRequest
+		args       *harvest.TaskCreateRequest
 		method     string
 		path       string
 		formValues values
 		body       string
 		response   string
-		want       *Task
+		want       *harvest.Task
 		wantErr    error
 	}{
 		{
 			name: "create task",
-			args: &TaskCreateRequest{
-				Name:              String("Task new"),
-				BillableByDefault: Bool(true),
-				DefaultHourlyRate: Float64(123),
-				IsDefault:         Bool(true),
-				IsActive:          Bool(true),
+			args: &harvest.TaskCreateRequest{
+				Name:              harvest.String("Task new"),
+				BillableByDefault: harvest.Bool(true),
+				DefaultHourlyRate: harvest.Float64(123),
+				IsDefault:         harvest.Bool(true),
+				IsActive:          harvest.Bool(true),
 			},
 			method:     "POST",
 			path:       "/tasks",
 			formValues: values{},
 			body:       `{"name":"Task new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true}` + "\n",
 			response:   `{"id":1,"name":"Task new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`,
-			want: &Task{
-				Id:                Int64(1),
-				Name:              String("Task new"),
-				BillableByDefault: Bool(true),
-				DefaultHourlyRate: Float64(123),
-				IsDefault:         Bool(true),
-				IsActive:          Bool(true),
+			want: &harvest.Task{
+				ID:                harvest.Int64(1),
+				Name:              harvest.String("Task new"),
+				BillableByDefault: harvest.Bool(true),
+				DefaultHourlyRate: harvest.Float64(123),
+				IsDefault:         harvest.Bool(true),
+				IsActive:          harvest.Bool(true),
 				CreatedAt:         &createdOne,
 				UpdatedAt:         &updatedOne,
 			},
@@ -58,9 +59,12 @@ func TestTaskService_Create(t *testing.T) {
 		},
 	}
 
+	t.Parallel()
+
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			mux.HandleFunc(tt.path, func(w http.ResponseWriter, r *http.Request) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
@@ -74,6 +78,7 @@ func TestTaskService_Create(t *testing.T) {
 			if tt.wantErr != nil {
 				assert.Nil(t, task)
 				assert.EqualError(t, err, tt.wantErr.Error())
+
 				return
 			}
 
@@ -84,11 +89,11 @@ func TestTaskService_Create(t *testing.T) {
 }
 
 func TestTaskService_Delete(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	type args struct {
-		taskId int64
+		taskID int64
 	}
 
 	tests := []struct {
@@ -104,7 +109,7 @@ func TestTaskService_Delete(t *testing.T) {
 		{
 			name: "delete 1",
 			args: args{
-				taskId: 1,
+				taskID: 1,
 			},
 			method:     "DELETE",
 			path:       "/tasks/1",
@@ -115,9 +120,12 @@ func TestTaskService_Delete(t *testing.T) {
 		},
 	}
 
+	t.Parallel()
+
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			mux.HandleFunc(tt.path, func(w http.ResponseWriter, r *http.Request) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
@@ -126,10 +134,11 @@ func TestTaskService_Delete(t *testing.T) {
 				assert.NoError(t, err)
 			})
 
-			_, err := service.Task.Delete(context.Background(), tt.args.taskId)
+			_, err := service.Task.Delete(context.Background(), tt.args.taskID)
 
 			if tt.wantErr != nil {
 				assert.EqualError(t, err, tt.wantErr.Error())
+
 				return
 			}
 
@@ -140,11 +149,11 @@ func TestTaskService_Delete(t *testing.T) {
 }
 
 func TestTaskService_Get(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	type args struct {
-		taskId int64
+		taskID int64
 	}
 
 	createdOne := time.Date(
@@ -160,26 +169,26 @@ func TestTaskService_Get(t *testing.T) {
 		formValues values
 		body       string
 		response   string
-		want       *Task
+		want       *harvest.Task
 		wantErr    error
 	}{
 		{
 			name: "get 1",
 			args: args{
-				taskId: 1,
+				taskID: 1,
 			},
 			method:     "GET",
 			path:       "/tasks/1",
 			formValues: values{},
 			body:       "",
 			response:   `{"id":1,"name":"Task new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`,
-			want: &Task{
-				Id:                Int64(1),
-				Name:              String("Task new"),
-				BillableByDefault: Bool(true),
-				DefaultHourlyRate: Float64(123),
-				IsDefault:         Bool(true),
-				IsActive:          Bool(true),
+			want: &harvest.Task{
+				ID:                harvest.Int64(1),
+				Name:              harvest.String("Task new"),
+				BillableByDefault: harvest.Bool(true),
+				DefaultHourlyRate: harvest.Float64(123),
+				IsDefault:         harvest.Bool(true),
+				IsActive:          harvest.Bool(true),
 				CreatedAt:         &createdOne,
 				UpdatedAt:         &updatedOne,
 			},
@@ -187,9 +196,12 @@ func TestTaskService_Get(t *testing.T) {
 		},
 	}
 
+	t.Parallel()
+
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			mux.HandleFunc(tt.path, func(w http.ResponseWriter, r *http.Request) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
@@ -198,11 +210,12 @@ func TestTaskService_Get(t *testing.T) {
 				assert.NoError(t, err)
 			})
 
-			task, _, err := service.Task.Get(context.Background(), tt.args.taskId)
+			task, _, err := service.Task.Get(context.Background(), tt.args.taskID)
 
 			if tt.wantErr != nil {
 				assert.Nil(t, task)
 				assert.EqualError(t, err, tt.wantErr.Error())
+
 				return
 			}
 
@@ -213,8 +226,10 @@ func TestTaskService_Get(t *testing.T) {
 }
 
 func TestTaskService_List(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
@@ -222,7 +237,7 @@ func TestTaskService_List(t *testing.T) {
 		fmt.Fprint(w, `{"tasks":[{"id":1,"name":"Task 1","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"Task 2","billable_by_default":false,"default_hourly_rate":321,"is_default":false,"is_active":false, "created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}],"per_page":100,"total_pages":1,"total_entries":2,"next_page":null,"previous_page":null,"page":1,"links":{"first":"https://api.harvestapp.com/v2/tasks?page=1&per_page=100","next":null,"previous":null,"last":"https://api.harvestapp.com/v2/tasks?page=1&per_page=100"}}`)
 	})
 
-	taskList, _, err := service.Task.List(context.Background(), &TaskListOptions{})
+	taskList, _, err := service.Task.List(context.Background(), &harvest.TaskListOptions{})
 	assert.NoError(t, err)
 
 	createdOne := time.Date(
@@ -234,39 +249,40 @@ func TestTaskService_List(t *testing.T) {
 	updatedTwo := time.Date(
 		2018, 4, 30, 12, 13, 14, 0, time.UTC)
 
-	want := &TaskList{
-		Tasks: []*Task{
+	want := &harvest.TaskList{
+		Tasks: []*harvest.Task{
 			{
-				Id:                Int64(1),
-				Name:              String("Task 1"),
-				BillableByDefault: Bool(true),
-				DefaultHourlyRate: Float64(123),
-				IsDefault:         Bool(true),
-				IsActive:          Bool(true),
+				ID:                harvest.Int64(1),
+				Name:              harvest.String("Task 1"),
+				BillableByDefault: harvest.Bool(true),
+				DefaultHourlyRate: harvest.Float64(123),
+				IsDefault:         harvest.Bool(true),
+				IsActive:          harvest.Bool(true),
 				CreatedAt:         &createdOne,
 				UpdatedAt:         &updatedOne,
 			}, {
-				Id:                Int64(2),
-				Name:              String("Task 2"),
-				BillableByDefault: Bool(false),
-				DefaultHourlyRate: Float64(321),
-				IsDefault:         Bool(false),
-				IsActive:          Bool(false),
+				ID:                harvest.Int64(2),
+				Name:              harvest.String("Task 2"),
+				BillableByDefault: harvest.Bool(false),
+				DefaultHourlyRate: harvest.Float64(321),
+				IsDefault:         harvest.Bool(false),
+				IsActive:          harvest.Bool(false),
 				CreatedAt:         &createdTwo,
 				UpdatedAt:         &updatedTwo,
-			}},
-		Pagination: Pagination{
-			PerPage:      Int(100),
-			TotalPages:   Int(1),
-			TotalEntries: Int(2),
+			},
+		},
+		Pagination: harvest.Pagination{
+			PerPage:      harvest.Int(100),
+			TotalPages:   harvest.Int(1),
+			TotalEntries: harvest.Int(2),
 			NextPage:     nil,
 			PreviousPage: nil,
-			Page:         Int(1),
-			Links: &PageLinks{
-				First:    String("https://api.harvestapp.com/v2/tasks?page=1&per_page=100"),
+			Page:         harvest.Int(1),
+			Links: &harvest.PageLinks{
+				First:    harvest.String("https://api.harvestapp.com/v2/tasks?page=1&per_page=100"),
 				Next:     nil,
 				Previous: nil,
-				Last:     String("https://api.harvestapp.com/v2/tasks?page=1&per_page=100"),
+				Last:     harvest.String("https://api.harvestapp.com/v2/tasks?page=1&per_page=100"),
 			},
 		},
 	}
@@ -275,8 +291,9 @@ func TestTaskService_List(t *testing.T) {
 }
 
 func TestTaskService_Update(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/tasks/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
@@ -285,12 +302,12 @@ func TestTaskService_Update(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"Task update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"Task 2","billable_by_default":false,"default_hourly_rate":321,"is_default":false,"is_active":false, "created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}`)
 	})
 
-	task, _, err := service.Task.Update(context.Background(), 1, &TaskUpdateRequest{
-		Name:              String("Task update"),
-		BillableByDefault: Bool(false),
-		DefaultHourlyRate: Float64(213),
-		IsDefault:         Bool(false),
-		IsActive:          Bool(false),
+	task, _, err := service.Task.Update(context.Background(), 1, &harvest.TaskUpdateRequest{
+		Name:              harvest.String("Task update"),
+		BillableByDefault: harvest.Bool(false),
+		DefaultHourlyRate: harvest.Float64(213),
+		IsDefault:         harvest.Bool(false),
+		IsActive:          harvest.Bool(false),
 	})
 	assert.NoError(t, err)
 
@@ -299,13 +316,13 @@ func TestTaskService_Update(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &Task{
-		Id:                Int64(1),
-		Name:              String("Task update"),
-		BillableByDefault: Bool(false),
-		DefaultHourlyRate: Float64(213),
-		IsDefault:         Bool(false),
-		IsActive:          Bool(false),
+	want := &harvest.Task{
+		ID:                harvest.Int64(1),
+		Name:              harvest.String("Task update"),
+		BillableByDefault: harvest.Bool(false),
+		DefaultHourlyRate: harvest.Float64(213),
+		IsDefault:         harvest.Bool(false),
+		IsActive:          harvest.Bool(false),
 		CreatedAt:         &createdOne,
 		UpdatedAt:         &updatedOne,
 	}

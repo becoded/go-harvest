@@ -10,10 +10,14 @@ import (
 // Harvest API docs: https://help.getharvest.com/api-v2/estimates-api/estimates/estimate-item-categories/
 
 type EstimateItemCategory struct {
-	Id        *int64     `json:"id,omitempty"`         // Unique ID for the estimate item category.
-	Name      *string    `json:"name,omitempty"`       // The name of the estimate item category.
-	CreatedAt *time.Time `json:"created_at,omitempty"` // Date and time the estimate item category was created.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"` // Date and time the estimate item category was last updated.
+	// Unique ID for the estimate item category.
+	ID *int64 `json:"id,omitempty"`
+	// The name of the estimate item category.
+	Name *string `json:"name,omitempty"`
+	// Date and time the estimate item category was created.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	// Date and time the estimate item category was last updated.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 type EstimateItemCategoryList struct {
@@ -41,19 +45,24 @@ type EstimateItemCategoryListOptions struct {
 	ListOptions
 }
 
-func (s *EstimateService) ListItemCategories(ctx context.Context, opt *EstimateItemCategoryListOptions) (*EstimateItemCategoryList, *http.Response, error) {
+func (s *EstimateService) ListItemCategories(
+	ctx context.Context,
+	opt *EstimateItemCategoryListOptions,
+) (*EstimateItemCategoryList, *http.Response, error) {
 	u := "estimate_item_categories"
+
 	u, err := addOptions(u, opt)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	estimateItemCategoryList := new(EstimateItemCategoryList)
+
 	resp, err := s.client.Do(ctx, req, &estimateItemCategoryList)
 	if err != nil {
 		return nil, resp, err
@@ -62,14 +71,19 @@ func (s *EstimateService) ListItemCategories(ctx context.Context, opt *EstimateI
 	return estimateItemCategoryList, resp, nil
 }
 
-func (s *EstimateService) GetItemCategory(ctx context.Context, estimateItemCategoryId int64) (*EstimateItemCategory, *http.Response, error) {
-	u := fmt.Sprintf("estimate_item_categories/%d", estimateItemCategoryId)
-	req, err := s.client.NewRequest("GET", u, nil)
+func (s *EstimateService) GetItemCategory(
+	ctx context.Context,
+	estimateItemCategoryID int64,
+) (*EstimateItemCategory, *http.Response, error) {
+	u := fmt.Sprintf("estimate_item_categories/%d", estimateItemCategoryID)
+
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	estimateItemCategory := new(EstimateItemCategory)
+
 	resp, err := s.client.Do(ctx, req, estimateItemCategory)
 	if err != nil {
 		return nil, resp, err
@@ -78,15 +92,19 @@ func (s *EstimateService) GetItemCategory(ctx context.Context, estimateItemCateg
 	return estimateItemCategory, resp, nil
 }
 
-func (s *EstimateService) CreateItemCategory(ctx context.Context, data *EstimateItemCategoryRequest) (*EstimateItemCategory, *http.Response, error) {
+func (s *EstimateService) CreateItemCategory(
+	ctx context.Context,
+	data *EstimateItemCategoryRequest,
+) (*EstimateItemCategory, *http.Response, error) {
 	u := "estimate_item_categories"
 
-	req, err := s.client.NewRequest("POST", u, data)
+	req, err := s.client.NewRequest(ctx, "POST", u, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	estimateItemCategory := new(EstimateItemCategory)
+
 	resp, err := s.client.Do(ctx, req, estimateItemCategory)
 	if err != nil {
 		return nil, resp, err
@@ -95,15 +113,20 @@ func (s *EstimateService) CreateItemCategory(ctx context.Context, data *Estimate
 	return estimateItemCategory, resp, nil
 }
 
-func (s *EstimateService) UpdateItemCategory(ctx context.Context, estimateItemCategoryId int64, data *EstimateItemCategoryRequest) (*EstimateItemCategory, *http.Response, error) {
-	u := fmt.Sprintf("estimate_item_categories/%d", estimateItemCategoryId)
+func (s *EstimateService) UpdateItemCategory(
+	ctx context.Context,
+	estimateItemCategoryID int64,
+	data *EstimateItemCategoryRequest,
+) (*EstimateItemCategory, *http.Response, error) {
+	u := fmt.Sprintf("estimate_item_categories/%d", estimateItemCategoryID)
 
-	req, err := s.client.NewRequest("PATCH", u, data)
+	req, err := s.client.NewRequest(ctx, "PATCH", u, data)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	estimateItemCategory := new(EstimateItemCategory)
+
 	resp, err := s.client.Do(ctx, req, estimateItemCategory)
 	if err != nil {
 		return nil, resp, err
@@ -112,9 +135,13 @@ func (s *EstimateService) UpdateItemCategory(ctx context.Context, estimateItemCa
 	return estimateItemCategory, resp, nil
 }
 
-func (s *EstimateService) DeleteItemCategory(ctx context.Context, estimateItemCategoryId int64) (*http.Response, error) {
-	u := fmt.Sprintf("estimate_item_categories/%d", estimateItemCategoryId)
-	req, err := s.client.NewRequest("DELETE", u, nil)
+func (s *EstimateService) DeleteItemCategory(
+	ctx context.Context,
+	estimateItemCategoryID int64,
+) (*http.Response, error) {
+	u := fmt.Sprintf("estimate_item_categories/%d", estimateItemCategoryID)
+
+	req, err := s.client.NewRequest(ctx, "DELETE", u, nil)
 	if err != nil {
 		return nil, err
 	}
