@@ -10,6 +10,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 
@@ -86,11 +87,13 @@ func testURLParseError(t *testing.T, err error) {
 	}
 }
 
-func testBody(t *testing.T, r *http.Request, want string) {
+func testBody(t *testing.T, r *http.Request, path string) {
+	want, err := os.ReadFile(filepath.Join("..", "testdata", path))
+	assert.NoError(t, err)
 	b, err := ioutil.ReadAll(r.Body)
 	assert.NoError(t, err, "error reading request body")
 
-	assert.Equal(t, want, string(b))
+	assert.Equal(t, string(want), string(b))
 }
 
 // Helper function to test that a value is marshalled to JSON as expected.
