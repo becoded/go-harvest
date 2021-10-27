@@ -2,7 +2,6 @@ package harvest
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
 
@@ -16,7 +15,8 @@ func TestCompanyService_Get(t *testing.T) {
 	mux.HandleFunc("/company", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		testFormValues(t, r, values{})
-		fmt.Fprint(w, `{"base_uri":"https://organisation.harvestapp.com","full_domain":"organisation.harvestapp.com","name":"organisation","is_active":true,"week_start_day":"Monday","wants_timestamp_timers": false,"time_format":"hours_minutes","plan_type":"free","clock":"24h","decimal_symbol":",","thousands_separator":".","color_scheme":"blue","expense_feature":true,"invoice_feature":true,"estimate_feature":true,"approval_feature":false}`)
+		testBody(t, r, "company/get/body_1.json")
+		testWriteResponse(t, w, "company/get/response_1.json")
 	})
 
 	company, _, err := service.Company.Get(context.Background())

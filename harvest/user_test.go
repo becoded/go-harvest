@@ -43,8 +43,8 @@ func TestUserService_Create(t *testing.T) {
 			method:     "POST",
 			path:       "/users",
 			formValues: values{},
-			body:       `{"first_name":"George","last_name":"Frank","email":"george@example.com","is_project_manager":true}` + "\n",
-			response:   `{"id":3,"first_name":"Gary","last_name":"Frank","email":"george@example.com","telephone":"","timezone":"Eastern Time (US & Canada)","has_access_to_all_future_projects":false,"is_contractor":false,"is_admin":false,"is_project_manager":true,"can_see_rates":false,"can_create_projects":false,"can_create_invoices":false,"is_active":true,"weekly_capacity":126000,"default_hourly_rate":0,"cost_rate":0,"roles":["Project Manager"],"avatar_url":"https://{ACCOUNT_SUBDOMAIN}.harvestapp.com/assets/profile_images/big_ben.png?1485372046","created_at":"2020-01-25T19:20:46Z","updated_at":"2020-01-25T19:20:57Z"}`,
+			body:       "user/create/body_1.json",
+			response:   "user/create/response_1.json",
 			want: &User{
 				Id:                           Int64(3),
 				FirstName:                    String("Gary"),
@@ -79,8 +79,7 @@ func TestUserService_Create(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				_, err := fmt.Fprint(w, tt.response)
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			user, _, err := service.User.Create(context.Background(), tt.args)
@@ -123,8 +122,8 @@ func TestUserService_Delete(t *testing.T) {
 			method:     "DELETE",
 			path:       "/users/1",
 			formValues: values{},
-			body:       "",
-			response:   "",
+			body:       "user/delete/body_1.json",
+			response:   "user/delete/response_1.json",
 			wantErr:    nil,
 		},
 	}
@@ -136,8 +135,7 @@ func TestUserService_Delete(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				_, err := fmt.Fprint(w, tt.response)
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			_, err := service.User.Delete(context.Background(), tt.args.userId)
@@ -187,8 +185,8 @@ func TestUserService_Get(t *testing.T) {
 			method:     "GET",
 			path:       "/users/3230547",
 			formValues: values{},
-			body:       "",
-			response:   `{"id":3230547,"first_name":"Jim","last_name":"Allen","email":"jimallen@example.com","telephone":"","timezone":"Mountain Time (US & Canada)","has_access_to_all_future_projects":false,"is_contractor":false,"is_admin":false,"is_project_manager":false,"can_see_rates":false,"can_create_projects":false,"can_create_invoices":false,"is_active":true,"created_at":"2020-05-01T22:34:41Z","updated_at":"2020-05-01T22:34:52Z","weekly_capacity":126000,"default_hourly_rate":100,"cost_rate":50,"roles":["Developer"],"avatar_url":"https://cache.harvestapp.com/assets/profile_images/abraj_albait_towers.png?1498516481"}`,
+			body:       "user/get/body_1.json",
+			response:   "user/get/response_1.json",
 			want: &User{
 				Id:                           Int64(3230547),
 				IsActive:                     Bool(true),
@@ -224,8 +222,7 @@ func TestUserService_Get(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				_, err := fmt.Fprint(w, tt.response)
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			user, _, err := service.User.Get(context.Background(), tt.args.userId)
@@ -276,8 +273,8 @@ func TestUserService_Current(t *testing.T) {
 			method:     "GET",
 			path:       "/users/me",
 			formValues: values{},
-			body:       "",
-			response:   `{"id":1782884,"first_name":"Bob","last_name":"Powell","email":"bobpowell@example.com","telephone":"","timezone":"Mountain Time (US & Canada)","has_access_to_all_future_projects":false,"is_contractor":false,"is_admin":true,"is_project_manager":false,"can_see_rates":true,"can_create_projects":true,"can_create_invoices":true,"is_active":true,"created_at":"2020-05-01T20:41:00Z","updated_at":"2020-05-01T20:42:25Z","weekly_capacity":126000,"default_hourly_rate":100,"cost_rate":75,"roles":["Founder","CEO"],"avatar_url":"https://cache.harvestapp.com/assets/profile_images/allen_bradley_clock_tower.png?1498509661"}`,
+			body:       "user/current/body_1.json",
+			response:   "user/current/response_1.json",
 			want: &User{
 				Id:                           Int64(1782884),
 				FirstName:                    String("Bob"),
@@ -312,8 +309,7 @@ func TestUserService_Current(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				_, err := fmt.Fprint(w, tt.response)
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			user, _, err := service.User.Current(context.Background())
@@ -452,8 +448,8 @@ func TestUserService_Update(t *testing.T) {
 	mux.HandleFunc("/users/3237198", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"first_name":"Project","last_name":"Manager","email":"pm@example.com"}`+"\n")
-		fmt.Fprint(w, `{"id":3237198,"first_name":"Project","last_name":"Manager","email":"pm@example.com","telephone":"","timezone":"Eastern Time (US & Canada)","has_access_to_all_future_projects":true,"is_contractor":false,"is_admin":false,"is_project_manager":true,"can_see_rates":true,"can_create_projects":true,"can_create_invoices":true,"is_active":true,"weekly_capacity":126000,"default_hourly_rate":120,"cost_rate":50,"roles":["Project Manager"],"avatar_url":"https://{ACCOUNT_SUBDOMAIN}.harvestapp.com/assets/profile_images/big_ben.png?1485372046","created_at":"2018-01-01T19:20:46Z","updated_at":"2019-01-25T19:20:57Z"}`)
+		testBody(t, r, "user/update/body_1.json")
+		testWriteResponse(t, w, "user/update/response_1.json")
 	})
 
 	user, _, err := service.User.Update(context.Background(), 3237198, &UserUpdateRequest{
