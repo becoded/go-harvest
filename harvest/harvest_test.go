@@ -96,6 +96,13 @@ func testBody(t *testing.T, r *http.Request, path string) {
 	assert.Equal(t, string(want), string(b))
 }
 
+func testWriteResponse(t *testing.T, w http.ResponseWriter, path string ) {
+	response, err := os.ReadFile(filepath.Join("..", "testdata", path))
+	assert.NoError(t, err)
+	_, err = fmt.Fprint(w, string(response))
+	assert.NoError(t, err)
+}
+
 // Helper function to test that a value is marshalled to JSON as expected.
 func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: deadcode,unused
 	j, err := json.Marshal(v)

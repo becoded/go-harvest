@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -81,10 +79,7 @@ func TestUserService_Create(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				response, err := os.ReadFile(filepath.Join("..", "testdata", tt.response))
-				assert.NoError(t, err)
-				_, err = fmt.Fprint(w, string(response))
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			user, _, err := service.User.Create(context.Background(), tt.args)
@@ -140,10 +135,7 @@ func TestUserService_Delete(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				response, err := os.ReadFile(filepath.Join("..", "testdata", tt.response))
-				assert.NoError(t, err)
-				_, err = fmt.Fprint(w, string(response))
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			_, err := service.User.Delete(context.Background(), tt.args.userId)
@@ -230,10 +222,7 @@ func TestUserService_Get(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				response, err := os.ReadFile(filepath.Join("..", "testdata", tt.response))
-				assert.NoError(t, err)
-				_, err = fmt.Fprint(w, string(response))
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			user, _, err := service.User.Get(context.Background(), tt.args.userId)
@@ -320,10 +309,7 @@ func TestUserService_Current(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				response, err := os.ReadFile(filepath.Join("..", "testdata", tt.response))
-				assert.NoError(t, err)
-				_, err = fmt.Fprint(w, string(response))
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			user, _, err := service.User.Current(context.Background())
@@ -463,10 +449,7 @@ func TestUserService_Update(t *testing.T) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
 		testBody(t, r, "user/update/body_1.json")
-		response, err := os.ReadFile(filepath.Join("..", "testdata", "user/update/response_1.json"))
-		assert.NoError(t, err)
-		_, err = fmt.Fprint(w, string(response))
-		assert.NoError(t, err)
+		testWriteResponse(t, w, "user/update/response_1.json")
 	})
 
 	user, _, err := service.User.Update(context.Background(), 3237198, &UserUpdateRequest{
