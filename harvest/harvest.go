@@ -290,7 +290,9 @@ type RateLimitError struct {
 }
 
 func (r *RateLimitError) Error() string {
-	return "Rate limit"
+	return fmt.Sprintf("%v %v: %d %v %v",
+		r.Response.Request.Method, sanitizeURL(r.Response.Request.URL),
+		r.Response.StatusCode, r.Message, "rate limit")
 }
 
 // AbuseRateLimitError occurs when Harvest returns 429 Too many requests response with the
