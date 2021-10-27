@@ -1,27 +1,33 @@
-package harvest
+package harvest_test
 
 import (
 	"fmt"
 	"testing"
+
+	"github.com/becoded/go-harvest/harvest"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStringify(t *testing.T) {
 	var nilPointer *string
 
-	var tests = []struct {
-		in  interface{}
-		out string
+	tests := []struct {
+		name string
+		in   interface{}
+		out  string
 	}{
 		// basic types
-		{"foo", `"foo"`},
-		{123, `123`},
-		{1.5, `1.5`},
-		{false, `false`},
+		{"case 1", "foo", `"foo"`},
+		{"case 2", 123, `123`},
+		{"case 3", 1.5, `1.5`},
+		{"case 4", false, `false`},
 		{
+			"case 5",
 			[]string{"a", "b"},
 			`["a" "b"]`,
 		},
 		{
+			"case 6",
 			struct {
 				A []string
 			}{nil},
@@ -29,6 +35,7 @@ func TestStringify(t *testing.T) {
 			`{}`,
 		},
 		{
+			"case 7",
 			struct {
 				A string
 			}{"foo"},
@@ -37,41 +44,57 @@ func TestStringify(t *testing.T) {
 		},
 
 		// pointers
-		{nilPointer, `<nil>`},
-		{String("foo"), `"foo"`},
-		{Int(123), `123`},
-		{Bool(false), `false`},
+		{"case 8", nilPointer, `<nil>`},
+		{"case 9", harvest.String("foo"), `"foo"`},
+		{"case 10", harvest.Int(123), `123`},
+		{"case 11", harvest.Bool(false), `false`},
 		{
-			[]*string{String("a"), String("b")},
+			"case 12",
+			[]*string{harvest.String("a"), harvest.String("b")},
 			`["a" "b"]`,
 		},
-
 		{
-			User{Id: Int64(123), FirstName: String("n")},
-			`harvest.User{Id:123, FirstName:"n"}`,
+			"case 13",
+			harvest.User{ID: harvest.Int64(123), FirstName: harvest.String("n")},
+			`harvest.User{ID:123, FirstName:"n"}`,
 		},
 	}
 
-	for i, tt := range tests {
-		s := Stringify(tt.in)
-		if s != tt.out {
-			t.Errorf("%d. Stringify(%q) => %q, response %q", i, tt.in, s, tt.out)
-		}
+	t.Parallel()
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			s := harvest.Stringify(tt.in)
+			assert.Equal(t, tt.out, s)
+		})
 	}
 }
 
 func TestString(t *testing.T) {
-	var tests = []struct {
-		in  interface{}
-		out string
+	tests := []struct {
+		name string
+		in   interface{}
+		out  string
 	}{
-		{User{Id: Int64(1)}, `harvest.User{Id:1}`},
+		{
+			"happy",
+			harvest.User{ID: harvest.Int64(1)},
+			`harvest.User{ID:1}`,
+		},
 	}
 
-	for i, tt := range tests {
-		s := tt.in.(fmt.Stringer).String()
-		if s != tt.out {
-			t.Errorf("%d. String() => %q, response %q", i, tt.in, tt.out)
-		}
+	t.Parallel()
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			s := tt.in.(fmt.Stringer).String()
+			assert.Equal(t, tt.out, s)
+		})
 	}
 }

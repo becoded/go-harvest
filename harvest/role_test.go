@@ -1,4 +1,4 @@
-package harvest
+package harvest_test
 
 import (
 	"context"
@@ -6,12 +6,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRoleService_CreateRole(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/roles", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
@@ -20,9 +23,9 @@ func TestRoleService_CreateRole(t *testing.T) {
 		testWriteResponse(t, w, "role/create/response_1.json")
 	})
 
-	role, _, err := service.Role.Create(context.Background(), &RoleCreateRequest{
-		Name:    String("Role new"),
-		UserIds: Ints64([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
+	role, _, err := service.Role.Create(context.Background(), &harvest.RoleCreateRequest{
+		Name:    harvest.String("Role new"),
+		UserIds: harvest.Ints64([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
 	})
 	assert.NoError(t, err)
 
@@ -31,10 +34,10 @@ func TestRoleService_CreateRole(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &Role{
-		Id:        Int64(1),
-		Name:      String("Role new"),
-		UserIds:   Ints64([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
+	want := &harvest.Role{
+		ID:        harvest.Int64(1),
+		Name:      harvest.String("Role new"),
+		UserIDs:   harvest.Ints64([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
 	}
@@ -43,8 +46,10 @@ func TestRoleService_CreateRole(t *testing.T) {
 }
 
 func TestRoleService_DeleteRole(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/roles/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "DELETE")
@@ -58,8 +63,10 @@ func TestRoleService_DeleteRole(t *testing.T) {
 }
 
 func TestRoleService_GetRole(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/roles/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
@@ -76,10 +83,10 @@ func TestRoleService_GetRole(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &Role{
-		Id:        Int64(1),
-		Name:      String("Role 1"),
-		UserIds:   Ints64([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
+	want := &harvest.Role{
+		ID:        harvest.Int64(1),
+		Name:      harvest.String("Role 1"),
+		UserIDs:   harvest.Ints64([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
 	}
@@ -88,8 +95,10 @@ func TestRoleService_GetRole(t *testing.T) {
 }
 
 func TestRoleService_ListRoles(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/roles", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
@@ -98,7 +107,7 @@ func TestRoleService_ListRoles(t *testing.T) {
 		testWriteResponse(t, w, "role/list/response_1.json")
 	})
 
-	role, _, err := service.Role.List(context.Background(), &RoleListOptions{})
+	role, _, err := service.Role.List(context.Background(), &harvest.RoleListOptions{})
 	assert.NoError(t, err)
 
 	createdOne := time.Date(
@@ -110,33 +119,34 @@ func TestRoleService_ListRoles(t *testing.T) {
 	updatedTwo := time.Date(
 		2018, 4, 30, 12, 13, 14, 0, time.UTC)
 
-	want := &RoleList{
-		Roles: []*Role{
+	want := &harvest.RoleList{
+		Roles: []*harvest.Role{
 			{
-				Id:        Int64(1),
-				Name:      String("Role 1"),
-				UserIds:   Ints64([]int64{1, 2, 3, 4, 5}),
+				ID:        harvest.Int64(1),
+				Name:      harvest.String("Role 1"),
+				UserIDs:   harvest.Ints64([]int64{1, 2, 3, 4, 5}),
 				CreatedAt: &createdOne,
 				UpdatedAt: &updatedOne,
 			}, {
-				Id:        Int64(2),
-				Name:      String("Role 2"),
-				UserIds:   Ints64([]int64{6, 7, 8, 9, 10}),
+				ID:        harvest.Int64(2),
+				Name:      harvest.String("Role 2"),
+				UserIDs:   harvest.Ints64([]int64{6, 7, 8, 9, 10}),
 				CreatedAt: &createdTwo,
 				UpdatedAt: &updatedTwo,
-			}},
-		Pagination: Pagination{
-			PerPage:      Int(100),
-			TotalPages:   Int(1),
-			TotalEntries: Int(2),
+			},
+		},
+		Pagination: harvest.Pagination{
+			PerPage:      harvest.Int(100),
+			TotalPages:   harvest.Int(1),
+			TotalEntries: harvest.Int(2),
 			NextPage:     nil,
 			PreviousPage: nil,
-			Page:         Int(1),
-			Links: &PageLinks{
-				First:    String("https://api.harvestapp.com/v2/roles?page=1&per_page=100"),
+			Page:         harvest.Int(1),
+			Links: &harvest.PageLinks{
+				First:    harvest.String("https://api.harvestapp.com/v2/roles?page=1&per_page=100"),
 				Next:     nil,
 				Previous: nil,
-				Last:     String("https://api.harvestapp.com/v2/roles?page=1&per_page=100"),
+				Last:     harvest.String("https://api.harvestapp.com/v2/roles?page=1&per_page=100"),
 			},
 		},
 	}
@@ -145,8 +155,10 @@ func TestRoleService_ListRoles(t *testing.T) {
 }
 
 func TestRoleService_UpdateRole(t *testing.T) {
-	service, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	service, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/roles/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
@@ -155,9 +167,9 @@ func TestRoleService_UpdateRole(t *testing.T) {
 		testWriteResponse(t, w, "role/update/response_1.json")
 	})
 
-	role, _, err := service.Role.Update(context.Background(), 1, &RoleUpdateRequest{
-		Name:    String("Role update"),
-		UserIds: Ints64([]int64{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}),
+	role, _, err := service.Role.Update(context.Background(), 1, &harvest.RoleUpdateRequest{
+		Name:    harvest.String("Role update"),
+		UserIds: harvest.Ints64([]int64{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}),
 	})
 	assert.NoError(t, err)
 
@@ -166,10 +178,10 @@ func TestRoleService_UpdateRole(t *testing.T) {
 	updatedOne := time.Date(
 		2018, 5, 31, 21, 34, 30, 0, time.UTC)
 
-	want := &Role{
-		Id:        Int64(1),
-		Name:      String("Role update"),
-		UserIds:   Ints64([]int64{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}),
+	want := &harvest.Role{
+		ID:        harvest.Int64(1),
+		Name:      harvest.String("Role update"),
+		UserIDs:   harvest.Ints64([]int64{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}),
 		CreatedAt: &createdOne,
 		UpdatedAt: &updatedOne,
 	}

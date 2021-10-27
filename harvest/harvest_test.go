@@ -1,9 +1,10 @@
-package harvest
+package harvest_test
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -13,7 +14,9 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
+	"time"
 
+	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,12 +24,17 @@ const (
 	baseURLPath = "/v2"
 )
 
-// setup sets up a test HTTP server along with a harvest.HarvestClient that is
+// setup sets up a test HTTP server along with a harvest.APIClient that is
 // configured to talk to that test server. Tests should register handlers on
 // mux which provide mock responses for the API method being tested.
-func setup() (client *HarvestClient, mux *http.ServeMux, serverURL string, teardown func()) {
+func setup(t *testing.T) (client *harvest.APIClient, mux *http.ServeMux, teardown func()) {
 	// mux is the HTTP request multiplexer used with the test server.
 	mux = http.NewServeMux()
+
+	loc, err := time.LoadLocation("UTC")
+	assert.NoError(t, err)
+	// handle err
+	time.Local = loc // -> this is setting the global timezone
 
 	apiHandler := http.NewServeMux()
 	apiHandler.Handle(baseURLPath+"/", http.StripPrefix(baseURLPath, mux))
@@ -44,12 +52,15 @@ func setup() (client *HarvestClient, mux *http.ServeMux, serverURL string, teard
 
 	// client is the Harvest client being tested and is
 	// configured to use test server.
-	client = NewHarvestClient(nil)
-	url, _ := url.Parse(server.URL + baseURLPath + "/")
-	client.BaseURL = url
-	client.AccountId = "test-account-id"
+	client = harvest.NewAPIClient(nil)
 
-	return client, mux, server.URL, server.Close
+	url, err := url.Parse(server.URL + baseURLPath + "/")
+	assert.NoError(t, err)
+
+	client.BaseURL = url
+	client.AccountID = "test-account-id"
+
+	return client, mux, server.Close
 }
 
 func testMethod(t *testing.T, r *http.Request, want string) {
@@ -82,7 +93,8 @@ func testHeader(t *testing.T, r *http.Request, header string, want string) { //n
 func testURLParseError(t *testing.T, err error) {
 	assert.Error(t, err, "Expected error to be returned")
 
-	if err, ok := err.(*url.Error); !ok || err.Op != "parse" {
+	var e *url.Error
+	if !errors.As(err, &e) || e.Op != "parse" {
 		t.Errorf("Expected URL parse error, got %+v", err)
 	}
 }
@@ -127,77 +139,95 @@ func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: deadc
 }
 
 func TestNewHarvestClient(t *testing.T) {
-	c := NewHarvestClient(nil)
+	t.Parallel()
 
-	if got, want := c.BaseURL.String(), defaultBaseURL; got != want {
-		t.Errorf("NewClient BaseURL is %v, response %v", got, want)
-	}
-	if got, want := c.UserAgent, userAgent; got != want {
-		t.Errorf("NewClient UserAgent is %v, response %v", got, want)
-	}
+	c := harvest.NewAPIClient(nil)
 
-	c2 := NewHarvestClient(nil)
-	if c.client == c2.client {
-		t.Error("NewClient returned same http.Clients, but they should differ")
-	}
+	assert.Equal(t, harvest.DefaultBaseURL, c.BaseURL.String())
+	assert.Equal(t, harvest.UserAgent, c.UserAgent)
+
+	c2 := harvest.NewAPIClient(nil)
+
+	assert.NotSame(t, c, c2)
 }
 
 func TestNewRequest_invalidJSON(t *testing.T) {
-	c := NewHarvestClient(nil)
+	t.Parallel()
+
+	c := harvest.NewAPIClient(nil)
 
 	type T struct {
 		A map[interface{}]interface{}
 	}
-	_, err := c.NewRequest("GET", ".", &T{})
+
+	ctx := context.Background()
+	_, err := c.NewRequest(ctx, "GET", ".", &T{})
 
 	if err == nil {
 		t.Error("Expected error to be returned.")
 	}
-	if err, ok := err.(*json.UnsupportedTypeError); !ok {
+
+	var e *json.UnsupportedTypeError
+	if !errors.As(err, &e) {
 		t.Errorf("Expected a JSON error; got %#v.", err)
 	}
 }
 
 func TestNewRequest_badURL(t *testing.T) {
-	c := NewHarvestClient(nil)
-	_, err := c.NewRequest("GET", ":", nil)
+	t.Parallel()
+
+	c := harvest.NewAPIClient(nil)
+	ctx := context.Background()
+	_, err := c.NewRequest(ctx, "GET", ":", nil)
 	testURLParseError(t, err)
 }
 
 // ensure that no User-Agent header is set if the client's UserAgent is empty.
 // This caused a problem with Google's internal http client.
 func TestNewRequest_emptyUserAgent(t *testing.T) {
-	c := NewHarvestClient(nil)
+	t.Parallel()
+
+	c := harvest.NewAPIClient(nil)
 	c.UserAgent = ""
-	req, err := c.NewRequest("GET", ".", nil)
+	ctx := context.Background()
+
+	req, err := c.NewRequest(ctx, "GET", ".", nil)
 	if err != nil {
 		t.Fatalf("NewRequest returned unexpected error: %v", err)
 	}
+
 	if _, ok := req.Header["User-Agent"]; ok {
 		t.Fatal("constructed request contains unexpected User-Agent header")
 	}
 }
 
-// If a nil body is passed to github.NewRequest, make sure that nil is also
+// If a nil body is passed to harvest.NewRequest, make sure that nil is also
 // passed to http.NewRequest. In most cases, passing an io.Reader that returns
 // no content is fine, since there is no difference between an HTTP request
 // body that is an empty string versus one that is not set at all. However in
 // certain cases, intermediate systems may treat these differently resulting in
 // subtle errors.
 func TestNewRequest_emptyBody(t *testing.T) {
-	c := NewHarvestClient(nil)
-	req, err := c.NewRequest("GET", ".", nil)
+	t.Parallel()
+
+	c := harvest.NewAPIClient(nil)
+	ctx := context.Background()
+
+	req, err := c.NewRequest(ctx, "GET", ".", nil)
 	if err != nil {
 		t.Fatalf("NewRequest returned unexpected error: %v", err)
 	}
+
 	if req.Body != nil {
 		t.Fatalf("constructed request contains a non-nil Body")
 	}
 }
 
 func TestDo(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	client, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	type foo struct {
 		A string
@@ -208,8 +238,11 @@ func TestDo(t *testing.T) {
 		fmt.Fprint(w, `{"A":"a"}`)
 	})
 
-	req, _ := client.NewRequest("GET", ".", nil)
+	ctx := context.Background()
+
+	req, _ := client.NewRequest(ctx, "GET", ".", nil)
 	body := new(foo)
+
 	_, err := client.Do(context.Background(), req, body)
 	if err != nil {
 		t.Error(err)
@@ -222,19 +255,23 @@ func TestDo(t *testing.T) {
 }
 
 func TestDo_httpError(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
+	t.Parallel()
+
+	client, mux, teardown := setup(t)
+	t.Cleanup(teardown)
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", 400)
 	})
 
-	req, _ := client.NewRequest("GET", ".", nil)
-	resp, err := client.Do(context.Background(), req, nil)
+	ctx := context.Background()
+	req, _ := client.NewRequest(ctx, "GET", ".", nil)
+	resp, err := client.Do(ctx, req, nil)
 
 	if err == nil {
 		t.Fatal("Expected HTTP 400 error, got no error.")
 	}
+
 	if resp.StatusCode != 400 {
 		t.Errorf("Expected HTTP 400 error, got %d status code.", resp.StatusCode)
 	}
