@@ -2,7 +2,6 @@ package harvest_test
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -20,8 +19,8 @@ func TestRoleService_CreateRole(t *testing.T) {
 	mux.HandleFunc("/roles", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"name":"Role new","user_ids":[1,2,3,4,5,6,7,8,9,10]}`+"\n")
-		fmt.Fprint(w, `{"id":1,"name":"Role new","user_ids":[1,2,3,4,5,6,7,8,9,10],"created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
+		testBody(t, r, "role/create/body_1.json")
+		testWriteResponse(t, w, "role/create/response_1.json")
 	})
 
 	role, _, err := service.Role.Create(context.Background(), &harvest.RoleCreateRequest{
@@ -55,8 +54,8 @@ func TestRoleService_DeleteRole(t *testing.T) {
 	mux.HandleFunc("/roles/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "DELETE")
 		testFormValues(t, r, values{})
-		testBody(t, r, ``)
-		fmt.Fprint(w, ``)
+		testBody(t, r, "role/delete/body_1.json")
+		testWriteResponse(t, w, "role/delete/response_1.json")
 	})
 
 	_, err := service.Role.Delete(context.Background(), 1)
@@ -72,7 +71,8 @@ func TestRoleService_GetRole(t *testing.T) {
 	mux.HandleFunc("/roles/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		testFormValues(t, r, values{})
-		fmt.Fprint(w, `{"id":1,"name":"Role 1","user_ids":[1,2,3,4,5,6,7,8,9,10],"created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
+		testBody(t, r, "role/get/body_1.json")
+		testWriteResponse(t, w, "role/get/response_1.json")
 	})
 
 	role, _, err := service.Role.Get(context.Background(), 1)
@@ -103,7 +103,8 @@ func TestRoleService_ListRoles(t *testing.T) {
 	mux.HandleFunc("/roles", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		testFormValues(t, r, values{})
-		fmt.Fprint(w, `{"roles":[{"id":1,"name":"Role 1","user_ids":[1,2,3,4,5],"created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"Role 2","user_ids":[6,7,8,9,10],"created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}],"per_page":100,"total_pages":1,"total_entries":2,"next_page":null,"previous_page":null,"page":1,"links":{"first":"https://api.harvestapp.com/v2/roles?page=1&per_page=100","next":null,"previous":null,"last":"https://api.harvestapp.com/v2/roles?page=1&per_page=100"}}`)
+		testBody(t, r, "role/list/body_1.json")
+		testWriteResponse(t, w, "role/list/response_1.json")
 	})
 
 	role, _, err := service.Role.List(context.Background(), &harvest.RoleListOptions{})
@@ -162,8 +163,8 @@ func TestRoleService_UpdateRole(t *testing.T) {
 	mux.HandleFunc("/roles/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"name":"Role update","user_ids":[11,12,13,14,15,16,17,18,19,20]}`+"\n")
-		fmt.Fprint(w, `{"id":1,"name":"Role update","is_active":true,"user_ids":[11,12,13,14,15,16,17,18,19,20],"created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
+		testBody(t, r, "role/update/body_1.json")
+		testWriteResponse(t, w, "role/update/response_1.json")
 	})
 
 	role, _, err := service.Role.Update(context.Background(), 1, &harvest.RoleUpdateRequest{

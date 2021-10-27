@@ -2,7 +2,6 @@ package harvest_test
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -43,8 +42,8 @@ func TestTaskService_Create(t *testing.T) {
 			method:     "POST",
 			path:       "/tasks",
 			formValues: values{},
-			body:       `{"name":"Task new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true}` + "\n",
-			response:   `{"id":1,"name":"Task new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`,
+			body:       "task/create/body_1.json",
+			response:   "task/create/response_1.json",
 			want: &harvest.Task{
 				ID:                harvest.Int64(1),
 				Name:              harvest.String("Task new"),
@@ -69,8 +68,7 @@ func TestTaskService_Create(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				_, err := fmt.Fprint(w, tt.response)
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			task, _, err := service.Task.Create(context.Background(), tt.args)
@@ -114,8 +112,8 @@ func TestTaskService_Delete(t *testing.T) {
 			method:     "DELETE",
 			path:       "/tasks/1",
 			formValues: values{},
-			body:       "",
-			response:   "",
+			body:       "task/delete/body_1.json",
+			response:   "task/delete/response_1.json",
 			wantErr:    nil,
 		},
 	}
@@ -130,8 +128,7 @@ func TestTaskService_Delete(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				_, err := fmt.Fprint(w, tt.response)
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			_, err := service.Task.Delete(context.Background(), tt.args.taskID)
@@ -180,8 +177,8 @@ func TestTaskService_Get(t *testing.T) {
 			method:     "GET",
 			path:       "/tasks/1",
 			formValues: values{},
-			body:       "",
-			response:   `{"id":1,"name":"Task new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`,
+			body:       "task/get/body_1.json",
+			response:   "task/get/response_1.json",
 			want: &harvest.Task{
 				ID:                harvest.Int64(1),
 				Name:              harvest.String("Task new"),
@@ -206,8 +203,7 @@ func TestTaskService_Get(t *testing.T) {
 				testMethod(t, r, tt.method)
 				testFormValues(t, r, tt.formValues)
 				testBody(t, r, tt.body)
-				_, err := fmt.Fprint(w, tt.response)
-				assert.NoError(t, err)
+				testWriteResponse(t, w, tt.response)
 			})
 
 			task, _, err := service.Task.Get(context.Background(), tt.args.taskID)
@@ -234,7 +230,8 @@ func TestTaskService_List(t *testing.T) {
 	mux.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		testFormValues(t, r, values{})
-		fmt.Fprint(w, `{"tasks":[{"id":1,"name":"Task 1","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"Task 2","billable_by_default":false,"default_hourly_rate":321,"is_default":false,"is_active":false, "created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}],"per_page":100,"total_pages":1,"total_entries":2,"next_page":null,"previous_page":null,"page":1,"links":{"first":"https://api.harvestapp.com/v2/tasks?page=1&per_page=100","next":null,"previous":null,"last":"https://api.harvestapp.com/v2/tasks?page=1&per_page=100"}}`)
+		testBody(t, r, "task/list/body_1.json")
+		testWriteResponse(t, w, "task/list/response_1.json")
 	})
 
 	taskList, _, err := service.Task.List(context.Background(), &harvest.TaskListOptions{})
@@ -298,8 +295,8 @@ func TestTaskService_Update(t *testing.T) {
 	mux.HandleFunc("/tasks/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"name":"Task update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false}`+"\n")
-		fmt.Fprint(w, `{"id":1,"name":"Task update","billable_by_default":false,"default_hourly_rate":213,"is_default":false,"is_active":false, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"},{"id":2,"name":"Task 2","billable_by_default":false,"default_hourly_rate":321,"is_default":false,"is_active":false, "created_at":"2018-03-02T10:12:13Z","updated_at":"2018-04-30T12:13:14Z"}`)
+		testBody(t, r, "task/update/body_1.json")
+		testWriteResponse(t, w, "task/update/response_1.json")
 	})
 
 	task, _, err := service.Task.Update(context.Background(), 1, &harvest.TaskUpdateRequest{

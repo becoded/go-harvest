@@ -2,7 +2,6 @@ package harvest_test
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"reflect"
 	"testing"
@@ -21,8 +20,8 @@ func TestTimesheetService_CreateTimeEntryViaDuration(t *testing.T) {
 	mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"user_id":1,"project_id":2,"task_id":3,"spent_date":"2018-03-30T22:24:10Z","hours":1.2,"notes":"Writing tests"}`+"\n")
-		fmt.Fprint(w, `{"id":1,"name":"TimeEntry new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
+		testBody(t, r, "time_entry/create/body_1.json")
+		testWriteResponse(t, w, "time_entry/create/response_1.json")
 	})
 
 	spentDate := time.Date(2018, 3, 30, 22, 24, 10, 0, time.UTC)
@@ -89,8 +88,8 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 	mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"user_id":1782959,"project_id":14307913,"task_id":8083365,"spent_date":"2017-03-21T22:24:10Z","started_time":"8:00am","ended_time":"9:00am","notes":"Writing tests"}`+"\n")
-		fmt.Fprint(w, `{"id":1,"name":"TimeEntry new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
+		testBody(t, r, "time_entry/create/body_2.json")
+		testWriteResponse(t, w, "time_entry/create/response_2.json")
 	})
 
 	spentDate := time.Date(2017, 3, 21, 22, 24, 10, 0, time.UTC)
@@ -131,8 +130,8 @@ func TestTimesheetService_DeleteTimeEntry(t *testing.T) {
 	mux.HandleFunc("/time_entries/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "DELETE")
 		testFormValues(t, r, values{})
-		testBody(t, r, ``)
-		fmt.Fprint(w, ``)
+		testBody(t, r, "time_entry/delete/body_1.json")
+		testWriteResponse(t, w, "time_entry/delete/response_1.json")
 	})
 
 	_, err := service.Timesheet.DeleteTimeEntry(context.Background(), 1)
@@ -150,7 +149,8 @@ func TestTimesheetService_GetTimeEntry(t *testing.T) {
 	mux.HandleFunc("/time_entries/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		testFormValues(t, r, values{})
-		fmt.Fprint(w, `{"id":1,"name":"TimeEntry new","billable_by_default":true,"default_hourly_rate":123,"is_default":true,"is_active":true, "created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z"}`)
+		testBody(t, r, "time_entry/get/body_1.json")
+		testWriteResponse(t, w, "time_entry/get/response_1.json")
 	})
 
 	timeEntry, _, err := service.Timesheet.Get(context.Background(), 1)
@@ -181,256 +181,8 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 	mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		testFormValues(t, r, values{})
-		fmt.Fprint(w, `{
-  "time_entries":[
-    {
-      "id":636709355,
-      "spent_date":"2017-03-02",
-      "user":{
-        "id":1782959,
-        "name":"Kim Allen"
-      },
-      "client":{
-        "id":5735774,
-        "name":"ABC Corp"
-      },
-      "project":{
-        "id":14307913,
-        "name":"Marketing Website"
-      },
-      "task":{
-        "id":8083365,
-        "name":"Graphic Design"
-      },
-      "user_assignment":{
-        "id":125068553,
-        "is_project_manager":true,
-        "is_active":true,
-        "budget":null,
-        "created_at":"2017-06-26T22:32:52Z",
-        "updated_at":"2017-06-26T22:32:52Z",
-        "hourly_rate":100.0
-      },
-      "task_assignment":{
-        "id":155502709,
-        "billable":true,
-        "is_active":true,
-        "created_at":"2017-06-26T21:36:23Z",
-        "updated_at":"2017-06-26T21:36:23Z",
-        "hourly_rate":100.0,
-        "budget":null
-      },
-      "hours":2.11,
-      "rounded_hours": 2.25,
-      "notes":"Adding CSS styling",
-      "created_at":"2017-06-27T15:50:15Z",
-      "updated_at":"2017-06-27T16:47:14Z",
-      "is_locked":true,
-      "locked_reason":"Item Approved and Locked for this Time Period",
-      "is_closed":true,
-      "is_billed":false,
-      "timer_started_at":null,
-      "started_time":"3:00pm",
-      "ended_time":"5:00pm",
-      "is_running":false,
-      "invoice":null,
-      "external_reference":null,
-      "billable":true,
-      "budgeted":true,
-      "billable_rate":100.0,
-      "cost_rate":50.0
-    },
-    {
-      "id":636708723,
-      "spent_date":"2017-03-01",
-      "user":{
-        "id":1782959,
-        "name":"Kim Allen"
-      },
-      "client":{
-        "id":5735776,
-        "name":"123 Industries"
-      },
-      "project":{
-        "id":14308069,
-        "name":"Online Store - Phase 1"
-      },
-      "task":{
-        "id":8083366,
-        "name":"Programming"
-      },
-      "user_assignment":{
-        "id":125068554,
-        "is_project_manager":true,
-        "is_active":true,
-        "budget":null,
-        "created_at":"2017-06-26T22:32:52Z",
-        "updated_at":"2017-06-26T22:32:52Z",
-        "hourly_rate":100.0
-      },
-      "task_assignment":{
-        "id":155505014,
-        "billable":true,
-        "is_active":true,
-        "created_at":"2017-06-26T21:52:18Z",
-        "updated_at":"2017-06-26T21:52:18Z",
-        "hourly_rate":100.0,
-        "budget":null
-      },
-      "hours":1.35,
-      "rounded_hours":1.5,
-      "notes":"Importing products",
-      "created_at":"2017-06-27T15:49:28Z",
-      "updated_at":"2017-06-27T16:47:14Z",
-      "is_locked":true,
-      "locked_reason":"Item Invoiced and Approved and Locked for this Time Period",
-      "is_closed":true,
-      "is_billed":true,
-      "timer_started_at":null,
-      "started_time":"1:00pm",
-      "ended_time":"2:00pm",
-      "is_running":false,
-      "invoice":{
-        "id":13150403,
-        "number":"1001"
-      },
-      "external_reference":null,
-      "billable":true,
-      "budgeted":true,
-      "billable_rate":100.0,
-      "cost_rate":50.0
-    },
-    {
-      "id":636708574,
-      "spent_date":"2017-03-01",
-      "user":{
-        "id":1782959,
-        "name":"Kim Allen"
-      },
-      "client":{
-        "id":5735776,
-        "name":"123 Industries"
-      },
-      "project":{
-        "id":14308069,
-        "name":"Online Store - Phase 1"
-      },
-      "task":{
-        "id":8083369,
-        "name":"Research"
-      },
-      "user_assignment":{
-        "id":125068554,
-        "is_project_manager":true,
-        "is_active":true,
-        "budget":null,
-        "created_at":"2017-06-26T22:32:52Z",
-        "updated_at":"2017-06-26T22:32:52Z",
-        "hourly_rate":100.0
-      },
-      "task_assignment":{
-        "id":155505016,
-        "billable":false,
-        "is_active":true,
-        "created_at":"2017-06-26T21:52:18Z",
-        "updated_at":"2017-06-26T21:54:06Z",
-        "hourly_rate":100.0,
-        "budget":null
-      },
-      "hours":1.0,
-      "rounded_hours":1.0,
-      "notes":"Evaluating 3rd party libraries",
-      "created_at":"2017-06-27T15:49:17Z",
-      "updated_at":"2017-06-27T16:47:14Z",
-      "is_locked":true,
-      "locked_reason":"Item Approved and Locked for this Time Period",
-      "is_closed":true,
-      "is_billed":false,
-      "timer_started_at":null,
-      "started_time":"11:00am",
-      "ended_time":"12:00pm",
-      "is_running":false,
-      "invoice":null,
-      "external_reference":null,
-      "billable":false,
-      "budgeted":true,
-      "billable_rate":null,
-      "cost_rate":50.0
-    },
-    {
-      "id":636707831,
-      "spent_date":"2017-03-01",
-      "user":{
-        "id":1782959,
-        "name":"Kim Allen"
-      },
-      "client":{
-        "id":5735776,
-        "name":"123 Industries"
-      },
-      "project":{
-        "id":14308069,
-        "name":"Online Store - Phase 1"
-      },
-      "task":{
-        "id":8083368,
-        "name":"Project Management"
-      },
-      "user_assignment":{
-        "id":125068554,
-        "is_project_manager":true,
-        "is_active":true,
-        "budget":null,
-        "created_at":"2017-06-26T22:32:52Z",
-        "updated_at":"2017-06-26T22:32:52Z",
-        "hourly_rate":100.0
-      },
-      "task_assignment":{
-        "id":155505015,
-        "billable":true,
-        "is_active":true,
-        "created_at":"2017-06-26T21:52:18Z",
-        "updated_at":"2017-06-26T21:52:18Z",
-        "hourly_rate":100.0,
-        "budget":null
-      },
-      "hours":2.0,
-      "rounded_hours":2.0,
-      "notes":"Planning meetings",
-      "created_at":"2017-06-27T15:48:24Z",
-      "updated_at":"2017-06-27T16:47:14Z",
-      "is_locked":true,
-      "locked_reason":"Item Invoiced and Approved and Locked for this Time Period",
-      "is_closed":true,
-      "is_billed":true,
-      "timer_started_at":null,
-      "started_time":"9:00am",
-      "ended_time":"11:00am",
-      "is_running":false,
-      "invoice":{
-        "id":13150403,
-        "number":"1001"
-      },
-      "external_reference":null,
-      "billable":true,
-      "budgeted":true,
-      "billable_rate":100.0,
-      "cost_rate":50.0
-    }
-  ],
-  "per_page":100,
-  "total_pages":1,
-  "total_entries":4,
-  "next_page":null,
-  "previous_page":null,
-  "page":1,
-  "links":{
-    "first":"https://api.harvestapp.com/v2/time_entries?page=1&per_page=100",
-    "next":null,
-    "previous":null,
-    "last":"https://api.harvestapp.com/v2/time_entries?page=1&per_page=100"
-  }
-}`)
+		testBody(t, r, "time_entry/list/body_1.json")
+		testWriteResponse(t, w, "time_entry/list/response_1.json")
 	})
 
 	taskList, _, err := service.Timesheet.List(context.Background(), &harvest.TimeEntryListOptions{})
@@ -694,7 +446,8 @@ func TestTimesheetService_RestartTimeEntry(t *testing.T) {
 	mux.HandleFunc("/time_entries/662202797/restart", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		fmt.Fprint(w, `{"id":662202797,"spent_date":"2017-03-21","user":{"id":1795925,"name":"Jane Smith"},"client":{"id":5735776,"name":"123 Industries"},"project":{"id":14808188,"name":"Task Force"},"task":{"id":8083366,"name":"Programming"},"user_assignment":{"id":130403296,"is_project_manager":true,"is_active":true,"budget":null,"created_at":"2017-08-22T17:36:54Z","updated_at":"2017-08-22T17:36:54Z","hourly_rate":100},"task_assignment":{"id":160726645,"billable":true,"is_active":true,"created_at":"2017-08-22T17:36:54Z","updated_at":"2017-08-22T17:36:54Z","hourly_rate":100,"budget":null},"hours":0,"rounded_hours":0,"notes":null,"created_at":"2017-08-22T17:40:24Z","updated_at":"2017-08-22T17:40:24Z","is_locked":false,"locked_reason":null,"is_closed":false,"is_billed":false,"timer_started_at":"2017-08-22T17:40:24Z","started_time":"11:40am","ended_time":null,"is_running":true,"invoice":null,"external_reference":null,"billable":true,"budgeted":false,"billable_rate":100,"cost_rate":75}`)
+		testBody(t, r, "time_entry/restart/body_1.json")
+		testWriteResponse(t, w, "time_entry/restart/response_1.json")
 	})
 
 	timeEntry, _, err := service.Timesheet.RestartTimeEntry(context.Background(), 662202797)
@@ -783,7 +536,8 @@ func TestTimesheetService_StopTimeEntry(t *testing.T) {
 	mux.HandleFunc("/time_entries/662202797/stop", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		fmt.Fprint(w, `{"id":662202797,"spent_date":"2017-03-21","user":{"id":1795925,"name":"Jane Smith"},"client":{"id":5735776,"name":"123 Industries"},"project":{"id":14808188,"name":"Task Force"},"task":{"id":8083366,"name":"Programming"},"user_assignment":{"id":130403296,"is_project_manager":true,"is_active":true,"budget":null,"created_at":"2017-08-22T17:36:54Z","updated_at":"2017-08-22T17:36:54Z","hourly_rate":100},"task_assignment":{"id":160726645,"billable":true,"is_active":true,"created_at":"2017-08-22T17:36:54Z","updated_at":"2017-08-22T17:36:54Z","hourly_rate":100,"budget":null},"hours":0.02,"rounded_hours":0.25,"notes":null,"created_at":"2017-08-22T17:37:13Z","updated_at":"2017-08-22T17:38:31Z","is_locked":false,"locked_reason":null,"is_closed":false,"is_billed":false,"timer_started_at":null,"started_time":"11:37am","ended_time":"11:38am","is_running":false,"invoice":null,"external_reference":null,"billable":true,"budgeted":false,"billable_rate":100,"cost_rate":75}`)
+		testBody(t, r, "time_entry/stop/body_1.json")
+		testWriteResponse(t, w, "time_entry/stop/response_1.json")
 	})
 
 	timeEntry, _, err := service.Timesheet.StopTimeEntry(context.Background(), 662202797)
@@ -868,8 +622,8 @@ func TestTimesheetService_UpdateTimeEntry(t *testing.T) {
 	mux.HandleFunc("/time_entries/636718192", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "PATCH")
 		testFormValues(t, r, values{})
-		testBody(t, r, `{"project_id":1234,"task_id":2345,"spent_date":"2017-03-21T00:00:00Z","started_time":"11:40am","ended_time":"12:45pm","hours":1,"notes":"new notes"}`+"\n")
-		fmt.Fprint(w, `{"id":636718192,"spent_date":"2017-03-21","user":{"id":1782959,"name":"Kim Allen"},"client":{"id":5735774,"name":"ABC Corp"},"project":{"id":14307913,"name":"Marketing Website"},"task":{"id":8083365,"name":"Graphic Design"},"user_assignment":{"id":125068553,"is_project_manager":true,"is_active":true,"budget":null,"created_at":"2017-06-26T22:32:52Z","updated_at":"2017-06-26T22:32:52Z","hourly_rate":100},"task_assignment":{"id":155502709,"billable":true,"is_active":true,"created_at":"2017-06-26T21:36:23Z","updated_at":"2017-06-26T21:36:23Z","hourly_rate":100,"budget":null},"hours":1,"rounded_hours":1,"notes":"Updated notes","created_at":"2017-06-27T16:01:23Z","updated_at":"2017-06-27T16:02:40Z","is_locked":false,"locked_reason":null,"is_closed":false,"is_billed":false,"timer_started_at":null,"started_time":null,"ended_time":null,"is_running":false,"invoice":null,"external_reference":null,"billable":true,"budgeted":true,"billable_rate":100,"cost_rate":50}`)
+		testBody(t, r, "time_entry/update/body_1.json")
+		testWriteResponse(t, w, "time_entry/update/response_1.json")
 	})
 
 	spentDate := time.Date(2017, 3, 21, 0, 0, 0, 0, time.Local)
