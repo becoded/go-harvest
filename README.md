@@ -20,8 +20,8 @@ ts := oauth2.StaticTokenSource(
     },
 )
 tc := oauth2.NewClient(ctx, ts)
-service := harvest.NewHarvestClient(tc)
-service.AccountId = os.Getenv("HARVEST_ACCOUNT_ID")
+service := harvest.NewAPIClient(tc)
+service.AccountID = os.Getenv("HARVEST_ACCOUNT_ID")
 
 c, _, err := service.Company.Get(ctx)
 if err != nil {
