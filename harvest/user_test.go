@@ -2,7 +2,6 @@ package harvest_test
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -67,7 +66,9 @@ func TestUserService_Create(t *testing.T) {
 				DefaultHourlyRate:            harvest.Float64(0),
 				CostRate:                     harvest.Float64(0),
 				Roles:                        &roles,
-				AvatarURL:                    harvest.String("https://{ACCOUNT_SUBDOMAIN}.harvestapp.com/assets/profile_images/big_ben.png?1485372046"),
+				AvatarURL: harvest.String(
+					"https://{ACCOUNT_SUBDOMAIN}.harvestapp.com/assets/profile_images/big_ben.png?1485372046",
+				),
 			},
 			wantErr: nil,
 		},
@@ -215,7 +216,9 @@ func TestUserService_Get(t *testing.T) {
 				CostRate:                     harvest.Float64(50),
 				DefaultHourlyRate:            harvest.Float64(100),
 				WeeklyCapacity:               harvest.Int(126000),
-				AvatarURL:                    harvest.String("https://cache.harvestapp.com/assets/profile_images/abraj_albait_towers.png?1498516481"),
+				AvatarURL: harvest.String(
+					"https://cache.harvestapp.com/assets/profile_images/abraj_albait_towers.png?1498516481",
+				),
 
 				CreatedAt: &createdOne,
 				UpdatedAt: &updatedOne,
@@ -309,7 +312,9 @@ func TestUserService_Current(t *testing.T) {
 				DefaultHourlyRate:            harvest.Float64(100.0),
 				CostRate:                     harvest.Float64(75.0),
 				Roles:                        &roles,
-				AvatarURL:                    harvest.String("https://cache.harvestapp.com/assets/profile_images/allen_bradley_clock_tower.png?1498509661"),
+				AvatarURL: harvest.String(
+					"https://cache.harvestapp.com/assets/profile_images/allen_bradley_clock_tower.png?1498509661",
+				),
 			},
 			wantErr: nil,
 		},
@@ -352,7 +357,8 @@ func TestUserService_List(t *testing.T) {
 	mux.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		testFormValues(t, r, values{})
-		fmt.Fprint(w, `{"users":[{"id":3230547,"first_name":"Jim","last_name":"Allen","email":"jimallen@example.com","telephone":"","timezone":"Mountain Time (US & Canada)","has_access_to_all_future_projects":false,"is_contractor":false,"is_admin":false,"is_project_manager":false,"can_see_rates":false,"can_create_projects":false,"can_create_invoices":false,"is_active":true,"created_at":"2020-05-01T22:34:41Z","updated_at":"2020-05-01T22:34:52Z","weekly_capacity":126000,"default_hourly_rate":100,"cost_rate":50,"roles":["Developer"],"avatar_url":"https://cache.harvestapp.com/assets/profile_images/abraj_albait_towers.png?1498516481"},{"id":1782959,"first_name":"Kim","last_name":"Allen","email":"kimallen@example.com","telephone":"","timezone":"Eastern Time (US & Canada)","has_access_to_all_future_projects":true,"is_contractor":false,"is_admin":false,"is_project_manager":true,"can_see_rates":false,"can_create_projects":false,"can_create_invoices":false,"is_active":true,"created_at":"2020-05-01T22:15:45Z","updated_at":"2020-05-01T22:32:52Z","weekly_capacity":126000,"default_hourly_rate":100,"cost_rate":50,"roles":["Designer"],"avatar_url":"https://cache.harvestapp.com/assets/profile_images/cornell_clock_tower.png?1498515345"},{"id":1782884,"first_name":"Bob","last_name":"Powell","email":"bobpowell@example.com","telephone":"","timezone":"Mountain Time (US & Canada)","has_access_to_all_future_projects":false,"is_contractor":false,"is_admin":true,"is_project_manager":false,"can_see_rates":true,"can_create_projects":true,"can_create_invoices":true,"is_active":true,"created_at":"2020-05-01T20:41:00Z","updated_at":"2020-05-01T20:42:25Z","weekly_capacity":126000,"default_hourly_rate":100,"cost_rate":75,"roles":["Founder","CEO"],"avatar_url":"https://cache.harvestapp.com/assets/profile_images/allen_bradley_clock_tower.png?1498509661"}],"per_page":100,"total_pages":1,"total_entries":3,"next_page":null,"previous_page":null,"page":1,"links":{"first":"https://api.harvestapp.com/v2/users?page=1&per_page=100","next":null,"previous":null,"last":"https://api.harvestapp.com/v2/users?page=1&per_page=100"}}`)
+		testBody(t, r, "user/list/body_1.json")
+		testWriteResponse(t, w, "user/list/response_1.json")
 	})
 
 	userList, _, err := service.User.List(context.Background(), &harvest.UserListOptions{})
@@ -391,10 +397,12 @@ func TestUserService_List(t *testing.T) {
 				DefaultHourlyRate:            harvest.Float64(100),
 				CostRate:                     harvest.Float64(50),
 				Roles:                        &[]string{"Developer"},
-				AvatarURL:                    harvest.String("https://cache.harvestapp.com/assets/profile_images/abraj_albait_towers.png?1498516481"),
-				IsActive:                     harvest.Bool(true),
-				CreatedAt:                    &createdOne,
-				UpdatedAt:                    &updatedOne,
+				AvatarURL: harvest.String(
+					"https://cache.harvestapp.com/assets/profile_images/abraj_albait_towers.png?1498516481",
+				),
+				IsActive:  harvest.Bool(true),
+				CreatedAt: &createdOne,
+				UpdatedAt: &updatedOne,
 			},
 			{
 				ID:                           harvest.Int64(1782959),
@@ -417,7 +425,9 @@ func TestUserService_List(t *testing.T) {
 				DefaultHourlyRate:            harvest.Float64(100.0),
 				CostRate:                     harvest.Float64(50.0),
 				Roles:                        &[]string{"Designer"},
-				AvatarURL:                    harvest.String("https://cache.harvestapp.com/assets/profile_images/cornell_clock_tower.png?1498515345"),
+				AvatarURL: harvest.String(
+					"https://cache.harvestapp.com/assets/profile_images/cornell_clock_tower.png?1498515345",
+				),
 			},
 			{
 				ID:                           harvest.Int64(1782884),
@@ -440,7 +450,9 @@ func TestUserService_List(t *testing.T) {
 				DefaultHourlyRate:            harvest.Float64(100.0),
 				CostRate:                     harvest.Float64(75.0),
 				Roles:                        &[]string{"Founder", "CEO"},
-				AvatarURL:                    harvest.String("https://cache.harvestapp.com/assets/profile_images/allen_bradley_clock_tower.png?1498509661"),
+				AvatarURL: harvest.String(
+					"https://cache.harvestapp.com/assets/profile_images/allen_bradley_clock_tower.png?1498509661",
+				),
 			},
 		},
 		Pagination: harvest.Pagination{
@@ -508,7 +520,9 @@ func TestUserService_Update(t *testing.T) {
 		WeeklyCapacity:               harvest.Int(126000),
 		CostRate:                     harvest.Float64(50),
 		Roles:                        &[]string{"Project Manager"},
-		AvatarURL:                    harvest.String("https://{ACCOUNT_SUBDOMAIN}.harvestapp.com/assets/profile_images/big_ben.png?1485372046"),
+		AvatarURL: harvest.String(
+			"https://{ACCOUNT_SUBDOMAIN}.harvestapp.com/assets/profile_images/big_ben.png?1485372046",
+		),
 	}
 
 	assert.Equal(t, want, user)
