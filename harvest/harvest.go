@@ -30,7 +30,7 @@ const (
 
 // A APIClient manages communication with the Harvest API.
 type APIClient struct {
-	client *http.Client // HTTP client used to communicate with the API.
+	httpClient *http.Client // HTTP client used to communicate with the API.
 
 	// Base URL for API requests. Defaults to the public Harvest API.
 	// BaseURL should always be specified with a trailing slash.
@@ -122,7 +122,7 @@ func NewAPIClient(httpClient *http.Client) *APIClient {
 
 	baseURL, _ := url.Parse(DefaultBaseURL)
 
-	c := &APIClient{client: httpClient, BaseURL: baseURL, UserAgent: UserAgent}
+	c := &APIClient{httpClient: httpClient, BaseURL: baseURL, UserAgent: UserAgent}
 	c.common.client = c
 	c.Client = (*ClientService)(&c.common)
 	c.Company = (*CompanyService)(&c.common)
@@ -202,7 +202,7 @@ func (c *APIClient) NewRequest(
 // The provided ctx must be non-nil. If it is canceled or times out,
 // ctx.Err() will be returned.
 func (c *APIClient) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
-	resp, err := c.client.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		// If we got an error, and the context has been canceled,
 		// the context's error is probably more useful.
