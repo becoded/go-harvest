@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "name": "Task new",
+  "billable_by_default": true,
+  "default_hourly_rate": 123,
+  "is_default": true,
+  "is_active": true,
+  "created_at": "2018-01-31T20:34:30Z",
+  "updated_at": "2018-05-31T21:34:30Z"
+}

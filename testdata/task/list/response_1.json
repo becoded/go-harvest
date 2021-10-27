@@ -1,0 +1,36 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "name": "Task 1",
+      "billable_by_default": true,
+      "default_hourly_rate": 123,
+      "is_default": true,
+      "is_active": true,
+      "created_at": "2018-01-31T20:34:30Z",
+      "updated_at": "2018-05-31T21:34:30Z"
+    },
+    {
+      "id": 2,
+      "name": "Task 2",
+      "billable_by_default": false,
+      "default_hourly_rate": 321,
+      "is_default": false,
+      "is_active": false,
+      "created_at": "2018-03-02T10:12:13Z",
+      "updated_at": "2018-04-30T12:13:14Z"
+    }
+  ],
+  "per_page": 100,
+  "total_pages": 1,
+  "total_entries": 2,
+  "next_page": null,
+  "previous_page": null,
+  "page": 1,
+  "links": {
+    "first": "https://api.harvestapp.com/v2/tasks?page=1&per_page=100",
+    "next": null,
+    "previous": null,
+    "last": "https://api.harvestapp.com/v2/tasks?page=1&per_page=100"
+  }
+}

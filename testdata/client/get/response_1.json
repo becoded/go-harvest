@@ -1,1 +1,10 @@
-{"id":1,"name":"Client 1","is_active":true,"address":"Address line 1","statement_key":"1234567890","created_at":"2018-01-31T20:34:30Z","updated_at":"2018-05-31T21:34:30Z","currency":"EUR"}
+{
+  "id": 1,
+  "name": "Client 1",
+  "is_active": true,
+  "address": "Address line 1",
+  "statement_key": "1234567890",
+  "created_at": "2018-01-31T20:34:30Z",
+  "updated_at": "2018-05-31T21:34:30Z",
+  "currency": "EUR"
+}
