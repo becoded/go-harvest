@@ -96,7 +96,7 @@ func testBody(t *testing.T, r *http.Request, path string) {
 	assert.Equal(t, string(want), string(b))
 }
 
-func testWriteResponse(t *testing.T, w http.ResponseWriter, path string ) {
+func testWriteResponse(t *testing.T, w http.ResponseWriter, path string) {
 	response, err := os.ReadFile(filepath.Join("..", "testdata", path))
 	assert.NoError(t, err)
 	_, err = fmt.Fprint(w, string(response))
