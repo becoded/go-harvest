@@ -152,7 +152,7 @@ type TimeEntryCreateViaStartEndTime struct {
 	EndedTime *Time `json:"ended_time,omitempty"`
 	// optional	Any notes to be associated with the time entry.
 	Notes *string `json:"notes,omitempty"`
-	// TODO
+	// To do
 	// optional	An object containing the id, group_id, and permalink of the external reference.
 	// External_reference *object `json:"external_reference,omitempty"`
 }

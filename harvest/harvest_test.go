@@ -23,10 +23,10 @@ const (
 	baseURLPath = "/v2"
 )
 
-// setup sets up a test HTTP server along with a harvest.HarvestClient that is
+// setup sets up a test HTTP server along with a harvest.APIClient that is
 // configured to talk to that test server. Tests should register handlers on
 // mux which provide mock responses for the API method being tested.
-func setup(t *testing.T) (client *harvest.HarvestClient, mux *http.ServeMux, teardown func()) {
+func setup(t *testing.T) (client *harvest.APIClient, mux *http.ServeMux, teardown func()) {
 	// mux is the HTTP request multiplexer used with the test server.
 	mux = http.NewServeMux()
 
@@ -51,7 +51,7 @@ func setup(t *testing.T) (client *harvest.HarvestClient, mux *http.ServeMux, tea
 
 	// client is the Harvest client being tested and is
 	// configured to use test server.
-	client = harvest.NewHarvestClient(nil)
+	client = harvest.NewAPIClient(nil)
 
 	url, err := url.Parse(server.URL + baseURLPath + "/")
 	assert.NoError(t, err)
@@ -139,12 +139,12 @@ func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: deadc
 func TestNewHarvestClient(t *testing.T) {
 	t.Parallel()
 
-	c := harvest.NewHarvestClient(nil)
+	c := harvest.NewAPIClient(nil)
 
 	assert.Equal(t, harvest.DefaultBaseURL, c.BaseURL.String())
 	assert.Equal(t, harvest.UserAgent, c.UserAgent)
 
-	c2 := harvest.NewHarvestClient(nil)
+	c2 := harvest.NewAPIClient(nil)
 
 	assert.NotSame(t, c, c2)
 }
@@ -152,7 +152,7 @@ func TestNewHarvestClient(t *testing.T) {
 func TestNewRequest_invalidJSON(t *testing.T) {
 	t.Parallel()
 
-	c := harvest.NewHarvestClient(nil)
+	c := harvest.NewAPIClient(nil)
 
 	type T struct {
 		A map[interface{}]interface{}
@@ -173,7 +173,7 @@ func TestNewRequest_invalidJSON(t *testing.T) {
 func TestNewRequest_badURL(t *testing.T) {
 	t.Parallel()
 
-	c := harvest.NewHarvestClient(nil)
+	c := harvest.NewAPIClient(nil)
 	ctx := context.Background()
 	_, err := c.NewRequest(ctx, "GET", ":", nil)
 	testURLParseError(t, err)
@@ -184,7 +184,7 @@ func TestNewRequest_badURL(t *testing.T) {
 func TestNewRequest_emptyUserAgent(t *testing.T) {
 	t.Parallel()
 
-	c := harvest.NewHarvestClient(nil)
+	c := harvest.NewAPIClient(nil)
 	c.UserAgent = ""
 	ctx := context.Background()
 
@@ -207,7 +207,7 @@ func TestNewRequest_emptyUserAgent(t *testing.T) {
 func TestNewRequest_emptyBody(t *testing.T) {
 	t.Parallel()
 
-	c := harvest.NewHarvestClient(nil)
+	c := harvest.NewAPIClient(nil)
 	ctx := context.Background()
 
 	req, err := c.NewRequest(ctx, "GET", ".", nil)

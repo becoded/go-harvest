@@ -83,6 +83,7 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 	service, mux, teardown := setup(t)
 	t.Cleanup(teardown)
 
+	// molint:lll
 	// https://help.getharvest.com/api-v2/timesheets-api/timesheets/time-entries/#create-a-time-entry-via-start-and-end-time
 
 	mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {
@@ -94,15 +95,18 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 
 	spentDate := time.Date(2017, 3, 21, 22, 24, 10, 0, time.UTC)
 
-	taskList, _, err := service.Timesheet.CreateTimeEntryViaStartEndTime(context.Background(), &harvest.TimeEntryCreateViaStartEndTime{
-		UserID:      harvest.Int64(1782959),
-		ProjectID:   harvest.Int64(14307913),
-		TaskID:      harvest.Int64(8083365),
-		SpentDate:   harvest.DateP(harvest.Date{spentDate}),
-		StartedTime: harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 8, 0o0, 0o0, 0, time.UTC)}),
-		EndedTime:   harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 9, 0o0, 0o0, 0, time.UTC)}),
-		Notes:       harvest.String("Writing tests"),
-	})
+	taskList, _, err := service.Timesheet.CreateTimeEntryViaStartEndTime(
+		context.Background(),
+		&harvest.TimeEntryCreateViaStartEndTime{
+			UserID:      harvest.Int64(1782959),
+			ProjectID:   harvest.Int64(14307913),
+			TaskID:      harvest.Int64(8083365),
+			SpentDate:   harvest.DateP(harvest.Date{spentDate}),
+			StartedTime: harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 8, 0o0, 0o0, 0, time.UTC)}),
+			EndedTime:   harvest.TimeP(harvest.Time{time.Date(0, 1, 1, 9, 0o0, 0o0, 0, time.UTC)}),
+			Notes:       harvest.String("Writing tests"),
+		},
+	)
 	if err != nil {
 		t.Errorf("CreateTimeEntry task returned error: %v", err)
 	}

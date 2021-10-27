@@ -10,9 +10,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var dateType = reflect.TypeOf(Date{})
+var dateType = reflect.TypeOf(Date{}) //nolint: gochecknoglobals
 
-var dateTimeType = reflect.TypeOf(time.Time{})
+var dateTimeType = reflect.TypeOf(time.Time{}) //nolint: gochecknoglobals
 
 // Stringify attempts to create a reasonable string representation of types in
 // the GitHub library. It does things like resolve pointers to their values

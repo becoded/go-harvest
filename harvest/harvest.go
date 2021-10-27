@@ -27,8 +27,8 @@ const (
 	bitSize64        = 64
 )
 
-// A HarvestClient manages communication with the Harvest API.
-type HarvestClient struct {
+// A APIClient manages communication with the Harvest API.
+type APIClient struct {
 	client *http.Client // HTTP client used to communicate with the API.
 
 	// Base URL for API requests. Defaults to the public Harvest API.
@@ -56,7 +56,7 @@ type HarvestClient struct {
 }
 
 type service struct {
-	client *HarvestClient
+	client *APIClient
 }
 
 // ListOptions specifies the optional parameters to various List methods that
@@ -110,18 +110,18 @@ func addOptions(s string, opt interface{}) (string, error) {
 	return u.String(), nil
 }
 
-// NewHarvestClient returns a new Harvest API client. If a nil httpClient is
+// NewAPIClient returns a new Harvest API client. If a nil httpClient is
 // provided, http.DefaultClient will be used. To use API methods which require
 // authentication, provide an http.Client that will perform the authentication
 // for you (such as that provided by the golang.org/x/oauth2 library).
-func NewHarvestClient(httpClient *http.Client) *HarvestClient {
+func NewAPIClient(httpClient *http.Client) *APIClient {
 	if httpClient == nil {
 		httpClient = &http.Client{}
 	}
 
 	baseURL, _ := url.Parse(DefaultBaseURL)
 
-	c := &HarvestClient{client: httpClient, BaseURL: baseURL, UserAgent: UserAgent}
+	c := &APIClient{client: httpClient, BaseURL: baseURL, UserAgent: UserAgent}
 	c.common.client = c
 	c.Client = (*ClientService)(&c.common)
 	c.Company = (*CompanyService)(&c.common)
@@ -141,7 +141,7 @@ func NewHarvestClient(httpClient *http.Client) *HarvestClient {
 // Relative URLs should always be specified without a preceding slash. If
 // specified, the value pointed to by body is JSON encoded and included as the
 // request body.
-func (c *HarvestClient) NewRequest(
+func (c *APIClient) NewRequest(
 	ctx context.Context,
 	method,
 	urlStr string,
@@ -198,7 +198,7 @@ func (c *HarvestClient) NewRequest(
 //
 // The provided ctx must be non-nil. If it is canceled or times out,
 // ctx.Err() will be returned.
-func (c *HarvestClient) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
+func (c *APIClient) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
 	resp, err := c.client.Do(req)
 	if err != nil {
 		// If we got an error, and the context has been canceled,
