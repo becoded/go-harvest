@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -92,7 +93,8 @@ func testHeader(t *testing.T, r *http.Request, header string, want string) { //n
 func testURLParseError(t *testing.T, err error) {
 	assert.Error(t, err, "Expected error to be returned")
 
-	if err, ok := err.(*url.Error); !ok || err.Op != "parse" {
+	var e *url.Error
+	if !errors.As(err, &e) || e.Op != "parse" {
 		t.Errorf("Expected URL parse error, got %+v", err)
 	}
 }
@@ -165,7 +167,8 @@ func TestNewRequest_invalidJSON(t *testing.T) {
 		t.Error("Expected error to be returned.")
 	}
 
-	if err, ok := err.(*json.UnsupportedTypeError); !ok {
+	var e *json.UnsupportedTypeError
+	if !errors.As(err, &e) {
 		t.Errorf("Expected a JSON error; got %#v.", err)
 	}
 }
@@ -198,7 +201,7 @@ func TestNewRequest_emptyUserAgent(t *testing.T) {
 	}
 }
 
-// If a nil body is passed to github.NewRequest, make sure that nil is also
+// If a nil body is passed to harvest.NewRequest, make sure that nil is also
 // passed to http.NewRequest. In most cases, passing an io.Reader that returns
 // no content is fine, since there is no difference between an HTTP request
 // body that is an empty string versus one that is not set at all. However in

@@ -118,7 +118,7 @@ func (s *EstimateService) CreateEstimateMessage(
 	ctx context.Context,
 	data *EstimateMessageCreateRequest,
 ) (*EstimateMessage, *http.Response, error) {
-	u := "invoices"
+	u := "estimates"
 
 	req, err := s.client.NewRequest(ctx, "POST", u, data)
 	if err != nil {

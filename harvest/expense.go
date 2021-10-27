@@ -80,7 +80,7 @@ type ExpenseCreateRequest struct {
 	Notes *string `json:"notes,omitempty"`
 	// optional	Whether this expense is billable or not. Defaults to true.
 	Billable *bool `json:"billable,omitempty"`
-	// TODO add receipt file
+	// TO DO add receipt file
 	// optional	A receipt file to attach to the expense.
 	// If including a receipt, you must submit a multipart/form-data request.
 	// Receipt *file `json:"receipt,omitempty"`
@@ -101,7 +101,7 @@ type ExpenseUpdateRequest struct {
 	Notes *string `json:"notes,omitempty"`
 	// Whether this expense is billable or not. Defaults to true.
 	Billable *bool `json:"billable,omitempty"`
-	// TODO add receipt file
+	// TO DO add receipt file
 	// A receipt file to attach to the expense. If including a receipt, you must submit a multipart/form-data request.
 	// Receipt *file `json:"receipt,omitempty"`
 	// Whether an attached expense receipt should be deleted. Pass true to delete the expense receipt.

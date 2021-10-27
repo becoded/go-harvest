@@ -13,6 +13,8 @@ import (
 // Harvest API docs: https://help.getharvest.com/api-v2/timesheets-api/timesheets/time-entries/
 type TimesheetService service
 
+const basePathTimeEntries = "time_entries"
+
 type TimeEntry struct {
 	// Unique ID for the time entry.
 	ID *int64 `json:"id,omitempty"`
@@ -131,7 +133,7 @@ type TimeEntryCreateViaDuration struct {
 	Hours *float64 `json:"hours,omitempty"`
 	// optional	Any notes to be associated with the time entry.
 	Notes *string `json:"notes,omitempty"`
-	// TODO
+	// TO DO
 	// optional	An object containing the id, group_id, and permalink of the external reference.
 	// ExternalReference *object `json:"external_reference,omitempty"`
 }
@@ -175,7 +177,7 @@ type TimeEntryUpdate struct {
 	Hours *float64 `json:"hours,omitempty"`
 	// optional	Any notes to be associated with the time entry.
 	Notes *string `json:"notes,omitempty"`
-	// TODO
+	// TO DO
 	// optional	An object containing the id, group_id, and permalink of the external reference.
 	// ExternalReference *object `json:"external_reference,omitempty"`
 }
@@ -184,7 +186,7 @@ func (s *TimesheetService) List(
 	ctx context.Context,
 	opt *TimeEntryListOptions,
 ) (*TimeEntryList, *http.Response, error) {
-	u := "time_entries"
+	u := basePathTimeEntries
 
 	u, err := addOptions(u, opt)
 	if err != nil {
@@ -207,7 +209,7 @@ func (s *TimesheetService) List(
 }
 
 func (s *TimesheetService) Get(ctx context.Context, timeEntryID int64) (*TimeEntry, *http.Response, error) {
-	u := fmt.Sprintf("time_entries/%d", timeEntryID)
+	u := fmt.Sprintf("%s/%d", basePathTimeEntries, timeEntryID)
 
 	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
@@ -228,7 +230,7 @@ func (s *TimesheetService) CreateTimeEntryViaDuration(
 	ctx context.Context,
 	data *TimeEntryCreateViaDuration,
 ) (*TimeEntry, *http.Response, error) {
-	u := "time_entries"
+	u := basePathTimeEntries
 
 	req, err := s.client.NewRequest(ctx, "POST", u, data)
 	if err != nil {
@@ -249,7 +251,7 @@ func (s *TimesheetService) CreateTimeEntryViaStartEndTime(
 	ctx context.Context,
 	data *TimeEntryCreateViaStartEndTime,
 ) (*TimeEntry, *http.Response, error) {
-	u := "time_entries"
+	u := basePathTimeEntries
 
 	req, err := s.client.NewRequest(ctx, "POST", u, data)
 	if err != nil {
@@ -271,7 +273,7 @@ func (s *TimesheetService) UpdateTimeEntry(
 	timeEntryID int64,
 	data *TimeEntryUpdate,
 ) (*TimeEntry, *http.Response, error) {
-	u := fmt.Sprintf("time_entries/%d", timeEntryID)
+	u := fmt.Sprintf("%s/%d", basePathTimeEntries, timeEntryID)
 
 	req, err := s.client.NewRequest(ctx, "PATCH", u, data)
 	if err != nil {
@@ -289,7 +291,7 @@ func (s *TimesheetService) UpdateTimeEntry(
 }
 
 func (s *TimesheetService) DeleteTimeEntry(ctx context.Context, timeEntryID int64) (*http.Response, error) {
-	u := fmt.Sprintf("time_entries/%d", timeEntryID)
+	u := fmt.Sprintf("%s/%d", basePathTimeEntries, timeEntryID)
 
 	req, err := s.client.NewRequest(ctx, "DELETE", u, nil)
 	if err != nil {
@@ -303,7 +305,7 @@ func (s *TimesheetService) RestartTimeEntry(
 	ctx context.Context,
 	timeEntryID int64,
 ) (*TimeEntry, *http.Response, error) {
-	u := fmt.Sprintf("time_entries/%d/restart", timeEntryID)
+	u := fmt.Sprintf("%s/%d/restart", basePathTimeEntries, timeEntryID)
 
 	req, err := s.client.NewRequest(ctx, "PATCH", u, nil)
 	if err != nil {
@@ -321,7 +323,7 @@ func (s *TimesheetService) RestartTimeEntry(
 }
 
 func (s *TimesheetService) StopTimeEntry(ctx context.Context, timeEntryID int64) (*TimeEntry, *http.Response, error) {
-	u := fmt.Sprintf("time_entries/%d/stop", timeEntryID)
+	u := fmt.Sprintf("%s/%d/stop", basePathTimeEntries, timeEntryID)
 
 	req, err := s.client.NewRequest(ctx, "PATCH", u, nil)
 	if err != nil {

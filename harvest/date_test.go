@@ -104,9 +104,15 @@ func TestDate_UnmarshalJSONParse(t *testing.T) {
 			t.Parallel()
 			tm := harvest.Date{}
 
-			if gotErr := tm.UnmarshalJSON([]byte(tt.args.str)); gotErr != tt.err {
-				t.Errorf("%q. UnmarshalJSON() error = %v, response %v", tt.name, gotErr, tt.err)
-			} else if !tm.Equal(tt.want) {
+			gotErr := tm.UnmarshalJSON([]byte(tt.args.str))
+			if tt.err != nil {
+				assert.EqualError(t, gotErr, tt.err.Error())
+
+				return
+			}
+			assert.NoError(t, gotErr)
+
+			if !tm.Equal(tt.want) {
 				t.Errorf("%q. UnmarshalJSON() = %v, response %v", tt.name, tm, tt.want)
 			}
 		})
@@ -162,16 +168,21 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 			t.Parallel()
 			var f foo
 
-			if gotErr := json.Unmarshal([]byte(tt.args.jsonStr), &f); gotErr != tt.err {
-				t.Errorf("%q. UnmarshalJSON() error = %v, response %v", tt.name, gotErr, tt.err)
-			} else if tt.err == nil {
-				if f.ID == nil || *f.ID != *tt.want.ID {
-					t.Errorf("%q. UnmarshalJSON() = %v, response %v - ID messed up", tt.name, f, tt.want)
-				} else if tt.want.Date == nil && f.Date != nil {
-					t.Errorf("%q. UnmarshalJSON() = %v, response %v - unexpected time", tt.name, f, tt.want)
-				} else if tt.want.Date != nil && (f.Date == nil || !tt.want.Date.Equal(*f.Date)) {
-					t.Errorf("%q. UnmarshalJSON() = %v, response %v", tt.name, f, tt.want)
-				}
+			gotErr := json.Unmarshal([]byte(tt.args.jsonStr), &f)
+			if tt.err != nil {
+				assert.EqualError(t, gotErr, tt.err.Error())
+
+				return
+			}
+			assert.NoError(t, gotErr)
+
+			switch {
+			case f.ID == nil || *f.ID != *tt.want.ID:
+				t.Errorf("%q. UnmarshalJSON() = %v, response %v - ID messed up", tt.name, f, tt.want)
+			case tt.want.Date == nil && f.Date != nil:
+				t.Errorf("%q. UnmarshalJSON() = %v, response %v - unexpected time", tt.name, f, tt.want)
+			case tt.want.Date != nil && (f.Date == nil || !tt.want.Date.Equal(*f.Date)):
+				t.Errorf("%q. UnmarshalJSON() = %v, response %v", tt.name, f, tt.want)
 			}
 		})
 	}

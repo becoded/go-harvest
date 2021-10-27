@@ -26,14 +26,17 @@ func TestTimesheetService_CreateTimeEntryViaDuration(t *testing.T) {
 
 	spentDate := time.Date(2018, 3, 30, 22, 24, 10, 0, time.UTC)
 
-	taskList, _, err := service.Timesheet.CreateTimeEntryViaDuration(context.Background(), &harvest.TimeEntryCreateViaDuration{
-		UserID:    harvest.Int64(1),
-		ProjectID: harvest.Int64(2),
-		TaskID:    harvest.Int64(3),
-		SpentDate: harvest.DateP(harvest.Date{spentDate}),
-		Hours:     harvest.Float64(1.2),
-		Notes:     harvest.String("Writing tests"),
-	})
+	taskList, _, err := service.Timesheet.CreateTimeEntryViaDuration(
+		context.Background(),
+		&harvest.TimeEntryCreateViaDuration{
+			UserID:    harvest.Int64(1),
+			ProjectID: harvest.Int64(2),
+			TaskID:    harvest.Int64(3),
+			SpentDate: harvest.DateP(harvest.Date{spentDate}),
+			Hours:     harvest.Float64(1.2),
+			Notes:     harvest.String("Writing tests"),
+		},
+	)
 	if err != nil {
 		t.Errorf("CreateTimeEntryViaDuration task returned error: %v", err)
 	}
@@ -83,7 +86,7 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 	service, mux, teardown := setup(t)
 	t.Cleanup(teardown)
 
-	// molint:lll
+	// nolint:lll
 	// https://help.getharvest.com/api-v2/timesheets-api/timesheets/time-entries/#create-a-time-entry-via-start-and-end-time
 
 	mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {

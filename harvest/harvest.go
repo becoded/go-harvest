@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -136,6 +137,8 @@ func NewAPIClient(httpClient *http.Client) *APIClient {
 	return c
 }
 
+var ErrBaseURLMissingSlash = errors.New("BaseURL must have a trailing slash")
+
 // NewRequest creates an API request. A relative URL can be provided in urlStr,
 // in which case it is resolved relative to the BaseURL of the Client.
 // Relative URLs should always be specified without a preceding slash. If
@@ -148,7 +151,7 @@ func (c *APIClient) NewRequest(
 	body interface{},
 ) (*http.Request, error) {
 	if !strings.HasSuffix(c.BaseURL.Path, "/") {
-		return nil, fmt.Errorf("BaseURL must have a trailing slash, but %q does not", c.BaseURL)
+		return nil, ErrBaseURLMissingSlash
 	}
 
 	u, err := c.BaseURL.Parse(urlStr)
@@ -210,7 +213,8 @@ func (c *APIClient) Do(ctx context.Context, req *http.Request, v interface{}) (*
 		}
 
 		// If the error type is *url.Error, sanitize its URL before returning.
-		if e, ok := err.(*url.Error); ok {
+		var e *url.Error
+		if errors.As(err, &e) {
 			if url, err := url.Parse(e.URL); err == nil {
 				e.URL = sanitizeURL(url).String()
 
@@ -223,7 +227,8 @@ func (c *APIClient) Do(ctx context.Context, req *http.Request, v interface{}) (*
 
 	defer func() {
 		// Drain up to 512 bytes and close the body to let the Transport reuse the connection
-		if _, err := io.CopyN(ioutil.Discard, resp.Body, 512); err != nil && err != io.EOF {
+		drainBytes := 512
+		if _, err := io.CopyN(ioutil.Discard, resp.Body, int64(drainBytes)); err != nil && !errors.Is(err, io.EOF) {
 			logrus.Error(err)
 		}
 
@@ -232,8 +237,7 @@ func (c *APIClient) Do(ctx context.Context, req *http.Request, v interface{}) (*
 		}
 	}()
 
-	err = CheckResponse(resp)
-	if err != nil {
+	if err := CheckResponse(resp); err != nil {
 		// even though there was an error, we still return the response
 		// in case the caller wants to inspect it further
 		return resp, err
@@ -244,10 +248,12 @@ func (c *APIClient) Do(ctx context.Context, req *http.Request, v interface{}) (*
 			if _, err := io.Copy(w, resp.Body); err != nil {
 				return resp, err
 			}
-		} else {
-			if err = json.NewDecoder(resp.Body).Decode(v); err == io.EOF {
-				err = nil // ignore EOF errors caused by empty response body
-			}
+
+			return resp, err
+		}
+
+		if err = json.NewDecoder(resp.Body).Decode(v); errors.Is(err, io.EOF) {
+			err = nil // ignore EOF errors caused by empty response body
 		}
 	}
 
