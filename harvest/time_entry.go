@@ -103,6 +103,8 @@ type TimeEntryListOptions struct {
 	ClientID *int64 `url:"client_id,omitempty"`
 	// Only return time entries belonging to the project with the given ID.
 	ProjectID *int64 `url:"project_id,omitempty"`
+	// Only return time entries belonging to the task with the given ID.
+	TaskID *int64 `url:"task_id,omitempty"`
 	// Pass true to only return time entries that have been invoiced and false to return time
 	// entries that have not been invoiced.
 	IsBilled *bool `url:"is_billed,omitempty"`
