@@ -84,7 +84,7 @@ type InvoiceLineItem struct {
 	// Text description of the line item.
 	Description *string `json:"description,omitempty"`
 	// The unit quantity of the item.
-	Quantity *int16 `json:"quantity,omitempty"`
+	Quantity *float64 `json:"quantity,omitempty"`
 	// The individual price per unit.
 	UnitPrice *float64 `json:"unit_price,omitempty"`
 	// The line item subtotal (quantity * unit_price).
