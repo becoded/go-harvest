@@ -66,6 +66,7 @@ type ProjectTaskAssignmentListOptions struct {
 	ListOptions
 }
 
+// ListTaskAssignments returns a list of your task assignments.
 func (s *ProjectService) ListTaskAssignments(
 	ctx context.Context,
 	projectID int64,
@@ -93,6 +94,7 @@ func (s *ProjectService) ListTaskAssignments(
 	return projectTaskAssignmentList, resp, nil
 }
 
+// GetTaskAssignment retrieves the task assignment with the given ID.
 func (s *ProjectService) GetTaskAssignment(
 	ctx context.Context,
 	projectID int64,
@@ -115,6 +117,7 @@ func (s *ProjectService) GetTaskAssignment(
 	return projectTaskAssignment, resp, nil
 }
 
+// CreateTaskAssignment creates a new task assignment object.
 func (s *ProjectService) CreateTaskAssignment(
 	ctx context.Context,
 	projectID int64,

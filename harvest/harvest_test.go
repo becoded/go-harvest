@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -102,7 +102,7 @@ func testURLParseError(t *testing.T, err error) {
 func testBody(t *testing.T, r *http.Request, path string) {
 	want, err := os.ReadFile(filepath.Join("..", "testdata", path))
 	assert.NoError(t, err)
-	b, err := ioutil.ReadAll(r.Body)
+	b, err := io.ReadAll(r.Body)
 	assert.NoError(t, err, "error reading request body")
 
 	assert.Equal(t, string(want), string(b))

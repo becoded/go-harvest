@@ -86,8 +86,8 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 	service, mux, teardown := setup(t)
 	t.Cleanup(teardown)
 
-	// nolint:lll
-	// https://help.getharvest.com/api-v2/timesheets-api/timesheets/time-entries/#create-a-time-entry-via-start-and-end-time
+	// https://help.getharvest.com/api-v2/timesheets-api/timesheets/time-entries/
+	// #create-a-time-entry-via-start-and-end-time
 
 	mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")

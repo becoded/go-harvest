@@ -158,6 +158,7 @@ type UserListOptions struct {
 	ListOptions
 }
 
+// List returns a list of your users.
 func (s *UserService) List(ctx context.Context, opt *UserListOptions) (*UserList, *http.Response, error) {
 	u := "users"
 
@@ -181,6 +182,7 @@ func (s *UserService) List(ctx context.Context, opt *UserListOptions) (*UserList
 	return userList, resp, nil
 }
 
+// Get retrieves the user with the given ID.
 func (s *UserService) Get(ctx context.Context, userID int64) (*User, *http.Response, error) {
 	u := fmt.Sprintf("users/%d", userID)
 
@@ -199,6 +201,7 @@ func (s *UserService) Get(ctx context.Context, userID int64) (*User, *http.Respo
 	return user, resp, nil
 }
 
+// Current retrieves the currently authenticated user.
 func (s *UserService) Current(ctx context.Context) (*User, *http.Response, error) {
 	u := "users/me"
 
@@ -217,6 +220,7 @@ func (s *UserService) Current(ctx context.Context) (*User, *http.Response, error
 	return user, resp, nil
 }
 
+// Create creates a new user object.
 func (s *UserService) Create(ctx context.Context, data *UserCreateRequest) (*User, *http.Response, error) {
 	u := "users"
 
@@ -235,6 +239,7 @@ func (s *UserService) Create(ctx context.Context, data *UserCreateRequest) (*Use
 	return user, resp, nil
 }
 
+// Update updates the specific user.
 func (s *UserService) Update(
 	ctx context.Context,
 	userID int64,
@@ -257,6 +262,7 @@ func (s *UserService) Update(
 	return user, resp, nil
 }
 
+// Delete deletes a user.
 func (s *UserService) Delete(ctx context.Context, userID int64) (*http.Response, error) {
 	u := fmt.Sprintf("users/%d", userID)
 

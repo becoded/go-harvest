@@ -105,6 +105,7 @@ type EstimateListOptions struct {
 	ListOptions
 }
 
+// List will return a list of your estimates.
 func (s *EstimateService) List(ctx context.Context, opt *EstimateListOptions) (*EstimateList, *http.Response, error) {
 	u := "estimates"
 
@@ -128,6 +129,7 @@ func (s *EstimateService) List(ctx context.Context, opt *EstimateListOptions) (*
 	return estimateList, resp, nil
 }
 
+// Get retrieves the estimate with the given ID.
 func (s *EstimateService) Get(ctx context.Context, estimateID int64) (*Estimate, *http.Response, error) {
 	u := fmt.Sprintf("estimates/%d", estimateID)
 

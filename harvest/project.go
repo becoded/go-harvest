@@ -87,6 +87,7 @@ type ProjectListOptions struct {
 	ListOptions
 }
 
+// List returns a list of your projects.
 func (s *ProjectService) List(ctx context.Context, opt *ProjectListOptions) (*ProjectList, *http.Response, error) {
 	u := "projects"
 
@@ -110,6 +111,7 @@ func (s *ProjectService) List(ctx context.Context, opt *ProjectListOptions) (*Pr
 	return projectList, resp, nil
 }
 
+// Get retrieves the project with the given ID.
 func (s *ProjectService) Get(ctx context.Context, projectID int64) (*Project, *http.Response, error) {
 	u := fmt.Sprintf("projects/%d", projectID)
 

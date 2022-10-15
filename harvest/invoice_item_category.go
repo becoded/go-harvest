@@ -50,6 +50,7 @@ type InvoiceItemCategoryListOptions struct {
 	ListOptions
 }
 
+// ListItemCategories returns a list of your invoice item categories.
 func (s *InvoiceService) ListItemCategories(
 	ctx context.Context,
 	opt *InvoiceItemCategoryListOptions,
@@ -76,6 +77,7 @@ func (s *InvoiceService) ListItemCategories(
 	return invoiceItemCategoryList, resp, nil
 }
 
+// GetItemCategory retrieves the invoice item category with the given ID.
 func (s *InvoiceService) GetItemCategory(
 	ctx context.Context,
 	invoiceItemCategoryID int64,
@@ -97,6 +99,7 @@ func (s *InvoiceService) GetItemCategory(
 	return invoiceItemCategory, resp, nil
 }
 
+// CreateItemCategory creates a new invoice item category object.
 func (s *InvoiceService) CreateItemCategory(
 	ctx context.Context,
 	data *InvoiceItemCategoryRequest,
@@ -118,6 +121,7 @@ func (s *InvoiceService) CreateItemCategory(
 	return invoiceItemCategory, resp, nil
 }
 
+// UpdateItemCategory updates the specific invoice item category.
 func (s *InvoiceService) UpdateItemCategory(
 	ctx context.Context,
 	invoiceItemCategoryID int64,
@@ -140,6 +144,7 @@ func (s *InvoiceService) UpdateItemCategory(
 	return invoiceItemCategory, resp, nil
 }
 
+// DeleteItemCategory deletes an invoice item category.
 func (s *InvoiceService) DeleteItemCategory(ctx context.Context, invoiceItemCategoryID int64) (*http.Response, error) {
 	u := fmt.Sprintf("invoice_item_categories/%d", invoiceItemCategoryID)
 

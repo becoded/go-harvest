@@ -87,6 +87,7 @@ type EstimateEventTypeRequest struct {
 	EventType string `json:"event_type"`
 }
 
+// ListEstimateMessages returns a list of messages associated with a given estimate.
 func (s *EstimateService) ListEstimateMessages(
 	ctx context.Context,
 	estimateID int64,
@@ -114,6 +115,7 @@ func (s *EstimateService) ListEstimateMessages(
 	return estimateList, resp, nil
 }
 
+// CreateEstimateMessage creates a new estimate message object.
 func (s *EstimateService) CreateEstimateMessage(
 	ctx context.Context,
 	data *EstimateMessageCreateRequest,
@@ -135,6 +137,7 @@ func (s *EstimateService) CreateEstimateMessage(
 	return estimateMessage, resp, nil
 }
 
+// DeleteEstimateMessage deletes an estimate message.
 func (s *EstimateService) DeleteEstimateMessage(
 	ctx context.Context,
 	estimateID,
@@ -150,6 +153,7 @@ func (s *EstimateService) DeleteEstimateMessage(
 	return s.client.Do(ctx, req, nil)
 }
 
+// MarkAsSent marks a draft estimate as sent.
 func (s *EstimateService) MarkAsSent(
 	ctx context.Context,
 	estimateID int64,
@@ -157,6 +161,7 @@ func (s *EstimateService) MarkAsSent(
 	return s.SendEvent(ctx, estimateID, &EstimateEventTypeRequest{EventType: "send"})
 }
 
+// MarkAsAccepted marks an open estimate as accepted.
 func (s *EstimateService) MarkAsAccepted(
 	ctx context.Context,
 	estimateID int64,
@@ -164,6 +169,7 @@ func (s *EstimateService) MarkAsAccepted(
 	return s.SendEvent(ctx, estimateID, &EstimateEventTypeRequest{EventType: "accept"})
 }
 
+// MarkAsDeclined marks an open estimate as declined.
 func (s *EstimateService) MarkAsDeclined(
 	ctx context.Context,
 	estimateID int64,
@@ -171,6 +177,7 @@ func (s *EstimateService) MarkAsDeclined(
 	return s.SendEvent(ctx, estimateID, &EstimateEventTypeRequest{EventType: "decline"})
 }
 
+// MarkAsReopen re-opens a closed estimate.
 func (s *EstimateService) MarkAsReopen(
 	ctx context.Context,
 	estimateID int64,
@@ -178,6 +185,7 @@ func (s *EstimateService) MarkAsReopen(
 	return s.SendEvent(ctx, estimateID, &EstimateEventTypeRequest{EventType: "re-open"})
 }
 
+// SendEvent will send an EstimateEventType.
 func (s *EstimateService) SendEvent(
 	ctx context.Context,
 	estimateID int64,

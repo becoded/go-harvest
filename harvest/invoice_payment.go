@@ -73,6 +73,7 @@ type InvoicePaymentListOptions struct {
 	ListOptions
 }
 
+// ListPayments returns a list of payments associate with a given invoice.
 func (s *InvoiceService) ListPayments(
 	ctx context.Context,
 	invoiceID int64,
@@ -100,6 +101,7 @@ func (s *InvoiceService) ListPayments(
 	return invoicePaymentList, resp, nil
 }
 
+// CreatePayment creates a new invoice payment object.
 func (s *InvoiceService) CreatePayment(
 	ctx context.Context,
 	invoiceID int64,
@@ -122,6 +124,7 @@ func (s *InvoiceService) CreatePayment(
 	return invoicePayment, resp, nil
 }
 
+// DeleteInvoicePayment deletes an invoice payment.
 func (s *InvoiceService) DeleteInvoicePayment(
 	ctx context.Context,
 	invoiceID,

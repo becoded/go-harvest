@@ -184,6 +184,7 @@ type TimeEntryUpdate struct {
 	// ExternalReference *object `json:"external_reference,omitempty"`
 }
 
+// List returns a list of time entries.
 func (s *TimesheetService) List(
 	ctx context.Context,
 	opt *TimeEntryListOptions,
@@ -210,6 +211,7 @@ func (s *TimesheetService) List(
 	return timeEntryList, resp, nil
 }
 
+// Get retrieves the time entry with the given ID.
 func (s *TimesheetService) Get(ctx context.Context, timeEntryID int64) (*TimeEntry, *http.Response, error) {
 	u := fmt.Sprintf("%s/%d", basePathTimeEntries, timeEntryID)
 
@@ -228,6 +230,7 @@ func (s *TimesheetService) Get(ctx context.Context, timeEntryID int64) (*TimeEnt
 	return timeEntry, resp, nil
 }
 
+// CreateTimeEntryViaDuration creates a time entry object via duration.
 func (s *TimesheetService) CreateTimeEntryViaDuration(
 	ctx context.Context,
 	data *TimeEntryCreateViaDuration,
@@ -249,6 +252,7 @@ func (s *TimesheetService) CreateTimeEntryViaDuration(
 	return timeEntry, resp, nil
 }
 
+// CreateTimeEntryViaStartEndTime creates a time entry object via start and end time.
 func (s *TimesheetService) CreateTimeEntryViaStartEndTime(
 	ctx context.Context,
 	data *TimeEntryCreateViaStartEndTime,
@@ -270,6 +274,7 @@ func (s *TimesheetService) CreateTimeEntryViaStartEndTime(
 	return timeEntry, resp, nil
 }
 
+// UpdateTimeEntry updates the specific time entry.
 func (s *TimesheetService) UpdateTimeEntry(
 	ctx context.Context,
 	timeEntryID int64,
@@ -292,6 +297,7 @@ func (s *TimesheetService) UpdateTimeEntry(
 	return timeEntry, resp, nil
 }
 
+// DeleteTimeEntry deletes a time entry.
 func (s *TimesheetService) DeleteTimeEntry(ctx context.Context, timeEntryID int64) (*http.Response, error) {
 	u := fmt.Sprintf("%s/%d", basePathTimeEntries, timeEntryID)
 
@@ -303,6 +309,7 @@ func (s *TimesheetService) DeleteTimeEntry(ctx context.Context, timeEntryID int6
 	return s.client.Do(ctx, req, nil)
 }
 
+// RestartTimeEntry restarts a stopped time entry.
 func (s *TimesheetService) RestartTimeEntry(
 	ctx context.Context,
 	timeEntryID int64,
@@ -324,6 +331,7 @@ func (s *TimesheetService) RestartTimeEntry(
 	return timeEntry, resp, nil
 }
 
+// StopTimeEntry stops a running time entry.
 func (s *TimesheetService) StopTimeEntry(ctx context.Context, timeEntryID int64) (*TimeEntry, *http.Response, error) {
 	u := fmt.Sprintf("%s/%d/stop", basePathTimeEntries, timeEntryID)
 

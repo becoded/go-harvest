@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -228,7 +227,7 @@ func (c *APIClient) Do(ctx context.Context, req *http.Request, v interface{}) (*
 	defer func() {
 		// Drain up to 512 bytes and close the body to let the Transport reuse the connection
 		drainBytes := 512
-		if _, err := io.CopyN(ioutil.Discard, resp.Body, int64(drainBytes)); err != nil && !errors.Is(err, io.EOF) {
+		if _, err := io.CopyN(io.Discard, resp.Body, int64(drainBytes)); err != nil && !errors.Is(err, io.EOF) {
 			logrus.Error(err)
 		}
 
@@ -365,7 +364,7 @@ func CheckResponse(r *http.Response) error {
 
 	errorResponse := &ErrorResponse{Response: r}
 
-	data, err := ioutil.ReadAll(r.Body)
+	data, err := io.ReadAll(r.Body)
 	if err == nil && data != nil {
 		if err := json.Unmarshal(data, errorResponse); err != nil {
 			logrus.Error(err)

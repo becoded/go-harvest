@@ -60,6 +60,7 @@ type ExpenseCategoryListOptions struct {
 	ListOptions
 }
 
+// ListExpenseCategories returns a list of your expense categories.
 func (s *ExpenseService) ListExpenseCategories(
 	ctx context.Context,
 	opt *ExpenseCategoryListOptions,
@@ -86,6 +87,7 @@ func (s *ExpenseService) ListExpenseCategories(
 	return expenseCategoryList, resp, nil
 }
 
+// GetExpenseCategory retrieves the expense category with the given ID.
 func (s *ExpenseService) GetExpenseCategory(
 	ctx context.Context,
 	expenseCategoryID int64,
@@ -107,6 +109,7 @@ func (s *ExpenseService) GetExpenseCategory(
 	return expenseCategory, resp, nil
 }
 
+// CreateExpenseCategory creates a new expense category object.
 func (s *ExpenseService) CreateExpenseCategory(
 	ctx context.Context,
 	data *ExpenseCategoryRequest,
@@ -128,6 +131,7 @@ func (s *ExpenseService) CreateExpenseCategory(
 	return expenseCategory, resp, nil
 }
 
+// UpdateExpenseCategory updates the specific expense category.
 func (s *ExpenseService) UpdateExpenseCategory(
 	ctx context.Context,
 	expenseCategoryID int64,
@@ -150,6 +154,7 @@ func (s *ExpenseService) UpdateExpenseCategory(
 	return expenseCategory, resp, nil
 }
 
+// DeleteExpenseCategory deletes an expense category.
 func (s *ExpenseService) DeleteExpenseCategory(
 	ctx context.Context,
 	expenseCategoryID int64,

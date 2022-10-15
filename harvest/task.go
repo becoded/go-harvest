@@ -82,6 +82,7 @@ type TaskUpdateRequest struct {
 	IsActive *bool `json:"is_active,omitempty"`
 }
 
+// List returns a list of your tasks.
 func (s *TaskService) List(ctx context.Context, opt *TaskListOptions) (*TaskList, *http.Response, error) {
 	u := "tasks"
 
@@ -105,6 +106,7 @@ func (s *TaskService) List(ctx context.Context, opt *TaskListOptions) (*TaskList
 	return taskList, resp, nil
 }
 
+// Get retrieves the task with the given ID.
 func (s *TaskService) Get(ctx context.Context, taskID int64) (*Task, *http.Response, error) {
 	u := fmt.Sprintf("tasks/%d", taskID)
 
@@ -123,6 +125,7 @@ func (s *TaskService) Get(ctx context.Context, taskID int64) (*Task, *http.Respo
 	return task, resp, nil
 }
 
+// Create creates a new task object.
 func (s *TaskService) Create(ctx context.Context, data *TaskCreateRequest) (*Task, *http.Response, error) {
 	u := "tasks"
 
@@ -141,6 +144,7 @@ func (s *TaskService) Create(ctx context.Context, data *TaskCreateRequest) (*Tas
 	return task, resp, nil
 }
 
+// Update updates the specific task.
 func (s *TaskService) Update(
 	ctx context.Context,
 	taskID int64,
@@ -163,6 +167,7 @@ func (s *TaskService) Update(
 	return task, resp, nil
 }
 
+// Delete deletes a task.
 func (s *TaskService) Delete(ctx context.Context, taskID int64) (*http.Response, error) {
 	u := fmt.Sprintf("tasks/%d", taskID)
 
