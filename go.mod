@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/boumenot/gocover-cobertura v1.2.0
-	github.com/golang/mock v1.4.4
+	github.com/golang/mock v1.6.0
 	github.com/google/go-querystring v1.1.0
 	github.com/magefile/mage v1.14.0
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
