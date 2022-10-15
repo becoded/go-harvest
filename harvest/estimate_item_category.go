@@ -45,6 +45,7 @@ type EstimateItemCategoryListOptions struct {
 	ListOptions
 }
 
+// ListItemCategories returns a list of your estimate item categories.
 func (s *EstimateService) ListItemCategories(
 	ctx context.Context,
 	opt *EstimateItemCategoryListOptions,
@@ -71,6 +72,7 @@ func (s *EstimateService) ListItemCategories(
 	return estimateItemCategoryList, resp, nil
 }
 
+// GetItemCategory retrieves the estimate item category with the given ID.
 func (s *EstimateService) GetItemCategory(
 	ctx context.Context,
 	estimateItemCategoryID int64,
@@ -92,6 +94,7 @@ func (s *EstimateService) GetItemCategory(
 	return estimateItemCategory, resp, nil
 }
 
+// CreateItemCategory creates an estimate item category.
 func (s *EstimateService) CreateItemCategory(
 	ctx context.Context,
 	data *EstimateItemCategoryRequest,
@@ -113,6 +116,7 @@ func (s *EstimateService) CreateItemCategory(
 	return estimateItemCategory, resp, nil
 }
 
+// UpdateItemCategory updates an estimate item category.
 func (s *EstimateService) UpdateItemCategory(
 	ctx context.Context,
 	estimateItemCategoryID int64,
@@ -135,6 +139,7 @@ func (s *EstimateService) UpdateItemCategory(
 	return estimateItemCategory, resp, nil
 }
 
+// DeleteItemCategory deletes an estimate item category.
 func (s *EstimateService) DeleteItemCategory(
 	ctx context.Context,
 	estimateItemCategoryID int64,

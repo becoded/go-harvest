@@ -21,4 +21,4 @@ Steps to reproduce the behavior:
 4. See error
 
 ## Attachments
-Include a self-contained reproducible code snippet and PDF file that demonstrates the issue.
+Include a self-contained reproducible code snippet that demonstrates the issue.

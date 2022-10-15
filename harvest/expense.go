@@ -140,6 +140,7 @@ type ExpenseListOptions struct {
 	ListOptions
 }
 
+// List returns a list of your expenses.
 func (s *ExpenseService) List(ctx context.Context, opt *ExpenseListOptions) (*ExpenseList, *http.Response, error) {
 	u := "expenses"
 
@@ -163,6 +164,7 @@ func (s *ExpenseService) List(ctx context.Context, opt *ExpenseListOptions) (*Ex
 	return expenseList, resp, nil
 }
 
+// Get retrieves the expense with the given ID.
 func (s *ExpenseService) Get(ctx context.Context, expenseID int64) (*Expense, *http.Response, error) {
 	u := fmt.Sprintf("expenses/%d", expenseID)
 
@@ -181,6 +183,7 @@ func (s *ExpenseService) Get(ctx context.Context, expenseID int64) (*Expense, *h
 	return expense, resp, nil
 }
 
+// Create creates a new expense object.
 func (s *ExpenseService) Create(ctx context.Context, data *ExpenseCreateRequest) (*Expense, *http.Response, error) {
 	u := "expenses"
 
@@ -199,6 +202,7 @@ func (s *ExpenseService) Create(ctx context.Context, data *ExpenseCreateRequest)
 	return expense, resp, nil
 }
 
+// Update Updates the specific expense by setting the values of the parameters passed.
 func (s *ExpenseService) Update(
 	ctx context.Context,
 	expenseID int64,
@@ -221,6 +225,7 @@ func (s *ExpenseService) Update(
 	return expense, resp, nil
 }
 
+// Delete deletes an expense.
 func (s *ExpenseService) Delete(ctx context.Context, expenseID int64) (*http.Response, error) {
 	u := fmt.Sprintf("expenses/%d", expenseID)
 

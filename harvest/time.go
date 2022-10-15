@@ -38,7 +38,7 @@ func (t *Time) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (t *Time) MarshalJSON() ([]byte, error) {
-	buffer := bytes.NewBufferString(fmt.Sprintf("\"%s\"", t.String()))
+	buffer := bytes.NewBufferString(fmt.Sprintf("%q", t.String()))
 
 	return buffer.Bytes(), nil
 }

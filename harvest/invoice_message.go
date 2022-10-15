@@ -97,6 +97,7 @@ type InvoiceMessageCreateRequest struct {
 	EventType *bool `json:"event_type,omitempty"`
 }
 
+// ListInvoiceMessages returns a list of messages associated with a given invoice.
 func (s *InvoiceService) ListInvoiceMessages(
 	ctx context.Context,
 	invoiceID int64,
@@ -124,6 +125,7 @@ func (s *InvoiceService) ListInvoiceMessages(
 	return invoiceList, resp, nil
 }
 
+// CreateInvoiceMessage creates a new invoice message object.
 func (s *InvoiceService) CreateInvoiceMessage(
 	ctx context.Context,
 	invoiceID int64,
@@ -146,6 +148,7 @@ func (s *InvoiceService) CreateInvoiceMessage(
 	return invoiceMessage, resp, nil
 }
 
+// DeleteInvoiceMessage deletes an invoice message.
 func (s *InvoiceService) DeleteInvoiceMessage(
 	ctx context.Context,
 	invoiceID,
@@ -161,6 +164,7 @@ func (s *InvoiceService) DeleteInvoiceMessage(
 	return s.client.Do(ctx, req, nil)
 }
 
+// MarkAsSent marks a draft invoice as sent.
 func (s *InvoiceService) MarkAsSent(
 	ctx context.Context,
 	invoiceID int64,
@@ -168,18 +172,22 @@ func (s *InvoiceService) MarkAsSent(
 	return s.SendEvent(ctx, invoiceID, &EventTypeRequest{EventType: "send"})
 }
 
+// MarkAsDraft marks an open invoice as a draft.
 func (s *InvoiceService) MarkAsDraft(ctx context.Context, invoiceID int64) (*InvoiceMessage, *http.Response, error) {
 	return s.SendEvent(ctx, invoiceID, &EventTypeRequest{EventType: "draft"})
 }
 
+// MarkAsClosed marks an open invoice as closed.
 func (s *InvoiceService) MarkAsClosed(ctx context.Context, invoiceID int64) (*InvoiceMessage, *http.Response, error) {
 	return s.SendEvent(ctx, invoiceID, &EventTypeRequest{EventType: "close"})
 }
 
+// MarkAsReopen re-opens a closed invoice.
 func (s *InvoiceService) MarkAsReopen(ctx context.Context, invoiceID int64) (*InvoiceMessage, *http.Response, error) {
 	return s.SendEvent(ctx, invoiceID, &EventTypeRequest{EventType: "re-open"})
 }
 
+// SendEvent will send an EventType.
 func (s *InvoiceService) SendEvent(
 	ctx context.Context,
 	invoiceID int64,

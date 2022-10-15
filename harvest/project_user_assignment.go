@@ -53,6 +53,7 @@ type ProjectUserAssignmentListOptions struct {
 	ListOptions
 }
 
+// ListUserAssignments returns a list of your projects user assignments.
 func (s *ProjectService) ListUserAssignments(
 	ctx context.Context,
 	projectID int64,
@@ -80,6 +81,7 @@ func (s *ProjectService) ListUserAssignments(
 	return projectUserAssignmentList, resp, nil
 }
 
+// GetUserAssignment retrieves the user assignment with the given ID.
 func (s *ProjectService) GetUserAssignment(
 	ctx context.Context,
 	projectID int64,

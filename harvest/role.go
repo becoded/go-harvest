@@ -49,6 +49,7 @@ type RoleUpdateRequest struct {
 	UserIds *[]int64 `json:"user_ids,omitempty"` // The IDs of the users assigned to this role.
 }
 
+// List returns a list of roles in the account.
 func (s *RoleService) List(ctx context.Context, opt *RoleListOptions) (*RoleList, *http.Response, error) {
 	u := "roles"
 
@@ -72,6 +73,7 @@ func (s *RoleService) List(ctx context.Context, opt *RoleListOptions) (*RoleList
 	return roleList, resp, nil
 }
 
+// Get retrieves the role with the given ID.
 func (s *RoleService) Get(ctx context.Context, roleID int64) (*Role, *http.Response, error) {
 	u := fmt.Sprintf("roles/%d", roleID)
 
@@ -90,6 +92,7 @@ func (s *RoleService) Get(ctx context.Context, roleID int64) (*Role, *http.Respo
 	return role, resp, nil
 }
 
+// Create creates a new role object.
 func (s *RoleService) Create(ctx context.Context, data *RoleCreateRequest) (*Role, *http.Response, error) {
 	u := "roles"
 
@@ -108,6 +111,7 @@ func (s *RoleService) Create(ctx context.Context, data *RoleCreateRequest) (*Rol
 	return role, resp, nil
 }
 
+// Update updates the specific role.
 func (s *RoleService) Update(
 	ctx context.Context,
 	roleID int64,
@@ -130,6 +134,7 @@ func (s *RoleService) Update(
 	return role, resp, nil
 }
 
+// Delete deletes a role.
 func (s *RoleService) Delete(ctx context.Context, roleID int64) (*http.Response, error) {
 	u := fmt.Sprintf("roles/%d", roleID)
 

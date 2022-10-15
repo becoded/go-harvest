@@ -50,6 +50,7 @@ func (c Company) String() string {
 	return Stringify(c)
 }
 
+// Get retrieves the company for the currently authenticated user.
 func (s *CompanyService) Get(ctx context.Context) (*Company, *http.Response, error) {
 	u := "company"
 

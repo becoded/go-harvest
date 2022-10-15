@@ -84,7 +84,7 @@ type InvoiceLineItem struct {
 	// Text description of the line item.
 	Description *string `json:"description,omitempty"`
 	// The unit quantity of the item.
-	Quantity *int16 `json:"quantity,omitempty"`
+	Quantity *float64 `json:"quantity,omitempty"`
 	// The individual price per unit.
 	UnitPrice *float64 `json:"unit_price,omitempty"`
 	// The line item subtotal (quantity * unit_price).
@@ -245,6 +245,7 @@ type InvoiceUpdateRequest struct {
 	LineItems *[]InvoiceLineItemRequest `json:"line_items,omitempty"`
 }
 
+// List returns a list of your invoices.
 func (s *InvoiceService) List(ctx context.Context, opt *InvoiceListOptions) (*InvoiceList, *http.Response, error) {
 	u := "invoices"
 
@@ -268,6 +269,7 @@ func (s *InvoiceService) List(ctx context.Context, opt *InvoiceListOptions) (*In
 	return invoiceList, resp, nil
 }
 
+// Get retrieves the invoice with the given ID.
 func (s *InvoiceService) Get(ctx context.Context, invoiceID int64) (*Invoice, *http.Response, error) {
 	u := fmt.Sprintf("invoices/%d", invoiceID)
 
@@ -286,6 +288,7 @@ func (s *InvoiceService) Get(ctx context.Context, invoiceID int64) (*Invoice, *h
 	return invoice, resp, nil
 }
 
+// Create creates a new invoice object.
 func (s *InvoiceService) Create(ctx context.Context, data *InvoiceCreateRequest) (*Invoice, *http.Response, error) {
 	u := "invoices"
 
@@ -304,6 +307,7 @@ func (s *InvoiceService) Create(ctx context.Context, data *InvoiceCreateRequest)
 	return invoice, resp, nil
 }
 
+// Update updates the specific invoice.
 func (s *InvoiceService) Update(
 	ctx context.Context,
 	invoiceID int64,
@@ -326,6 +330,7 @@ func (s *InvoiceService) Update(
 	return invoice, resp, nil
 }
 
+// Delete deletes an invoice.
 func (s *InvoiceService) Delete(ctx context.Context, invoiceID int64) (*http.Response, error) {
 	u := fmt.Sprintf("invoices/%d", invoiceID)
 

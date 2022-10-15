@@ -102,7 +102,7 @@ func Update() error {
 		return err
 	}
 
-	return sh.RunV("go", "mod", "tidy")
+	return sh.RunV("go", "mod", "tidy", "-compat=1.19")
 }
 
 // Generate

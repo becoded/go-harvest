@@ -57,6 +57,7 @@ type MyProjectAssignmentListOptions struct {
 	ListOptions
 }
 
+// ListProjectAssignments returns a list of active project assignments for the user.
 func (s *ProjectService) ListProjectAssignments(
 	ctx context.Context,
 	userID int64,
@@ -84,6 +85,7 @@ func (s *ProjectService) ListProjectAssignments(
 	return UserProjectAssignmentList, resp, nil
 }
 
+// GetMyProjectAssignments returns a list of your active project assignments.
 func (s *ProjectService) GetMyProjectAssignments(
 	ctx context.Context,
 	opt *MyProjectAssignmentListOptions,
