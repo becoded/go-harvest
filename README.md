@@ -1,6 +1,11 @@
 # go-harvest #
 
-[![GoDoc](https://godoc.org/github.com/becoded/go-harvest/harvest?status.svg)](https://godoc.org/github.com/becoded/go-harvest/harvest) [![Build Status](https://travis-ci.org/becoded/go-harvest.svg?branch=master)](https://travis-ci.org/becoded/go-harvest) [![Test Coverage](https://codecov.io/gh/becoded/go-harvest/branch/master/graph/badge.svg)](https://codecov.io/gh/becoded/go-harvest) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3255/badge)](https://bestpractices.coreinfrastructure.org/projects/3255) [![Go Report Card](https://goreportcard.com/badge/github.com/becoded/go-harvest)](https://goreportcard.com/report/github.com/becoded/go-harvest)
+[![GoDoc](https://godoc.org/github.com/becoded/go-harvest/harvest?status.svg)](https://godoc.org/github.com/becoded/go-harvest/harvest)
+[![GitHub CI Test](https://github.com/becoded/go-harvest/actions/workflows/test.yml/badge.svg)](https://github.com/becoded/go-harvest/actions/workflows/test.yml)
+[![GitHub CI Lint](https://github.com/becoded/go-harvest/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/becoded/go-harvest/actions/workflows/golangci-lint.yml)
+[![Test Coverage](https://codecov.io/gh/becoded/go-harvest/branch/main/graph/badge.svg)](https://codecov.io/gh/becoded/go-harvest)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3255/badge)](https://bestpractices.coreinfrastructure.org/projects/3255)
+[![Go Report Card](https://goreportcard.com/badge/github.com/becoded/go-harvest)](https://goreportcard.com/report/github.com/becoded/go-harvest)
 
 go-harvest is a Go client library for accessing [Harvest API v2](https://help.getharvest.com/api-v2/)
 
