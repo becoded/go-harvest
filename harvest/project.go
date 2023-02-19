@@ -36,6 +36,8 @@ type Project struct {
 	Budget *float64 `json:"budget,omitempty"`
 	// The method by which the project is budgeted.
 	BudgetBy *string `json:"budget_by,omitempty"`
+	// Whether the project budget is monthly or not.
+	BudgetIsMonthly *bool `json:"budget_is_monthly,omitempty"`
 	// Whether project managers should be notified when the project goes over budget.
 	NotifyWhenOverBudget *bool `json:"notify_when_over_budget,omitempty"`
 	// Percentage value used to trigger over budget email alerts.
