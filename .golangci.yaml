@@ -62,9 +62,28 @@ linters-settings:
   wsl:
     allow-cuddle-declarations: true
   gci:
-    local-prefixes: gitlab.showpad.io/showpad/file-service
+    local-prefixes: github.com/becoded/go-harvest
   goimports:
-    local-prefixes: gitlab.showpad.io/showpad/file-service
+    local-prefixes: github.com/becoded/go-harvest
+  depguard:
+    rules:
+      Main:
+        files:
+          - $all
+          - "!$test"
+        allow:
+          - $gostd
+          - github.com/becoded/go-harvest
+          - github.com/google/go-querystring
+          - github.com/sirupsen/logrus
+      Test:
+        files:
+          - $test
+        allow:
+          - $gostd
+          - github.com/becoded/go-harvest
+          - github.com/google/go-querystring
+          - github.com/stretchr/testify
 issues:
   exclude:
     - 'shadow: declaration of "err" shadows declaration at line'

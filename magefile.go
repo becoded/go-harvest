@@ -121,8 +121,8 @@ func DiffGen() error {
 func Tools() error {
 	tools := []string{
 		"github.com/boumenot/gocover-cobertura",
-		"github.com/golang/mock/mockgen",
 		"github.com/magefile/mage/mage",
+		"go.uber.org/mock/mockgen",
 		"mvdan.cc/gofumpt",
 	}
 

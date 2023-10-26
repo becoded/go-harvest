@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestCompanyService_Get(t *testing.T) {
