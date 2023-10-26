@@ -2,11 +2,13 @@ package harvest_test
 
 import (
 	"context"
-	"github.com/becoded/go-harvest/harvest"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestEstimateService_List(t *testing.T) {
@@ -40,7 +42,7 @@ func TestEstimateService_List(t *testing.T) {
 	createdTwo := time.Date(
 		2017, 6, 27, 16, 9, 33, 0, time.UTC)
 	updatedTwo := time.Date(
-		2017, 6, 27, 16, 12, 00, 0, time.UTC)
+		2017, 6, 27, 16, 12, 0o0, 0, time.UTC)
 	acceptedTwo := time.Date(
 		2017, 6, 27, 16, 10, 32, 0, time.UTC)
 
