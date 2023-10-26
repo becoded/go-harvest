@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestStringify(t *testing.T) {
