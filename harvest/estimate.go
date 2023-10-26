@@ -48,7 +48,9 @@ type Estimate struct {
 	// Any additional notes included on the estimate.
 	Notes *string `json:"notes,omitempty"`
 	// The currency code associated with this estimate.
-	Currency *string `json:"currency,omitempty"`
+	Currency *string `json:"currency,omitempty"
+	// The current state of the estimate: draft, sent, accepted, or declined.`
+	State *string `json:"state,omitempty"`
 	// Date the estimate was issued.
 	IssueDate *Date `json:"issue_date,omitempty"`
 	// Date and time the estimate was sent.
