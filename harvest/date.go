@@ -30,6 +30,10 @@ func (t *Date) UnmarshalJSON(data []byte) (err error) {
 	return nil
 }
 
+func (t *Date) MarshalJSON() ([]byte, error) {
+	return []byte(t.Time.Format("\"2006-01-02\"")), nil
+}
+
 func (t *Date) EncodeValues(key string, v *url.Values) error {
 	v.Add(key, t.String())
 
