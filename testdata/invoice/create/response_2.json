@@ -1,0 +1,73 @@
+{
+  "id":15340591,
+  "client_key":"16173155e0a01542b8c7f689888cb3eaeda0dc94",
+  "number":"1002",
+  "purchase_order":"",
+  "amount":333.35,
+  "due_amount":333.35,
+  "tax":null,
+  "tax_amount":0.0,
+  "tax2":null,
+  "tax2_amount":0.0,
+  "discount":null,
+  "discount_amount":0.0,
+  "subject":"ABC Project Quote",
+  "notes":"",
+  "state":"draft",
+  "period_start":"2017-03-01",
+  "period_end":"2017-03-31",
+  "issue_date":"2018-02-12",
+  "due_date":"2018-02-12",
+  "payment_term":"upon receipt",
+  "sent_at":null,
+  "paid_at":null,
+  "closed_at":null,
+  "recurring_invoice_id":null,
+  "created_at":"2018-02-12T21:02:37Z",
+  "updated_at":"2018-02-12T21:02:37Z",
+  "paid_date":null,
+  "currency":"USD",
+  "payment_options":["credit_card"],
+  "client":{
+    "id":5735774,
+    "name":"ABC Corp"
+  },
+  "estimate":null,
+  "retainer":null,
+  "creator":{
+    "id":1782884,
+    "name":"Bob Powell"
+  },
+  "line_items":[
+    {
+      "id":64957723,
+      "kind":"Service",
+      "description":"[MW] Marketing Website: Graphic Design (03/01/2017 - 03/31/2017)",
+      "quantity":2.0,
+      "unit_price":100.0,
+      "amount":200.0,
+      "taxed":false,
+      "taxed2":false,
+      "project":{
+        "id":14307913,
+        "name":"Marketing Website",
+        "code":"MW"
+      }
+    },
+    {
+      "id":64957724,
+      "kind":"Product",
+      "description":"[MW] Marketing Website: Meals ",
+      "quantity":1.0,
+      "unit_price":133.35,
+      "amount":133.35,
+      "taxed":false,
+      "taxed2":false,
+      "project":{
+        "id":14307913,
+        "name":"Marketing Website",
+        "code":"MW"
+      }
+    }
+  ]
+}
