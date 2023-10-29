@@ -53,6 +53,7 @@ func TestInvoiceService_CreateInvoice(t *testing.T) {
 							UnitPrice:   harvest.Float64(5000.0),
 						},
 					}
+
 					return &harvest.InvoiceCreateRequest{
 						ClientID: harvest.Int64(5735774),
 						Subject:  harvest.String("ABC Project Quote"),
@@ -150,6 +151,7 @@ func TestInvoiceService_CreateInvoice(t *testing.T) {
 							SummaryType: harvest.String("category"),
 						},
 					}
+
 					return &harvest.InvoiceCreateRequest{
 						ClientID:        harvest.Int64(5735774),
 						Subject:         harvest.String("ABC Project Quote"),
@@ -271,8 +273,10 @@ func TestInvoiceService_CreateInvoice(t *testing.T) {
 
 			if tt.wantError != nil {
 				assert.EqualError(t, err, tt.wantError.Error())
+
 				return
 			}
+
 			assert.NoError(t, err)
 		})
 	}
@@ -334,8 +338,10 @@ func TestInvoiceService_DeleteInvoice(t *testing.T) {
 
 			if tt.wantError != nil {
 				assert.EqualError(t, err, tt.wantError.Error())
+
 				return
 			}
+
 			assert.NoError(t, err)
 		})
 	}
@@ -472,8 +478,10 @@ func TestInvoiceService_GetInvoice(t *testing.T) {
 
 			if tt.wantError != nil {
 				assert.EqualError(t, err, tt.wantError.Error())
+
 				return
 			}
+
 			assert.NoError(t, err)
 		})
 	}
@@ -719,8 +727,10 @@ func TestInvoiceService_ListInvoices(t *testing.T) {
 
 			if tt.wantError != nil {
 				assert.EqualError(t, err, tt.wantError.Error())
+
 				return
 			}
+
 			assert.NoError(t, err)
 		})
 	}
@@ -847,8 +857,10 @@ func TestInvoiceService_UpdateInvoice(t *testing.T) {
 
 			if tt.wantError != nil {
 				assert.EqualError(t, err, tt.wantError.Error())
+
 				return
 			}
+
 			assert.NoError(t, err)
 		})
 	}

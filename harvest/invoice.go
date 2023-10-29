@@ -160,7 +160,8 @@ type InvoiceCreateRequest struct {
 	// Options: upon receipt, net 15, net 30, net 45, net 60, or custom.
 	PaymentTerm *string `json:"payment_term,omitempty"`
 	// The payment options available to pay the invoice.
-	// Your account must be configured with the appropriate options under Settings > Integrations > Online payment to assign them.
+	// Your account must be configured with the appropriate options under
+	// Settings > Integrations > Online payment to assign them.
 	// Options: [ach, credit_card, paypal]
 	PaymentOptions *[]string `json:"payment_options,omitempty"`
 	// optional	Array of line item parameters
