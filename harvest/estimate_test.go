@@ -82,7 +82,8 @@ func TestEstimateService_List(t *testing.T) {
 				},
 				LineItems: &lineItemsOne,
 				Creator: &harvest.User{
-					ID: harvest.Int64(1782884),
+					ID:   harvest.Int64(1782884),
+					Name: harvest.String("Bob Powell"),
 				},
 				ClientKey:      harvest.String("13dc088aa7d51ec687f186b146730c3c75dc7423"),
 				Number:         harvest.String("1001"),
@@ -112,7 +113,8 @@ func TestEstimateService_List(t *testing.T) {
 				},
 				LineItems: &lineItemsTwo,
 				Creator: &harvest.User{
-					ID: harvest.Int64(1782884),
+					ID:   harvest.Int64(1782884),
+					Name: harvest.String("Bob Powell"),
 				},
 				ClientKey:      harvest.String("a5ffaeb30c55776270fcd3992b70332d769f97e7"),
 				Number:         harvest.String("1000"),
@@ -200,7 +202,8 @@ func TestEstimateService_Get(t *testing.T) {
 		},
 		LineItems: &lineItemsOne,
 		Creator: &harvest.User{
-			ID: harvest.Int64(1782884),
+			ID:   harvest.Int64(1782884),
+			Name: harvest.String("Bob Powell"),
 		},
 		ClientKey:      harvest.String("13dc088aa7d51ec687f186b146730c3c75dc7423"),
 		Number:         harvest.String("1001"),

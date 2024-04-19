@@ -203,7 +203,8 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 				SpentDate: harvest.DateP(harvest.Date{time.Date(
 					2017, 3, 2, 0, 0, 0, 0, time.Local)}),
 				User: &harvest.User{
-					ID: harvest.Int64(1782959),
+					ID:   harvest.Int64(1782959),
+					Name: harvest.String("Kim Allen"),
 				},
 				Client: &harvest.Client{
 					ID:   harvest.Int64(5735774),
@@ -261,7 +262,8 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 				SpentDate: harvest.DateP(harvest.Date{time.Date(
 					2017, 3, 1, 0, 0, 0, 0, time.Local)}),
 				User: &harvest.User{
-					ID: harvest.Int64(1782959),
+					ID:   harvest.Int64(1782959),
+					Name: harvest.String("Kim Allen"),
 				},
 				Client: &harvest.Client{
 					ID:   harvest.Int64(5735776),
@@ -317,7 +319,8 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 				SpentDate: harvest.DateP(harvest.Date{time.Date(
 					2017, 3, 1, 0, 0, 0, 0, time.Local)}),
 				User: &harvest.User{
-					ID: harvest.Int64(1782959),
+					ID:   harvest.Int64(1782959),
+					Name: harvest.String("Kim Allen"),
 				},
 				Client: &harvest.Client{
 					ID:   harvest.Int64(5735776),
@@ -371,7 +374,8 @@ func TestTimesheetService_ListTimeEntries(t *testing.T) {
 				SpentDate: harvest.DateP(harvest.Date{time.Date(
 					2017, 3, 1, 0, 0, 0, 0, time.Local)}),
 				User: &harvest.User{
-					ID: harvest.Int64(1782959),
+					ID:   harvest.Int64(1782959),
+					Name: harvest.String("Kim Allen"),
 				},
 				Client: &harvest.Client{
 					ID:   harvest.Int64(5735776),
@@ -479,7 +483,8 @@ func TestTimesheetService_RestartTimeEntry(t *testing.T) {
 		ID:        harvest.Int64(662202797),
 		SpentDate: harvest.DateP(harvest.Date{spentDate}),
 		User: &harvest.User{
-			ID: harvest.Int64(1795925),
+			ID:   harvest.Int64(1795925),
+			Name: harvest.String("Jane Smith"),
 		},
 		Client: &harvest.Client{
 			ID:   harvest.Int64(5735776),
@@ -565,7 +570,8 @@ func TestTimesheetService_StopTimeEntry(t *testing.T) {
 		ID:        harvest.Int64(662202797),
 		SpentDate: harvest.DateP(harvest.Date{spentDate}),
 		User: &harvest.User{
-			ID: harvest.Int64(1795925),
+			ID:   harvest.Int64(1795925),
+			Name: harvest.String("Jane Smith"),
 		},
 		Client: &harvest.Client{
 			ID:   harvest.Int64(5735776),
@@ -668,7 +674,8 @@ func TestTimesheetService_UpdateTimeEntry(t *testing.T) {
 		UpdatedAt: &updatedTimeEntry,
 		SpentDate: harvest.DateP(harvest.Date{spentDate}),
 		User: &harvest.User{
-			ID: harvest.Int64(1782959),
+			ID:   harvest.Int64(1782959),
+			Name: harvest.String("Kim Allen"),
 		},
 		Client: &harvest.Client{
 			ID:   harvest.Int64(5735774),

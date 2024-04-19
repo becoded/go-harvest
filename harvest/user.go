@@ -20,6 +20,8 @@ type User struct {
 	FirstName *string `json:"first_name,omitempty"`
 	// The last name of the user.
 	LastName *string `json:"last_name,omitempty"`
+	// The full name of the user - this is populated when listing time entries
+	Name *string `json:"name,omitempty"`
 	// The email address of the user.
 	Email *string `json:"email,omitempty"`
 	// The telephone number for the user.

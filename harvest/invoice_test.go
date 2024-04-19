@@ -97,7 +97,8 @@ func TestInvoiceService_CreateInvoice(t *testing.T) {
 					},
 					LineItems: &lineItems,
 					Creator: &harvest.User{
-						ID: harvest.Int64(1782884),
+						ID:   harvest.Int64(1782884),
+						Name: harvest.String("Bob Powell"),
 					},
 					ClientKey:      harvest.String("8b86437630b6c260c1bfa289f0154960f83b606d"),
 					Number:         harvest.String("1002"),
@@ -218,7 +219,8 @@ func TestInvoiceService_CreateInvoice(t *testing.T) {
 					},
 					LineItems: &lineItems,
 					Creator: &harvest.User{
-						ID: harvest.Int64(1782884),
+						ID:   harvest.Int64(1782884),
+						Name: harvest.String("Bob Powell"),
 					},
 					ClientKey:      harvest.String("16173155e0a01542b8c7f689888cb3eaeda0dc94"),
 					Number:         harvest.String("1002"),
@@ -422,7 +424,8 @@ func TestInvoiceService_GetInvoice(t *testing.T) {
 					},
 					LineItems: &lineItems,
 					Creator: &harvest.User{
-						ID: harvest.Int64(1782884),
+						ID:   harvest.Int64(1782884),
+						Name: harvest.String("Bob Powell"),
 					},
 					ClientKey:      harvest.String("9e97f4a65c5b83b1fc02f54e5a41c9dc7d458542"),
 					Number:         harvest.String("1000"),
@@ -613,7 +616,8 @@ func TestInvoiceService_ListInvoices(t *testing.T) {
 							},
 							LineItems: &lineItemsOne,
 							Creator: &harvest.User{
-								ID: harvest.Int64(1782884),
+								ID:   harvest.Int64(1782884),
+								Name: harvest.String("Bob Powell"),
 							},
 							ClientKey:      harvest.String("21312da13d457947a217da6775477afee8c2eba8"),
 							Number:         harvest.String("1001"),
@@ -656,7 +660,8 @@ func TestInvoiceService_ListInvoices(t *testing.T) {
 							},
 							LineItems: &lineItemsTwo,
 							Creator: &harvest.User{
-								ID: harvest.Int64(1782884),
+								ID:   harvest.Int64(1782884),
+								Name: harvest.String("Bob Powell"),
 							},
 							ClientKey:      harvest.String("9e97f4a65c5b83b1fc02f54e5a41c9dc7d458542"),
 							Number:         harvest.String("1000"),
@@ -810,7 +815,8 @@ func TestInvoiceService_UpdateInvoice(t *testing.T) {
 					PurchaseOrder: harvest.String("2345"),
 					LineItems:     &lineItems,
 					Creator: &harvest.User{
-						ID: harvest.Int64(1782884),
+						ID:   harvest.Int64(1782884),
+						Name: harvest.String("Bob Powell"),
 					},
 					ClientKey:      harvest.String("8b86437630b6c260c1bfa289f0154960f83b606d"),
 					Number:         harvest.String("1002"),
