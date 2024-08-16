@@ -135,9 +135,8 @@ type TimeEntryCreateViaDuration struct {
 	Hours *float64 `json:"hours,omitempty"`
 	// optional	Any notes to be associated with the time entry.
 	Notes *string `json:"notes,omitempty"`
-	// TO DO
 	// optional	An object containing the id, group_id, and permalink of the external reference.
-	// ExternalReference *object `json:"external_reference,omitempty"`
+	ExternalReference *ExternalReference `json:"external_reference,omitempty"`
 }
 
 type TimeEntryCreateViaStartEndTime struct {
@@ -156,9 +155,8 @@ type TimeEntryCreateViaStartEndTime struct {
 	EndedTime *Time `json:"ended_time,omitempty"`
 	// optional	Any notes to be associated with the time entry.
 	Notes *string `json:"notes,omitempty"`
-	// To do
 	// optional	An object containing the id, group_id, and permalink of the external reference.
-	// External_reference *object `json:"external_reference,omitempty"`
+	ExternalReference *ExternalReference `json:"external_reference,omitempty"`
 }
 
 type TimeEntryUpdate struct {
@@ -179,9 +177,8 @@ type TimeEntryUpdate struct {
 	Hours *float64 `json:"hours,omitempty"`
 	// optional	Any notes to be associated with the time entry.
 	Notes *string `json:"notes,omitempty"`
-	// TO DO
 	// optional	An object containing the id, group_id, and permalink of the external reference.
-	// ExternalReference *object `json:"external_reference,omitempty"`
+	ExternalReference *ExternalReference `json:"external_reference,omitempty"`
 }
 
 // List returns a list of time entries.
