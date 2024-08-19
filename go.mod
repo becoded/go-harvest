@@ -1,6 +1,7 @@
 module github.com/becoded/go-harvest
 
 go 1.21
+toolchain go1.22.5
 
 require (
 	github.com/boumenot/gocover-cobertura v1.2.0
@@ -14,7 +15,7 @@ require (
 	golang.org/x/tools v0.23.0
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	mvdan.cc/gofumpt v0.6.0
+	mvdan.cc/gofumpt v0.7.0
 )
 
 require (
