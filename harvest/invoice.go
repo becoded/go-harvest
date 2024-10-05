@@ -54,6 +54,8 @@ type Invoice struct {
 	Notes *string `json:"notes,omitempty"`
 	// The currency code associated with this invoice.
 	Currency *string `json:"currency,omitempty"`
+	// The current state of the invoice: draft, open, paid, or closed.
+	State *string `json:"state,omitempty"`
 	// Start of the period during which time entries and expenses were added to this invoice.
 	PeriodStart *Date `json:"period_start,omitempty"`
 	// End of the period during which time entries and expenses were added to this invoice.
@@ -62,6 +64,10 @@ type Invoice struct {
 	IssueDate *Date `json:"issue_date,omitempty"`
 	// Date the invoice is due.
 	DueDate *Date `json:"due_date,omitempty"`
+	// The timeframe in which the invoice should be paid. Options: upon receipt, net 15, net 30, net 45, net 60, or custom.
+	PaymentTerm *string `json:"payment_term,omitempty"`
+	// The list of payment options enabled for the invoice. Options: [ach, credit_card, paypal]
+	PaymentOptions *[]string `json:"payment_options,omitempty"`
 	// Date and time the invoice was sent.
 	SentAt *time.Time `json:"sent_at,omitempty"`
 	// Date and time the invoice was paid.
@@ -150,10 +156,18 @@ type InvoiceCreateRequest struct {
 	IssueDate *Date `json:"issue_date,omitempty"`
 	// optional	Date the invoice is due. Defaults to the issue_date.
 	DueDate *Date `json:"due_date,omitempty"`
+	// The timeframe in which the invoice should be paid. Defaults to custom.
+	// Options: upon receipt, net 15, net 30, net 45, net 60, or custom.
+	PaymentTerm *string `json:"payment_term,omitempty"`
+	// The payment options available to pay the invoice.
+	// Your account must be configured with the appropriate options under
+	// Settings > Integrations > Online payment to assign them.
+	// Options: [ach, credit_card, paypal]
+	PaymentOptions *[]string `json:"payment_options,omitempty"`
 	// optional	Array of line item parameters
 	LineItems *[]InvoiceLineItemRequest `json:"line_items,omitempty"`
 	// optional	An line items import object
-	LineItemsImport *[]InvoiceLineItemImportRequest `json:"line_items_import,omitempty"`
+	LineItemsImport *InvoiceLineItemImportRequest `json:"line_items_import,omitempty"`
 }
 
 type InvoiceLineItemRequest struct {
