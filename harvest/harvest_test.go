@@ -261,7 +261,7 @@ func TestDo_httpError(t *testing.T) {
 	client, mux, teardown := setup(t)
 	t.Cleanup(teardown)
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/", func(w http.ResponseWriter, _ *http.Request) {
 		http.Error(w, "Bad Request", 400)
 	})
 

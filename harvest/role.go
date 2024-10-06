@@ -41,12 +41,12 @@ type RoleListOptions struct {
 
 type RoleCreateRequest struct {
 	Name    *string  `json:"name"`               // required	The name of the role.
-	UserIds *[]int64 `json:"user_ids,omitempty"` // The IDs of the users assigned to this role.
+	UserIDs *[]int64 `json:"user_ids,omitempty"` // The IDs of the users assigned to this role.
 }
 
 type RoleUpdateRequest struct {
 	Name    *string  `json:"name,omitempty"`     // The name of the role.
-	UserIds *[]int64 `json:"user_ids,omitempty"` // The IDs of the users assigned to this role.
+	UserIDs *[]int64 `json:"user_ids,omitempty"` // The IDs of the users assigned to this role.
 }
 
 // List returns a list of roles in the account.

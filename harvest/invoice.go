@@ -193,7 +193,7 @@ type InvoiceLineItemRequest struct {
 
 type InvoiceLineItemImportRequest struct {
 	// required	An array of the client’s project IDs you’d like to include time/expenses from.
-	ProjectIds *[]int64 `json:"project_ids"`
+	ProjectIDs *[]int64 `json:"project_ids"`
 	// optional	A time import object.
 	Time *InvoiceLineItemImportTimeRequest `json:"time,omitempty"`
 	// optional	An expense import object.

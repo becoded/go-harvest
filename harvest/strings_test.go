@@ -64,12 +64,11 @@ func TestStringify(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
-
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
 			s := harvest.Stringify(tt.in)
+
 			assert.Equal(t, tt.out, s)
 		})
 	}
@@ -91,10 +90,11 @@ func TestString(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			s := tt.in.(fmt.Stringer).String()
+
 			assert.Equal(t, tt.out, s)
 		})
 	}

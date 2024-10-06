@@ -44,7 +44,6 @@ func TestDate_String(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			assert.Equal(t, tt.want, tt.input.String())
@@ -100,9 +99,9 @@ func TestDate_UnmarshalJSONParse(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			tm := harvest.Date{}
 
 			gotErr := tm.UnmarshalJSON([]byte(tt.args.str))
@@ -111,6 +110,7 @@ func TestDate_UnmarshalJSONParse(t *testing.T) {
 
 				return
 			}
+
 			assert.NoError(t, gotErr)
 
 			if !tm.Equal(tt.want) {
@@ -164,7 +164,6 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			var f foo
@@ -175,6 +174,7 @@ func TestDate_UnmarshalJSON(t *testing.T) {
 
 				return
 			}
+
 			assert.NoError(t, gotErr)
 
 			switch {
@@ -234,13 +234,14 @@ func TestDate_EncodeValues(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			qs, err := query.Values(tt.args)
 			if err != nil {
 				t.Errorf("%q. EncodeValues() error = %v", tt.name, err)
 			}
+
 			if !reflect.DeepEqual(qs, tt.want) {
 				t.Errorf("%q. EncodeValues() = %v, response %v", tt.name, qs, tt.want)
 			}

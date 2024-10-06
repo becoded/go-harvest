@@ -78,7 +78,6 @@ func TestUserService_Create(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			mux.HandleFunc(tt.path, func(w http.ResponseWriter, r *http.Request) {
@@ -138,7 +137,6 @@ func TestUserService_Delete(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			mux.HandleFunc(tt.path, func(w http.ResponseWriter, r *http.Request) {
@@ -231,7 +229,6 @@ func TestUserService_Get(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			mux.HandleFunc(tt.path, func(w http.ResponseWriter, r *http.Request) {
@@ -324,7 +321,6 @@ func TestUserService_Current(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			mux.HandleFunc(tt.path, func(w http.ResponseWriter, r *http.Request) {
