@@ -16,6 +16,10 @@ type UserProjectAssignment struct {
 	IsActive *bool `json:"is_active,omitempty"`
 	// Determines if the user has project manager permissions for the project.
 	IsProjectManager *bool `json:"is_project_manager,omitempty"`
+	// Determines which billable rate(s) will be used on the project for this user when bill_by is People.
+	// When true, the project will use the user’s default billable rates.
+	// When false, the project will use the custom rate defined on this user assignment.
+	UseDefaultRates *bool `json:"use_default_rates,omitempty"`
 	// Rate used when the project’s bill_by is People.
 	HourlyRate *float64 `json:"hourly_rate,omitempty"`
 	// Budget used when the project’s budget_by is person.
@@ -33,7 +37,7 @@ type UserProjectAssignment struct {
 }
 
 type UserProjectAssignmentList struct {
-	UserAssignments []*UserProjectAssignment `json:"project_assignments"`
+	ProjectAssignments []*UserProjectAssignment `json:"project_assignments"`
 
 	Pagination
 }
@@ -58,7 +62,7 @@ type MyProjectAssignmentListOptions struct {
 }
 
 // ListProjectAssignments returns a list of active project assignments for the user.
-func (s *ProjectService) ListProjectAssignments(
+func (s *UserService) ListProjectAssignments(
 	ctx context.Context,
 	userID int64,
 	opt *UserProjectAssignmentListOptions,
@@ -75,18 +79,18 @@ func (s *ProjectService) ListProjectAssignments(
 		return nil, nil, err
 	}
 
-	UserProjectAssignmentList := new(UserProjectAssignmentList)
+	list := new(UserProjectAssignmentList)
 
-	resp, err := s.client.Do(ctx, req, &UserProjectAssignmentList)
+	resp, err := s.client.Do(ctx, req, &list)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return UserProjectAssignmentList, resp, nil
+	return list, resp, nil
 }
 
 // GetMyProjectAssignments returns a list of your active project assignments.
-func (s *ProjectService) GetMyProjectAssignments(
+func (s *UserService) GetMyProjectAssignments(
 	ctx context.Context,
 	opt *MyProjectAssignmentListOptions,
 ) (*UserProjectAssignmentList, *http.Response, error) {
@@ -102,12 +106,12 @@ func (s *ProjectService) GetMyProjectAssignments(
 		return nil, nil, err
 	}
 
-	UserProjectAssignmentList := new(UserProjectAssignmentList)
+	list := new(UserProjectAssignmentList)
 
-	resp, err := s.client.Do(ctx, req, &UserProjectAssignmentList)
+	resp, err := s.client.Do(ctx, req, &list)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return UserProjectAssignmentList, resp, nil
+	return list, resp, nil
 }
