@@ -8,7 +8,7 @@ linters:
     - errcheck
     - errorlint
     - exhaustive
-    - exportloopref
+    - copyloopvar
     - funlen
     - gci
     - gochecknoglobals
@@ -19,13 +19,13 @@ linters:
     - gocyclo
     - godot
     - godox
-    - goerr113
+    - err113
     - gofmt
     - gofumpt
     - goheader
     - goimports
     - revive
-    - gomnd
+    - mnd
     - gomodguard
     - goprintffuncname
     - gosec
@@ -56,13 +56,16 @@ linters:
 
 linters-settings:
   govet:
-    check-shadowing: true
+    shadow: true
   golint:
     min-confidence: 0
   wsl:
     allow-cuddle-declarations: true
   gci:
-    local-prefixes: github.com/becoded/go-harvest
+    sections:
+      - standard
+      - default
+      - prefix(github.com/becoded/go-harvest)
   goimports:
     local-prefixes: github.com/becoded/go-harvest
   depguard:

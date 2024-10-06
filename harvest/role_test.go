@@ -26,7 +26,7 @@ func TestRoleService_CreateRole(t *testing.T) {
 
 	role, _, err := service.Role.Create(context.Background(), &harvest.RoleCreateRequest{
 		Name:    harvest.String("Role new"),
-		UserIds: harvest.Ints64([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
+		UserIDs: harvest.Ints64([]int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}),
 	})
 	assert.NoError(t, err)
 
@@ -170,7 +170,7 @@ func TestRoleService_UpdateRole(t *testing.T) {
 
 	role, _, err := service.Role.Update(context.Background(), 1, &harvest.RoleUpdateRequest{
 		Name:    harvest.String("Role update"),
-		UserIds: harvest.Ints64([]int64{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}),
+		UserIDs: harvest.Ints64([]int64{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}),
 	})
 	assert.NoError(t, err)
 

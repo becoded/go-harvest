@@ -136,9 +136,9 @@ func TestInvoiceService_CreateInvoice(t *testing.T) {
 				data: func() *harvest.InvoiceCreateRequest {
 					fromDate := time.Date(2017, 3, 1, 0, 0, 0, 0, time.UTC)
 					toDate := time.Date(2017, 3, 31, 0, 0, 0, 0, time.UTC)
-					projectIds := []int64{14307913}
+					projectIDs := []int64{14307913}
 					lineItemsImport := harvest.InvoiceLineItemImportRequest{
-						ProjectIds: &projectIds,
+						ProjectIDs: &projectIDs,
 						Time: &harvest.InvoiceLineItemImportTimeRequest{
 							SummaryType: harvest.String("task"),
 							From: &harvest.Date{
@@ -256,7 +256,6 @@ func TestInvoiceService_CreateInvoice(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -322,7 +321,6 @@ func TestInvoiceService_DeleteInvoice(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -462,7 +460,6 @@ func TestInvoiceService_GetInvoice(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -713,7 +710,6 @@ func TestInvoiceService_ListInvoices(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -844,7 +840,6 @@ func TestInvoiceService_UpdateInvoice(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 

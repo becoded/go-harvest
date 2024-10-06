@@ -93,10 +93,11 @@ func TestTime_UnmarshalJSONParse(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			tm := harvest.Time{}
+
 			gotErr := tm.UnmarshalJSON([]byte(tt.args.str))
 			if tt.err != nil {
 				assert.EqualError(t, gotErr, tt.err.Error())
@@ -156,11 +157,11 @@ func TestTime_UnmarshalJSON(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
 			var f foo
+
 			gotErr := json.Unmarshal([]byte(tt.args.jsonStr), &f)
 			if tt.err != nil {
 				assert.EqualError(t, gotErr, tt.err.Error())

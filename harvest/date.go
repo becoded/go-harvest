@@ -21,8 +21,8 @@ func (t *Date) UnmarshalJSON(data []byte) (err error) {
 	str := string(data)
 	str = strings.Trim(str, "\"")
 	const shortForm = "2006-01-02"
-	t.Time, err = time.ParseInLocation(shortForm, str, time.Local)
 
+	t.Time, err = time.ParseInLocation(shortForm, str, time.Local)
 	if err != nil {
 		return ErrDateParse
 	}
