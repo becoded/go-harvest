@@ -1,3 +1,4 @@
 .idea
 main.go
 gl-code-quality-report.json
+coverage.out
