@@ -231,7 +231,6 @@ func TestUserService_ListProjectAssignments(t *testing.T) {
 
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want.String(), userProjectAssignments.String())
-			t.Log(userProjectAssignments.String())
 		})
 	}
 }
@@ -448,7 +447,6 @@ func TestUserService_GetMyProjectAssignments(t *testing.T) {
 
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want.String(), userProjectAssignments.String())
-			t.Log(userProjectAssignments.String())
 		})
 	}
 }
