@@ -79,6 +79,7 @@ linters-settings:
           - github.com/becoded/go-harvest
           - github.com/google/go-querystring
           - github.com/sirupsen/logrus
+          - golang.org/x/oauth2
       Test:
         files:
           - $test
