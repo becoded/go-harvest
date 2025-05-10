@@ -35,7 +35,7 @@ type InvoiceMessage struct {
 	// Whether this is a thank you message.
 	ThankYou *bool `json:"thank_you,omitempty"`
 	// The type of invoice event that occurred with the message: send, close, draft, re-open, or view.
-	EventType *bool `json:"event_type,omitempty"`
+	EventType *string `json:"event_type,omitempty"`
 	// Whether this is a reminder message.
 	Reminder *bool `json:"reminder,omitempty"`
 	// The date the reminder email will be sent.
@@ -54,7 +54,7 @@ type InvoiceMessageRecipient struct {
 }
 
 type InvoiceMessageList struct {
-	Invoices []*Invoice `json:"invoices"`
+	InvoiceMessages []*InvoiceMessage `json:"invoice_messages"`
 
 	Pagination
 }
@@ -102,7 +102,7 @@ func (s *InvoiceService) ListInvoiceMessages(
 	ctx context.Context,
 	invoiceID int64,
 	opt *InvoiceMessageListOptions,
-) (*InvoiceList, *http.Response, error) {
+) (*InvoiceMessageList, *http.Response, error) {
 	u := fmt.Sprintf("invoices/%d/messages", invoiceID)
 
 	u, err := addOptions(u, opt)
@@ -115,14 +115,14 @@ func (s *InvoiceService) ListInvoiceMessages(
 		return nil, nil, err
 	}
 
-	invoiceList := new(InvoiceList)
+	invoiceMessageList := new(InvoiceMessageList)
 
-	resp, err := s.client.Do(ctx, req, &invoiceList)
+	resp, err := s.client.Do(ctx, req, &invoiceMessageList)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return invoiceList, resp, nil
+	return invoiceMessageList, resp, nil
 }
 
 // CreateInvoiceMessage creates a new invoice message object.
