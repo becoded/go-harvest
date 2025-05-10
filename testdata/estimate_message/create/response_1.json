@@ -1,0 +1,19 @@
+{
+  "id":2666240,
+  "sent_by":"Bob Powell",
+  "sent_by_email":"bobpowell@example.com",
+  "sent_from":"Bob Powell",
+  "sent_from_email":"bobpowell@example.com",
+  "send_me_a_copy":true,
+  "created_at":"2017-08-25T21:27:52Z",
+  "updated_at":"2017-08-25T21:27:52Z",
+  "recipients":[
+    {
+      "name":"Richard Roe",
+      "email":"richardroe@example.com"
+    }
+  ],
+  "event_type":null,
+  "subject":"Estimate #1001",
+  "body":"Here is our estimate."
+}

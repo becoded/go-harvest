@@ -29,7 +29,7 @@ type EstimateMessage struct {
 	// Whether to email a copy of the message to the current user.
 	SendMeACopy *bool `json:"send_me_a_copy,omitempty"`
 	// The type of estimate event that occurred with the message: send, accept, decline, re-open, view, or invoice.
-	EventType *bool `json:"event_type,omitempty"`
+	EventType *string `json:"event_type,omitempty"`
 	// Date and time the message was created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Date and time the message was last updated.
@@ -64,7 +64,7 @@ type EstimateMessageRecipientCreateRequest struct {
 }
 
 type EstimateMessageList struct {
-	Estimates []*Estimate `json:"estimates"`
+	EstimateMessages []*EstimateMessage `json:"estimate_messages"`
 
 	Pagination
 }
@@ -92,7 +92,7 @@ func (s *EstimateService) ListEstimateMessages(
 	ctx context.Context,
 	estimateID int64,
 	opt *EstimateMessageListOptions,
-) (*EstimateList, *http.Response, error) {
+) (*EstimateMessageList, *http.Response, error) {
 	u := fmt.Sprintf("estimates/%d/messages", estimateID)
 
 	u, err := addOptions(u, opt)
@@ -105,22 +105,23 @@ func (s *EstimateService) ListEstimateMessages(
 		return nil, nil, err
 	}
 
-	estimateList := new(EstimateList)
+	estimateMessageList := new(EstimateMessageList)
 
-	resp, err := s.client.Do(ctx, req, &estimateList)
+	resp, err := s.client.Do(ctx, req, &estimateMessageList)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return estimateList, resp, nil
+	return estimateMessageList, resp, nil
 }
 
 // CreateEstimateMessage creates a new estimate message object.
 func (s *EstimateService) CreateEstimateMessage(
 	ctx context.Context,
+	estimateID int64,
 	data *EstimateMessageCreateRequest,
 ) (*EstimateMessage, *http.Response, error) {
-	u := "estimates"
+	u := fmt.Sprintf("estimates/%d/messages", estimateID)
 
 	req, err := s.client.NewRequest(ctx, "POST", u, data)
 	if err != nil {
