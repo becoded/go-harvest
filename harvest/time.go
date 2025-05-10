@@ -16,7 +16,7 @@ type Time struct {
 }
 
 func (t Time) String() string {
-	return strings.ToLower(t.Time.Format(time.Kitchen))
+	return strings.ToLower(t.Format(time.Kitchen))
 }
 
 func (t *Time) UnmarshalJSON(data []byte) (err error) {

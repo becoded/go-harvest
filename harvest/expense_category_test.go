@@ -6,8 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestExpenseCategoryService_List(t *testing.T) {
@@ -98,6 +99,8 @@ func TestExpenseCategoryService_List(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -158,6 +161,8 @@ func TestExpenseCategoryService_Get(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -209,6 +214,8 @@ func TestExpenseCategoryService_Create(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -262,6 +269,8 @@ func TestExpenseCategoryService_Update(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -313,6 +322,8 @@ func TestExpenseCategoryService_Delete(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 

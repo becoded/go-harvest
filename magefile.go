@@ -82,7 +82,7 @@ func (Lint) GoFix() error {
 
 // Run golangci-lint and output as code-climate: gl-code-quality-report.json.
 func (Lint) Go() error {
-	return sh.RunV("bash", "-c", "golangci-lint run --timeout 5m --out-format code-climate > gl-code-quality-report.json")
+	return sh.RunV("bash", "-c", "golangci-lint run --timeout 5m --output.code-climate.path=gl-code-quality-report.json")
 }
 
 // Remove all build, coverage and linting artifacts.

@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestCompanyService_Get(t *testing.T) {
@@ -63,6 +64,8 @@ func TestCompanyService_Get(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 

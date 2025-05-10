@@ -6,8 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestClientService_ListContacts(t *testing.T) {
@@ -103,6 +104,8 @@ func TestClientService_ListContacts(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -179,6 +182,8 @@ func TestClientService_GetContact(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -195,4 +200,166 @@ func TestClientService_GetContact(t *testing.T) {
 	}
 }
 
-// Similar table-driven test structures can be applied to `CreateClientContact`, `UpdateClientContact`, and `DeleteClientContact`.
+func TestClientService_CreateClientContact(t *testing.T) {
+	t.Parallel()
+
+	createdAt := time.Date(2019, 6, 26, 21, 44, 57, 0, time.UTC)
+	updatedAt := time.Date(2019, 6, 26, 21, 44, 57, 0, time.UTC)
+
+	tests := []struct {
+		name      string
+		input     *harvest.ClientContactCreateRequest
+		setupMock func(mux *http.ServeMux)
+		want      *harvest.ClientContact
+		wantErr   bool
+	}{
+		{
+			name: "Valid Contact Creation",
+			input: &harvest.ClientContactCreateRequest{
+				ClientID:  harvest.Int64(5735776),
+				FirstName: harvest.String("George"),
+				LastName:  harvest.String("Frank"),
+				Email:     harvest.String("georgefrank@example.com"),
+			},
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/contacts", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "POST")
+					testBody(t, r, "contact/create/body_1.json")
+					testWriteResponse(t, w, "contact/create/response_1.json")
+				})
+			},
+			want: &harvest.ClientContact{
+				ID: harvest.Int64(4706510),
+				Client: &harvest.Client{
+					ID:   harvest.Int64(5735776),
+					Name: harvest.String("123 Industries"),
+				},
+				FirstName:   harvest.String("George"),
+				LastName:    harvest.String("Frank"),
+				Email:       harvest.String("georgefrank@example.com"),
+				PhoneOffice: harvest.String(""),
+				PhoneMobile: harvest.String(""),
+				Fax:         harvest.String(""),
+				CreatedAt:   &createdAt,
+				UpdatedAt:   &updatedAt,
+			},
+			wantErr: false,
+		},
+		{
+			name: "Error Creating Contact",
+			input: &harvest.ClientContactCreateRequest{
+				ClientID:  harvest.Int64(5735776),
+				FirstName: harvest.String("George"),
+			},
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/contacts", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "POST")
+					http.Error(w, `{"message":"Invalid data"}`, http.StatusBadRequest)
+				})
+			},
+			want:    nil,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			service, mux, teardown := setup(t)
+			t.Cleanup(teardown)
+
+			tt.setupMock(mux)
+
+			got, _, err := service.Client.CreateClientContact(context.Background(), tt.input)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
+			}
+		})
+	}
+}
+
+func TestClientService_UpdateClientContact(t *testing.T) {
+	t.Parallel()
+
+	createdAt := time.Date(2019, 6, 26, 21, 44, 57, 0, time.UTC)
+	updatedAt := time.Date(2019, 6, 26, 21, 44, 57, 0, time.UTC)
+
+	tests := []struct {
+		name      string
+		contactID int64
+		input     *harvest.ClientContactUpdateRequest
+		setupMock func(mux *http.ServeMux)
+		want      *harvest.ClientContact
+		wantErr   bool
+	}{
+		{
+			name:      "Valid Contact Update",
+			contactID: 4706510,
+			input: &harvest.ClientContactUpdateRequest{
+				Title: harvest.String("Owner"),
+			},
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/contacts/4706510", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "PATCH")
+					testBody(t, r, "contact/update/body_1.json")
+					testWriteResponse(t, w, "contact/update/response_1.json")
+				})
+			},
+			want: &harvest.ClientContact{
+				ID: harvest.Int64(4706510),
+				Client: &harvest.Client{
+					ID:   harvest.Int64(5735776),
+					Name: harvest.String("123 Industries"),
+				},
+				Title:       harvest.String("Owner"),
+				FirstName:   harvest.String("George"),
+				LastName:    harvest.String("Frank"),
+				Email:       harvest.String("georgefrank@example.com"),
+				PhoneOffice: harvest.String(""),
+				PhoneMobile: harvest.String(""),
+				Fax:         harvest.String(""),
+				CreatedAt:   &createdAt,
+				UpdatedAt:   &updatedAt,
+			},
+			wantErr: false,
+		},
+		{
+			name:      "Error Updating Contact",
+			contactID: 4706510,
+			input: &harvest.ClientContactUpdateRequest{
+				Title: harvest.String(""),
+			},
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/contacts/4706510", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "PATCH")
+					http.Error(w, `{"message":"Invalid data"}`, http.StatusBadRequest)
+				})
+			},
+			want:    nil,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			service, mux, teardown := setup(t)
+			t.Cleanup(teardown)
+
+			tt.setupMock(mux)
+
+			got, _, err := service.Client.UpdateClientContact(context.Background(), tt.contactID, tt.input)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
+			}
+		})
+	}
+}

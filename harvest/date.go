@@ -14,7 +14,7 @@ type Date struct {
 }
 
 func (t *Date) String() string {
-	return t.Time.Format("2006-01-02")
+	return t.Format("2006-01-02")
 }
 
 func (t *Date) UnmarshalJSON(data []byte) (err error) {
@@ -31,7 +31,7 @@ func (t *Date) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (t *Date) MarshalJSON() ([]byte, error) {
-	return []byte(t.Time.Format("\"2006-01-02\"")), nil
+	return []byte(t.Format("\"2006-01-02\"")), nil
 }
 
 func (t *Date) EncodeValues(key string, v *url.Values) error {

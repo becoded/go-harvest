@@ -6,8 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestClientService_List(t *testing.T) {
@@ -80,6 +81,8 @@ func TestClientService_List(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -144,6 +147,8 @@ func TestClientService_Get(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -205,7 +210,7 @@ func TestClientService_CreateClient(t *testing.T) {
 				Currency: harvest.String("EUR"),
 			},
 			setupMock: func(mux *http.ServeMux) {
-				mux.HandleFunc("/clients", func(w http.ResponseWriter, r *http.Request) {
+				mux.HandleFunc("/clients", func(w http.ResponseWriter, _ *http.Request) {
 					http.Error(w, `{"message":"Name is required"}`, http.StatusBadRequest)
 				})
 			},
@@ -216,6 +221,8 @@ func TestClientService_CreateClient(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -291,6 +298,8 @@ func TestClientService_UpdateClient(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -343,6 +352,8 @@ func TestClientService_DeleteClient(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 

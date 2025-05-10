@@ -6,8 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestExpenseService_List(t *testing.T) {
@@ -155,6 +156,8 @@ func TestExpenseService_List(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -258,6 +261,8 @@ func TestExpenseService_Get(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -352,7 +357,7 @@ func TestExpenseService_Create(t *testing.T) {
 				TotalCost:         harvest.Float64(13.59),
 			},
 			setupMock: func(mux *http.ServeMux) {
-				mux.HandleFunc("/expenses", func(w http.ResponseWriter, r *http.Request) {
+				mux.HandleFunc("/expenses", func(w http.ResponseWriter, _ *http.Request) {
 					http.Error(w, `{"message":"ProjectID is required"}`, http.StatusBadRequest)
 				})
 			},
@@ -363,6 +368,8 @@ func TestExpenseService_Create(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -473,6 +480,8 @@ func TestExpenseService_Update(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -524,6 +533,8 @@ func TestExpenseService_Delete(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 

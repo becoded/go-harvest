@@ -372,8 +372,8 @@ func CheckResponse(r *http.Response) error {
 		}
 	}
 
-	switch {
-	case r.StatusCode == http.StatusTooManyRequests:
+	switch r.StatusCode {
+	case http.StatusTooManyRequests:
 		abuseRateLimitError := &AbuseRateLimitError{
 			Response: errorResponse.Response,
 			Message:  errorResponse.Message,

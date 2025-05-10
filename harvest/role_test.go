@@ -50,7 +50,7 @@ func TestRoleService_CreateRole(t *testing.T) {
 				UserIDs: harvest.Ints64([]int64{1, 2, 3}),
 			},
 			setupMock: func(mux *http.ServeMux) {
-				mux.HandleFunc("/roles", func(w http.ResponseWriter, r *http.Request) {
+				mux.HandleFunc("/roles", func(w http.ResponseWriter, _ *http.Request) {
 					http.Error(w, `{"message":"Name is required"}`, http.StatusBadRequest)
 				})
 			},
@@ -61,6 +61,8 @@ func TestRoleService_CreateRole(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -113,6 +115,8 @@ func TestRoleService_DeleteRole(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -174,6 +178,8 @@ func TestRoleService_GetRole(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -258,6 +264,8 @@ func TestRoleService_ListRoles(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
@@ -329,6 +337,8 @@ func TestRoleService_UpdateRole(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			service, mux, teardown := setup(t)
 			t.Cleanup(teardown)
 
