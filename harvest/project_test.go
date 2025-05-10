@@ -13,7 +13,7 @@ import (
 
 func TestProjectService_List(t *testing.T) {
 	t.Parallel()
-	
+
 	tests := []struct {
 		name      string
 		setupMock func(mux *http.ServeMux)
