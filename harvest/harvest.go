@@ -45,14 +45,14 @@ type APIClient struct {
 	// Services used for talking to different parts of the Harvest API.
 	Client    *ClientService
 	Company   *CompanyService
-	Project   *ProjectService
-	Task      *TaskService
-	User      *UserService
 	Estimate  *EstimateService
+	Expense   *ExpenseService
 	Invoice   *InvoiceService
-	Timesheet *TimesheetService
+	Project   *ProjectService
 	Role      *RoleService
-	// Retainer	*RetainerService
+	Task      *TaskService
+	Timesheet *TimesheetService
+	User      *UserService
 }
 
 type service struct {
@@ -125,13 +125,14 @@ func NewAPIClient(httpClient *http.Client) *APIClient {
 	c.common.client = c
 	c.Client = (*ClientService)(&c.common)
 	c.Company = (*CompanyService)(&c.common)
-	c.Project = (*ProjectService)(&c.common)
-	c.Task = (*TaskService)(&c.common)
-	c.User = (*UserService)(&c.common)
 	c.Estimate = (*EstimateService)(&c.common)
+	c.Expense = (*ExpenseService)(&c.common)
 	c.Invoice = (*InvoiceService)(&c.common)
-	c.Timesheet = (*TimesheetService)(&c.common)
+	c.Project = (*ProjectService)(&c.common)
 	c.Role = (*RoleService)(&c.common)
+	c.Task = (*TaskService)(&c.common)
+	c.Timesheet = (*TimesheetService)(&c.common)
+	c.User = (*UserService)(&c.common)
 
 	return c
 }
