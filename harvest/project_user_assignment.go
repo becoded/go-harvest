@@ -12,6 +12,8 @@ import (
 type ProjectUserAssignment struct {
 	// Unique ID for the user assignment.
 	ID *int64 `json:"id,omitempty"`
+	// An object containing the id, name, and code of the associated project.
+	Project *Project `json:"project,omitempty"`
 	// An object containing the id and name of the associated user.
 	User *User `json:"user,omitempty"`
 	// Whether the user assignment is active or archived.

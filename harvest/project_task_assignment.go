@@ -10,6 +10,8 @@ import (
 type ProjectTaskAssignment struct {
 	// Unique ID for the task assignment.
 	ID *int64 `json:"id,omitempty"`
+	// An object containing the id, name, and code of the associated project.
+	Project *Project `json:"project,omitempty"`
 	// An object containing the id and name of the associated task.
 	Task *Task `json:"task,omitempty"`
 	// Whether the task assignment is active or archived.

@@ -13,7 +13,7 @@ type InvoicePayment struct {
 	// Unique ID for the payment.
 	ID *int64 `json:"id,omitempty"`
 	// The amount of the payment.
-	Amount *string `json:"amount,omitempty"`
+	Amount *float64 `json:"amount,omitempty"`
 	// Date and time the payment was made.
 	PaidAt *time.Time `json:"paid_at,omitempty"`
 	// The name of the person who recorded the payment.
@@ -124,8 +124,8 @@ func (s *InvoiceService) CreatePayment(
 	return invoicePayment, resp, nil
 }
 
-// DeleteInvoicePayment deletes an invoice payment.
-func (s *InvoiceService) DeleteInvoicePayment(
+// DeletePayment deletes an invoice payment.
+func (s *InvoiceService) DeletePayment(
 	ctx context.Context,
 	invoiceID,
 	invoicePaymentID int64,

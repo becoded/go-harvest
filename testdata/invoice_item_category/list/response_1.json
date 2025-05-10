@@ -1,0 +1,32 @@
+{
+  "invoice_item_categories":[
+    {
+      "id":1466293,
+      "name":"Product",
+      "use_as_service":false,
+      "use_as_expense":true,
+      "created_at":"2017-06-26T20:41:00Z",
+      "updated_at":"2017-06-26T20:41:00Z"
+    },
+    {
+      "id":1466292,
+      "name":"Service",
+      "use_as_service":true,
+      "use_as_expense":false,
+      "created_at":"2017-06-26T20:41:00Z",
+      "updated_at":"2017-06-26T20:41:00Z"
+    }
+  ],
+  "per_page":2000,
+  "total_pages":1,
+  "total_entries":2,
+  "next_page":null,
+  "previous_page":null,
+  "page":1,
+  "links":{
+    "first":"https://api.harvestapp.com/v2/invoice_item_categories?page=1&per_page=2000",
+    "next":null,
+    "previous":null,
+    "last":"https://api.harvestapp.com/v2/invoice_item_categories?page=1&per_page=2000"
+  }
+}

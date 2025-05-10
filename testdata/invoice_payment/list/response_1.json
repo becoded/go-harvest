@@ -1,0 +1,32 @@
+{
+  "invoice_payments": [
+    {
+      "id": 10112854,
+      "amount": 10700,
+      "paid_at": "2017-02-21T00:00:00Z",
+      "paid_date": "2017-02-21",
+      "recorded_by": "Alice Doe",
+      "recorded_by_email": "alice@example.com",
+      "notes": "Paid via check #4321",
+      "transaction_id": null,
+      "created_at": "2017-06-27T16:24:57Z",
+      "updated_at": "2017-06-27T16:24:57Z",
+      "payment_gateway": {
+        "id": 1234,
+        "name": "Linkpoint International"
+      }
+    }
+  ],
+  "per_page": 2000,
+  "total_pages": 1,
+  "total_entries": 1,
+  "next_page": null,
+  "previous_page": null,
+  "page": 1,
+  "links": {
+    "first": "https://api.harvestapp.com/v2/invoices/13150378/payments?page=1&per_page=2000",
+    "next": null,
+    "previous": null,
+    "last": "https://api.harvestapp.com/v2/invoices/13150378/payments?page=1&per_page=2000"
+  }
+}
