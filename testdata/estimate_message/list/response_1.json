@@ -1,0 +1,39 @@
+{
+  "estimate_messages":[
+    {
+      "id":2666236,
+      "sent_by":"Bob Powell",
+      "sent_by_email":"bobpowell@example.com",
+      "sent_from":"Bob Powell",
+      "sent_from_email":"bobpowell@example.com",
+      "send_me_a_copy":true,
+      "created_at":"2017-08-25T21:23:40Z",
+      "updated_at":"2017-08-25T21:23:40Z",
+      "recipients":[
+        {
+          "name":"Richard Roe",
+          "email":"richardroe@example.com"
+        },
+        {
+          "name":"Bob Powell",
+          "email":"bobpowell@example.com"
+        }
+      ],
+      "event_type":null,
+      "subject":"Estimate #1001 from API Examples",
+      "body":"---------------------------------------------\r\nEstimate Summary\r\n---------------------------------------------\r\nEstimate ID: 1001\r\nEstimate Date: 06/01/2017\r\nClient: 123 Industries\r\nP.O. Number: 5678\r\nAmount: $9,630.00\r\n\r\nYou can view the estimate here:\r\n\r\n%estimate_url%\r\n\r\nThank you!\r\n---------------------------------------------"
+    }
+  ],
+  "per_page":2000,
+  "total_pages":1,
+  "total_entries":1,
+  "next_page":null,
+  "previous_page":null,
+  "page":1,
+  "links":{
+    "first":"https://api.harvestapp.com/v2/estimates/1439818/messages?page=1&per_page=2000",
+    "next":null,
+    "previous":null,
+    "last":"https://api.harvestapp.com/v2/estimates/1439818/messages?page=1&per_page=2000"
+  }
+}

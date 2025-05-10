@@ -86,7 +86,7 @@ func testFormValues(t *testing.T, r *http.Request, values values) {
 	}
 }
 
-func testHeader(t *testing.T, r *http.Request, header string, want string) { //nolint: deadcode,unused
+func testHeader(t *testing.T, r *http.Request, header string, want string) { //nolint: unused
 	got := r.Header.Get(header)
 	assert.Equal(t, want, got)
 }
@@ -117,7 +117,7 @@ func testWriteResponse(t *testing.T, w http.ResponseWriter, path string) {
 }
 
 // Helper function to test that a value is marshalled to JSON as expected.
-func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: deadcode,unused
+func testJSONMarshal(t *testing.T, v interface{}, want string) { //nolint: unused
 	j, err := json.Marshal(v)
 	assert.NoError(t, err, "unable to marshal JSON")
 

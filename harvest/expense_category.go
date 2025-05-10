@@ -27,7 +27,7 @@ type ExpenseCategory struct {
 }
 
 type ExpenseCategoryList struct {
-	ExpenseCategories []*ExpenseCategory `json:"invoice_item_categories"`
+	ExpenseCategories []*ExpenseCategory `json:"expense_categories"`
 
 	Pagination
 }

@@ -1,16 +1,16 @@
+version: "2"
 linters:
   enable:
     - asciicheck
     - bodyclose
+    - copyloopvar
     - depguard
     - dogsled
     - dupl
-    - errcheck
+    - err113
     - errorlint
     - exhaustive
-    - copyloopvar
     - funlen
-    - gci
     - gochecknoglobals
     - gochecknoinits
     - gocognit
@@ -19,21 +19,13 @@ linters:
     - gocyclo
     - godot
     - godox
-    - err113
-    - gofmt
-    - gofumpt
     - goheader
-    - goimports
-    - revive
-    - mnd
     - gomodguard
     - goprintffuncname
     - gosec
-    - gosimple
-    - govet
-    - ineffassign
     - lll
     - misspell
+    - mnd
     - nakedret
     - nestif
     - nlreturn
@@ -41,62 +33,80 @@ linters:
     - nolintlint
     - paralleltest
     - prealloc
+    - revive
     - rowserrcheck
     - sqlclosecheck
     - staticcheck
-    - stylecheck
     - testpackage
     - tparallel
-    - typecheck
     - unconvert
     - unparam
-    - unused
     - whitespace
     - wsl
-
-linters-settings:
-  govet:
-    shadow: true
-  golint:
-    min-confidence: 0
-  wsl:
-    allow-cuddle-declarations: true
-  gci:
-    sections:
-      - standard
-      - default
-      - prefix(github.com/becoded/go-harvest)
-  goimports:
-    local-prefixes: github.com/becoded/go-harvest
-  depguard:
+  settings:
+    depguard:
+      rules:
+        Main:
+          files:
+            - $all
+            - '!$test'
+          allow:
+            - $gostd
+            - github.com/becoded/go-harvest
+            - github.com/google/go-querystring
+            - github.com/sirupsen/logrus
+            - golang.org/x/oauth2
+        Test:
+          files:
+            - $test
+          allow:
+            - $gostd
+            - github.com/becoded/go-harvest
+            - github.com/google/go-querystring
+            - github.com/stretchr/testify
+    wsl:
+      allow-cuddle-declarations: true
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     rules:
-      Main:
-        files:
-          - $all
-          - "!$test"
-        allow:
-          - $gostd
-          - github.com/becoded/go-harvest
-          - github.com/google/go-querystring
-          - github.com/sirupsen/logrus
-      Test:
-        files:
-          - $test
-        allow:
-          - $gostd
-          - github.com/becoded/go-harvest
-          - github.com/google/go-querystring
-          - github.com/stretchr/testify
-issues:
-  exclude:
-    - 'shadow: declaration of "err" shadows declaration at line'
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - funlen
-        - bodyclose
-        - dupl
-        - goerr113
-    - linters:
-        - lll
-      source: "^//go:generate "
+      - linters:
+          - bodyclose
+          - dupl
+          - err113
+          - funlen
+        path: _test\.go
+      - linters:
+          - lll
+        source: '^//go:generate '
+      - path: (.+)\.go$
+        text: 'shadow: declaration of "err" shadows declaration at line'
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/becoded/go-harvest)
+    goimports:
+      local-prefixes:
+        - github.com/becoded/go-harvest
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

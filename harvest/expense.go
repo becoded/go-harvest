@@ -32,6 +32,10 @@ type Expense struct {
 	Invoice *Invoice `json:"invoice,omitempty"`
 	// Textual notes used to describe the expense.
 	Notes *string `json:"notes,omitempty"`
+	// The quantity of units used to calculate the total_cost of the expense.
+	Units *float64 `json:"units,omitempty"`
+	// The total amount of the expense.
+	TotalCost *float64 `json:"total_cost,omitempty"`
 	// Whether the expense is billable or not.
 	Billable *bool `json:"billable,omitempty"`
 	// Whether the expense has been approved or closed for some other reason.

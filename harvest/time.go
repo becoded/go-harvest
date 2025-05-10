@@ -15,8 +15,8 @@ type Time struct {
 	time.Time
 }
 
-func (t Time) String() string {
-	return strings.ToLower(t.Time.Format(time.Kitchen))
+func (t *Time) String() string {
+	return strings.ToLower(t.Format(time.Kitchen))
 }
 
 func (t *Time) UnmarshalJSON(data []byte) (err error) {
@@ -50,6 +50,6 @@ func (t *Time) EncodeValues(key string, v *url.Values) error {
 }
 
 // Equal reports whether t and u are equal based on time.Equal.
-func (t Time) Equal(u Time) bool {
+func (t *Time) Equal(u Time) bool {
 	return t.Time.Equal(u.Time)
 }
