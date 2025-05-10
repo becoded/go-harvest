@@ -52,7 +52,7 @@ func TestTimesheetService_CreateTimeEntryViaDuration(t *testing.T) {
 				TaskID: harvest.Int64(3),
 			},
 			setupMock: func(mux *http.ServeMux) {
-				mux.HandleFunc("/time_entries", func(w http.ResponseWriter, r *http.Request) {
+				mux.HandleFunc("/time_entries", func(w http.ResponseWriter, _ *http.Request) {
 					http.Error(w, `{"message":"ProjectID is required"}`, http.StatusBadRequest)
 				})
 			},
@@ -111,7 +111,7 @@ func TestTimesheetService_GetTimeEntry(t *testing.T) {
 			name:        "Time Entry Not Found",
 			timeEntryID: 999,
 			setupMock: func(mux *http.ServeMux) {
-				mux.HandleFunc("/time_entries/999", func(w http.ResponseWriter, r *http.Request) {
+				mux.HandleFunc("/time_entries/999", func(w http.ResponseWriter, _ *http.Request) {
 					http.Error(w, `{"message":"Time entry not found"}`, http.StatusNotFound)
 				})
 			},

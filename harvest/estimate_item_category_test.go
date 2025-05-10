@@ -6,8 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestEstimateService_ListItemCategories(t *testing.T) {

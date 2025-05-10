@@ -6,8 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/becoded/go-harvest/harvest"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/becoded/go-harvest/harvest"
 )
 
 func TestEstimate_ListEstimateMessages(t *testing.T) {
@@ -52,7 +53,17 @@ func TestEstimate_ListEstimateMessages(t *testing.T) {
 							},
 						},
 						Subject: harvest.String("Estimate #1001 from API Examples"),
-						Body:    harvest.String("---------------------------------------------\r\nEstimate Summary\r\n---------------------------------------------\r\nEstimate ID: 1001\r\nEstimate Date: 06/01/2017\r\nClient: 123 Industries\r\nP.O. Number: 5678\r\nAmount: $9,630.00\r\n\r\nYou can view the estimate here:\r\n\r\n%estimate_url%\r\n\r\nThank you!\r\n---------------------------------------------"),
+						Body: harvest.String("---------------------------------------------\r\n" +
+							"Estimate Summary\r\n" +
+							"---------------------------------------------\r\n" +
+							"Estimate ID: 1001\r\n" +
+							"Estimate Date: 06/01/2017\r\n" +
+							"Client: 123 Industries\r\n" +
+							"P.O. Number: 5678\r\n" +
+							"Amount: $9,630.00\r\n\r\n" +
+							"You can view the estimate here:\r\n\r\n" +
+							"%estimate_url%\r\n\r\n" +
+							"Thank you!\r\n---------------------------------------------"),
 					},
 				},
 				Pagination: harvest.Pagination{
@@ -61,10 +72,14 @@ func TestEstimate_ListEstimateMessages(t *testing.T) {
 					TotalEntries: harvest.Int(1),
 					Page:         harvest.Int(1),
 					Links: &harvest.PageLinks{
-						First:    harvest.String("https://api.harvestapp.com/v2/estimates/1439818/messages?page=1&per_page=2000"),
+						First: harvest.String(
+							"https://api.harvestapp.com/v2/estimates/1439818/messages?page=1&per_page=2000",
+						),
 						Next:     nil,
 						Previous: nil,
-						Last:     harvest.String("https://api.harvestapp.com/v2/estimates/1439818/messages?page=1&per_page=2000"),
+						Last: harvest.String(
+							"https://api.harvestapp.com/v2/estimates/1439818/messages?page=1&per_page=2000",
+						),
 					},
 				},
 			},
@@ -93,7 +108,11 @@ func TestEstimate_ListEstimateMessages(t *testing.T) {
 
 			tt.setupMock(mux)
 
-			got, _, err := service.Estimate.ListEstimateMessages(context.Background(), tt.estimateID, &harvest.EstimateMessageListOptions{})
+			got, _, err := service.Estimate.ListEstimateMessages(
+				context.Background(),
+				tt.estimateID,
+				&harvest.EstimateMessageListOptions{},
+			)
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
@@ -164,7 +183,7 @@ func TestEstimate_CreateEstimateMessage(t *testing.T) {
 				Body: harvest.String("Here is our estimate."),
 			},
 			setupMock: func(mux *http.ServeMux) {
-				mux.HandleFunc("/estimates/1439818/messages", func(w http.ResponseWriter, r *http.Request) {
+				mux.HandleFunc("/estimates/1439818/messages", func(w http.ResponseWriter, _ *http.Request) {
 					http.Error(w, `{"message":"Subject is required"}`, http.StatusBadRequest)
 				})
 			},
