@@ -3,7 +3,7 @@ module github.com/becoded/go-harvest
 go 1.24.1
 
 require (
-	github.com/boumenot/gocover-cobertura v1.3.0
+	github.com/boumenot/gocover-cobertura v1.4.0
 	github.com/google/go-querystring v1.1.0
 	github.com/magefile/mage v1.15.0
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
