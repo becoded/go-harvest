@@ -8,7 +8,7 @@ require (
 	github.com/magefile/mage v1.15.0
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.11.0
+	github.com/stretchr/testify v1.11.1
 	go.uber.org/mock v0.6.0
 	golang.org/x/sys v0.36.0 // indirect
 	golang.org/x/tools v0.37.0
