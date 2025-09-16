@@ -363,3 +363,56 @@ func TestClientService_UpdateClientContact(t *testing.T) {
 		})
 	}
 }
+
+func TestClientService_DeleteClientContact(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		contactID int64
+		setupMock func(mux *http.ServeMux)
+		wantErr   bool
+	}{
+		{
+			name:      "Valid Client Deletion",
+			contactID: 1,
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/contacts/1", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "DELETE")
+					testFormValues(t, r, values{})
+					w.WriteHeader(http.StatusNoContent)
+				})
+			},
+			wantErr: false,
+		},
+		{
+			name:      "Client Not Found",
+			contactID: 999,
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/contacts/999", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "DELETE")
+					http.Error(w, `{"message":"Client not found"}`, http.StatusNotFound)
+				})
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			service, mux, teardown := setup(t)
+			t.Cleanup(teardown)
+
+			tt.setupMock(mux)
+
+			_, err := service.Client.DeleteClientContact(context.Background(), tt.contactID)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
