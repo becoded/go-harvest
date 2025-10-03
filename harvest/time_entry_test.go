@@ -270,7 +270,7 @@ func TestTimesheetService_CreateTimeEntryViaStartEndTime(t *testing.T) {
 				IsClosed:     harvest.Bool(false),
 				IsBilled:     harvest.Bool(false),
 				StartedTime:  &harvest.Time{Time: time.Date(0, time.January, 1, 3, 0, 0, 0, time.Local)},
-				EndedTime:    &harvest.Time{Time: time.Date(0, time.January, 1, 5, 4, 0, 0, time.Local)},
+				EndedTime:    &harvest.Time{Time: time.Date(0, time.January, 1, 5, 0, 0, 0, time.Local)},
 				IsRunning:    harvest.Bool(false),
 				Billable:     harvest.Bool(true),
 				Budgeted:     harvest.Bool(true),
