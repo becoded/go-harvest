@@ -162,8 +162,8 @@ func TestNewRequest_invalidJSON(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	_, err := c.NewRequest(ctx, "GET", ".", &T{})
 
+	_, err := c.NewRequest(ctx, "GET", ".", &T{})
 	if err == nil {
 		t.Error("Expected error to be returned.")
 	}
@@ -267,8 +267,8 @@ func TestDo_httpError(t *testing.T) {
 
 	ctx := context.Background()
 	req, _ := client.NewRequest(ctx, "GET", ".", nil)
-	resp, err := client.Do(ctx, req, nil)
 
+	resp, err := client.Do(ctx, req, nil)
 	if err == nil {
 		t.Fatal("Expected HTTP 400 error, got no error.")
 	}

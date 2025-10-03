@@ -42,7 +42,7 @@ linters:
     - unconvert
     - unparam
     - whitespace
-    - wsl
+    - wsl_v5
   settings:
     depguard:
       rules:
@@ -64,8 +64,12 @@ linters:
             - github.com/becoded/go-harvest
             - github.com/google/go-querystring
             - github.com/stretchr/testify
-    wsl:
-      allow-cuddle-declarations: true
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
+      disable:
+        - decl
   exclusions:
     generated: lax
     presets:
