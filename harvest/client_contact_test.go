@@ -446,7 +446,7 @@ func TestClientContact_String(t *testing.T) {
 				CreatedAt:   &createdAt,
 				UpdatedAt:   &updatedAt,
 			},
-			want: `harvest.ClientContact{ID:4706479, Client:harvest.Client{ID:5735774, Name:"ABC Corp"}, Title:"Owner", FirstName:"Jane", LastName:"Doe", Email:"janedoe@example.com", PhoneOffice:"(203) 697-8885", PhoneMobile:"(203) 697-8886", Fax:"(203) 697-8887", CreatedAt:time.Time{2017-06-26 21:20:07 +0000 UTC}, UpdatedAt:time.Time{2017-06-26 21:27:07 +0000 UTC}}`,
+			want: `harvest.ClientContact{ID:4706479, Client:harvest.Client{ID:5735774, Name:"ABC Corp"}, Title:"Owner", FirstName:"Jane", LastName:"Doe", Email:"janedoe@example.com", PhoneOffice:"(203) 697-8885", PhoneMobile:"(203) 697-8886", Fax:"(203) 697-8887", CreatedAt:time.Time{2017-06-26 21:20:07 +0000 UTC}, UpdatedAt:time.Time{2017-06-26 21:27:07 +0000 UTC}}`, //nolint: lll
 		},
 		{
 			name: "Contact with minimal fields",
@@ -479,7 +479,7 @@ func TestClientContact_String(t *testing.T) {
 				PhoneMobile: harvest.String("555-5678"),
 				Fax:         harvest.String("555-9999"),
 			},
-			want: `harvest.ClientContact{ID:555, FirstName:"Contact", PhoneOffice:"555-1234", PhoneMobile:"555-5678", Fax:"555-9999"}`,
+			want: `harvest.ClientContact{ID:555, FirstName:"Contact", PhoneOffice:"555-1234", PhoneMobile:"555-5678", Fax:"555-9999"}`, //nolint: lll
 		},
 		{
 			name: "Empty Contact",
@@ -530,7 +530,7 @@ func TestClientContactList_String(t *testing.T) {
 					Page:         harvest.Int(1),
 				},
 			},
-			want: `harvest.ClientContactList{ClientContacts:[harvest.ClientContact{ID:4706479, FirstName:"Jane", LastName:"Doe", Email:"jane@example.com"} harvest.ClientContact{ID:4706453, FirstName:"Richard", LastName:"Roe", Email:"richard@example.com"}], Pagination:harvest.Pagination{PerPage:100, TotalPages:1, TotalEntries:2, Page:1}}`,
+			want: `harvest.ClientContactList{ClientContacts:[harvest.ClientContact{ID:4706479, FirstName:"Jane", LastName:"Doe", Email:"jane@example.com"} harvest.ClientContact{ID:4706453, FirstName:"Richard", LastName:"Roe", Email:"richard@example.com"}], Pagination:harvest.Pagination{PerPage:100, TotalPages:1, TotalEntries:2, Page:1}}`, //nolint: lll
 		},
 		{
 			name: "ContactList with single contact",
@@ -549,7 +549,7 @@ func TestClientContactList_String(t *testing.T) {
 					Page:         harvest.Int(1),
 				},
 			},
-			want: `harvest.ClientContactList{ClientContacts:[harvest.ClientContact{ID:999, FirstName:"Solo", LastName:"Contact"}], Pagination:harvest.Pagination{PerPage:50, TotalPages:1, TotalEntries:1, Page:1}}`,
+			want: `harvest.ClientContactList{ClientContacts:[harvest.ClientContact{ID:999, FirstName:"Solo", LastName:"Contact"}], Pagination:harvest.Pagination{PerPage:50, TotalPages:1, TotalEntries:1, Page:1}}`, //nolint: lll
 		},
 		{
 			name: "Empty ContactList",
@@ -562,7 +562,7 @@ func TestClientContactList_String(t *testing.T) {
 					Page:         harvest.Int(1),
 				},
 			},
-			want: `harvest.ClientContactList{ClientContacts:[], Pagination:harvest.Pagination{PerPage:100, TotalPages:0, TotalEntries:0, Page:1}}`,
+			want: `harvest.ClientContactList{ClientContacts:[], Pagination:harvest.Pagination{PerPage:100, TotalPages:0, TotalEntries:0, Page:1}}`, //nolint: lll
 		},
 		{
 			name: "ContactList with Links",
@@ -587,7 +587,7 @@ func TestClientContactList_String(t *testing.T) {
 					},
 				},
 			},
-			want: `harvest.ClientContactList{ClientContacts:[harvest.ClientContact{ID:100, FirstName:"Test", LastName:"User"}], Pagination:harvest.Pagination{PerPage:25, TotalPages:3, TotalEntries:75, Page:2, Links:harvest.PageLinks{First:"https://api.harvestapp.com/v2/contacts?page=1&per_page=25", Next:"https://api.harvestapp.com/v2/contacts?page=3&per_page=25", Previous:"https://api.harvestapp.com/v2/contacts?page=1&per_page=25", Last:"https://api.harvestapp.com/v2/contacts?page=3&per_page=25"}}}`,
+			want: `harvest.ClientContactList{ClientContacts:[harvest.ClientContact{ID:100, FirstName:"Test", LastName:"User"}], Pagination:harvest.Pagination{PerPage:25, TotalPages:3, TotalEntries:75, Page:2, Links:harvest.PageLinks{First:"https://api.harvestapp.com/v2/contacts?page=1&per_page=25", Next:"https://api.harvestapp.com/v2/contacts?page=3&per_page=25", Previous:"https://api.harvestapp.com/v2/contacts?page=1&per_page=25", Last:"https://api.harvestapp.com/v2/contacts?page=3&per_page=25"}}}`, //nolint: lll
 		},
 		{
 			name: "ContactList with contacts with client info",
@@ -617,7 +617,7 @@ func TestClientContactList_String(t *testing.T) {
 					Page:         harvest.Int(1),
 				},
 			},
-			want: `harvest.ClientContactList{ClientContacts:[harvest.ClientContact{ID:1, Client:harvest.Client{ID:10, Name:"Company A"}, FirstName:"Alice"} harvest.ClientContact{ID:2, Client:harvest.Client{ID:20, Name:"Company B"}, FirstName:"Bob"}], Pagination:harvest.Pagination{PerPage:10, TotalPages:1, TotalEntries:2, Page:1}}`,
+			want: `harvest.ClientContactList{ClientContacts:[harvest.ClientContact{ID:1, Client:harvest.Client{ID:10, Name:"Company A"}, FirstName:"Alice"} harvest.ClientContact{ID:2, Client:harvest.Client{ID:20, Name:"Company B"}, FirstName:"Bob"}], Pagination:harvest.Pagination{PerPage:10, TotalPages:1, TotalEntries:2, Page:1}}`, //nolint: lll
 		},
 	}
 

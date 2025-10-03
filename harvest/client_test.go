@@ -388,7 +388,7 @@ func TestClient_String(t *testing.T) {
 				CreatedAt: harvest.TimeTimeP(time.Date(2018, 1, 31, 20, 34, 30, 0, time.UTC)),
 				UpdatedAt: harvest.TimeTimeP(time.Date(2018, 5, 31, 21, 34, 30, 0, time.UTC)),
 			},
-			want: `harvest.Client{ID:123, Name:"Test Client", IsActive:true, Address:"123 Main St", Currency:"USD", CreatedAt:time.Time{2018-01-31 20:34:30 +0000 UTC}, UpdatedAt:time.Time{2018-05-31 21:34:30 +0000 UTC}}`,
+			want: `harvest.Client{ID:123, Name:"Test Client", IsActive:true, Address:"123 Main St", Currency:"USD", CreatedAt:time.Time{2018-01-31 20:34:30 +0000 UTC}, UpdatedAt:time.Time{2018-05-31 21:34:30 +0000 UTC}}`, //nolint: lll
 		},
 		{
 			name: "Client with minimal fields",
@@ -453,7 +453,7 @@ func TestClientList_String(t *testing.T) {
 					Page:         harvest.Int(1),
 				},
 			},
-			want: `harvest.ClientList{Clients:[harvest.Client{ID:1, Name:"Client One", IsActive:true} harvest.Client{ID:2, Name:"Client Two", IsActive:false}], Pagination:harvest.Pagination{PerPage:100, TotalPages:1, TotalEntries:2, Page:1}}`,
+			want: `harvest.ClientList{Clients:[harvest.Client{ID:1, Name:"Client One", IsActive:true} harvest.Client{ID:2, Name:"Client Two", IsActive:false}], Pagination:harvest.Pagination{PerPage:100, TotalPages:1, TotalEntries:2, Page:1}}`, //nolint: lll
 		},
 		{
 			name: "ClientList with single client",
@@ -471,7 +471,7 @@ func TestClientList_String(t *testing.T) {
 					Page:         harvest.Int(1),
 				},
 			},
-			want: `harvest.ClientList{Clients:[harvest.Client{ID:999, Name:"Solo Client"}], Pagination:harvest.Pagination{PerPage:50, TotalPages:1, TotalEntries:1, Page:1}}`,
+			want: `harvest.ClientList{Clients:[harvest.Client{ID:999, Name:"Solo Client"}], Pagination:harvest.Pagination{PerPage:50, TotalPages:1, TotalEntries:1, Page:1}}`, //nolint: lll
 		},
 		{
 			name: "Empty ClientList",
@@ -484,7 +484,7 @@ func TestClientList_String(t *testing.T) {
 					Page:         harvest.Int(1),
 				},
 			},
-			want: `harvest.ClientList{Clients:[], Pagination:harvest.Pagination{PerPage:100, TotalPages:0, TotalEntries:0, Page:1}}`,
+			want: `harvest.ClientList{Clients:[], Pagination:harvest.Pagination{PerPage:100, TotalPages:0, TotalEntries:0, Page:1}}`, //nolint: lll
 		},
 		{
 			name: "ClientList with Links",
@@ -508,7 +508,7 @@ func TestClientList_String(t *testing.T) {
 					},
 				},
 			},
-			want: `harvest.ClientList{Clients:[harvest.Client{ID:100, Name:"Test Client"}], Pagination:harvest.Pagination{PerPage:25, TotalPages:2, TotalEntries:50, Page:1, Links:harvest.PageLinks{First:"https://api.harvestapp.com/v2/clients?page=1&per_page=25", Next:"https://api.harvestapp.com/v2/clients?page=2&per_page=25", Last:"https://api.harvestapp.com/v2/clients?page=2&per_page=25"}}}`,
+			want: `harvest.ClientList{Clients:[harvest.Client{ID:100, Name:"Test Client"}], Pagination:harvest.Pagination{PerPage:25, TotalPages:2, TotalEntries:50, Page:1, Links:harvest.PageLinks{First:"https://api.harvestapp.com/v2/clients?page=1&per_page=25", Next:"https://api.harvestapp.com/v2/clients?page=2&per_page=25", Last:"https://api.harvestapp.com/v2/clients?page=2&per_page=25"}}}`, //nolint: lll
 		},
 	}
 
