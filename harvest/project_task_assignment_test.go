@@ -391,8 +391,6 @@ func TestProjectTaskAssignment_String(t *testing.T) {
 	}
 }
 
-
-
 func TestProjectTaskAssignmentList_String(t *testing.T) {
 	t.Parallel()
 
