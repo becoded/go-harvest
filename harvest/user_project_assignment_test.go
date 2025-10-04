@@ -12,34 +12,26 @@ import (
 )
 
 func TestUserService_ListProjectAssignments(t *testing.T) {
-	service, mux, teardown := setup(t)
-	t.Cleanup(teardown)
-
-	type args struct {
-		userID int64
-	}
+	t.Parallel()
 
 	tests := []struct {
-		name       string
-		args       args
-		method     string
-		path       string
-		formValues values
-		body       string
-		response   string
-		want       *harvest.UserProjectAssignmentList
-		wantErr    error
+		name      string
+		userID    int64
+		setupMock func(mux *http.ServeMux)
+		want      *harvest.UserProjectAssignmentList
+		wantErr   bool
 	}{
 		{
-			name: "get 1",
-			args: args{
-				userID: 1782959,
+			name:   "Valid Project Assignment List",
+			userID: 1782959,
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/users/1782959/project_assignments", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "GET")
+					testFormValues(t, r, values{})
+					testBody(t, r, "user/list_project_assignments/body_1.json")
+					testWriteResponse(t, w, "user/list_project_assignments/response_1.json")
+				})
 			},
-			method:     "GET",
-			path:       "/users/1782959/project_assignments",
-			formValues: values{},
-			body:       "user/list_project_assignments/body_1.json",
-			response:   "user/list_project_assignments/response_1.json",
 			want: &harvest.UserProjectAssignmentList{
 				ProjectAssignments: []*harvest.UserProjectAssignment{
 					{
@@ -204,58 +196,63 @@ func TestUserService_ListProjectAssignments(t *testing.T) {
 					},
 				},
 			},
-			wantErr: nil,
+			wantErr: false,
+		},
+		{
+			name:   "Error Fetching Project Assignment List",
+			userID: 1782959,
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/users/1782959/project_assignments", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "GET")
+					http.Error(w, `{"message":"Internal Server Error"}`, http.StatusInternalServerError)
+				})
+			},
+			want:    nil,
+			wantErr: true,
 		},
 	}
-
-	t.Parallel()
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			mux.HandleFunc(tt.path, func(w http.ResponseWriter, r *http.Request) {
-				testMethod(t, r, tt.method)
-				testFormValues(t, r, tt.formValues)
-				testBody(t, r, tt.body)
-				testWriteResponse(t, w, tt.response)
-			})
 
-			userProjectAssignments, _, err := service.User.ListProjectAssignments(context.Background(), tt.args.userID, nil)
+			service, mux, teardown := setup(t)
+			t.Cleanup(teardown)
 
-			if tt.wantErr != nil {
+			tt.setupMock(mux)
+
+			userProjectAssignments, _, err := service.User.ListProjectAssignments(context.Background(), tt.userID, nil)
+
+			if tt.wantErr {
+				assert.Error(t, err)
 				assert.Nil(t, userProjectAssignments)
-				assert.EqualError(t, err, tt.wantErr.Error())
-
-				return
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, userProjectAssignments)
 			}
-
-			assert.NoError(t, err)
-			assert.Equal(t, tt.want.String(), userProjectAssignments.String())
 		})
 	}
 }
 
 func TestUserService_GetMyProjectAssignments(t *testing.T) {
-	service, mux, teardown := setup(t)
-	t.Cleanup(teardown)
+	t.Parallel()
 
 	tests := []struct {
-		name       string
-		method     string
-		path       string
-		formValues values
-		body       string
-		response   string
-		want       *harvest.UserProjectAssignmentList
-		wantErr    error
+		name      string
+		setupMock func(mux *http.ServeMux)
+		want      *harvest.UserProjectAssignmentList
+		wantErr   bool
 	}{
 		{
-			name:       "get 1",
-			method:     "GET",
-			path:       "/users/me/project_assignments",
-			formValues: values{},
-			body:       "user/current_list_project_assignments/body_1.json",
-			response:   "user/current_list_project_assignments/response_1.json",
+			name: "Valid My Project Assignment List",
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/users/me/project_assignments", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "GET")
+					testFormValues(t, r, values{})
+					testBody(t, r, "user/current_list_project_assignments/body_1.json")
+					testWriteResponse(t, w, "user/current_list_project_assignments/response_1.json")
+				})
+			},
 			want: &harvest.UserProjectAssignmentList{
 				ProjectAssignments: []*harvest.UserProjectAssignment{
 					{
@@ -420,33 +417,39 @@ func TestUserService_GetMyProjectAssignments(t *testing.T) {
 					},
 				},
 			},
-			wantErr: nil,
+			wantErr: false,
+		},
+		{
+			name: "Error Fetching My Project Assignment List",
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/users/me/project_assignments", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "GET")
+					http.Error(w, `{"message":"Internal Server Error"}`, http.StatusInternalServerError)
+				})
+			},
+			want:    nil,
+			wantErr: true,
 		},
 	}
-
-	t.Parallel()
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			mux.HandleFunc(tt.path, func(w http.ResponseWriter, r *http.Request) {
-				testMethod(t, r, tt.method)
-				testFormValues(t, r, tt.formValues)
-				testBody(t, r, tt.body)
-				testWriteResponse(t, w, tt.response)
-			})
+
+			service, mux, teardown := setup(t)
+			t.Cleanup(teardown)
+
+			tt.setupMock(mux)
 
 			userProjectAssignments, _, err := service.User.GetMyProjectAssignments(context.Background(), nil)
 
-			if tt.wantErr != nil {
+			if tt.wantErr {
+				assert.Error(t, err)
 				assert.Nil(t, userProjectAssignments)
-				assert.EqualError(t, err, tt.wantErr.Error())
-
-				return
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, userProjectAssignments)
 			}
-
-			assert.NoError(t, err)
-			assert.Equal(t, tt.want.String(), userProjectAssignments.String())
 		})
 	}
 }
