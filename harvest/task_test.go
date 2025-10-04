@@ -481,8 +481,6 @@ func TestTask_String(t *testing.T) {
 	}
 }
 
-
-
 func TestTaskList_String(t *testing.T) {
 	t.Parallel()
 
