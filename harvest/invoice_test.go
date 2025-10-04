@@ -835,7 +835,6 @@ func TestInvoiceService_UpdateInvoice(t *testing.T) {
 	}
 }
 
-
 func TestInvoice_String(t *testing.T) {
 	t.Parallel()
 
@@ -945,7 +944,7 @@ func TestInvoice_String(t *testing.T) {
 				Currency:       harvest.String("EUR"),
 				State:          harvest.String("open"),
 			},
-			want: `harvest.Invoice{ID:13150403, Number:"1001", Amount:288.9, Discount:10, DiscountAmount:30, Currency:"EUR", State:"open"}`,
+			want: `harvest.Invoice{ID:13150403, Number:"1001", Amount:288.9, Discount:10, DiscountAmount:30, Currency:"EUR", State:"open"}`, //nolint: lll
 		},
 	}
 
@@ -958,7 +957,6 @@ func TestInvoice_String(t *testing.T) {
 		})
 	}
 }
-
 
 func TestInvoiceList_String(t *testing.T) {
 	t.Parallel()
@@ -1034,7 +1032,7 @@ func TestInvoiceList_String(t *testing.T) {
 					Page:         harvest.Int(1),
 				},
 			},
-			want: `harvest.InvoiceList{Invoices:[], Pagination:harvest.Pagination{PerPage:100, TotalPages:0, TotalEntries:0, Page:1}}`,
+			want: `harvest.InvoiceList{Invoices:[], Pagination:harvest.Pagination{PerPage:100, TotalPages:0, TotalEntries:0, Page:1}}`, //nolint: lll
 		},
 		{
 			name: "InvoiceList with Links",
@@ -1103,4 +1101,3 @@ func TestInvoiceList_String(t *testing.T) {
 		})
 	}
 }
-

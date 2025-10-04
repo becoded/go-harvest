@@ -702,16 +702,16 @@ func TestInvoiceMessageList_String(t *testing.T) {
 			in: harvest.InvoiceMessageList{
 				InvoiceMessages: []*harvest.InvoiceMessage{
 					{
-						ID:            harvest.Int64(27835209),
-						SentBy:        harvest.String("Bob Powell"),
-						SentByEmail:   harvest.String("bobpowell@example.com"),
-						Subject:       harvest.String("Invoice #1001"),
-						AttachPdf:     harvest.Bool(true),
-						SendMeACopy:   harvest.Bool(false),
-						ThankYou:      harvest.Bool(false),
-						Reminder:      harvest.Bool(false),
-						CreatedAt:     harvest.TimeTimeP(time.Date(2017, 8, 23, 22, 15, 6, 0, time.UTC)),
-						UpdatedAt:     harvest.TimeTimeP(time.Date(2017, 8, 23, 22, 15, 6, 0, time.UTC)),
+						ID:          harvest.Int64(27835209),
+						SentBy:      harvest.String("Bob Powell"),
+						SentByEmail: harvest.String("bobpowell@example.com"),
+						Subject:     harvest.String("Invoice #1001"),
+						AttachPdf:   harvest.Bool(true),
+						SendMeACopy: harvest.Bool(false),
+						ThankYou:    harvest.Bool(false),
+						Reminder:    harvest.Bool(false),
+						CreatedAt:   harvest.TimeTimeP(time.Date(2017, 8, 23, 22, 15, 6, 0, time.UTC)),
+						UpdatedAt:   harvest.TimeTimeP(time.Date(2017, 8, 23, 22, 15, 6, 0, time.UTC)),
 					},
 					{
 						ID:          harvest.Int64(27835207),
