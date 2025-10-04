@@ -113,7 +113,7 @@ func (s *ClientService) ListContacts(
 
 	clientContactList := new(ClientContactList)
 
-	resp, err := s.client.Do(ctx, req, &clientContactList)
+	resp, err := s.client.Do(ctx, req, clientContactList)
 	if err != nil {
 		return nil, resp, err
 	}

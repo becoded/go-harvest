@@ -160,7 +160,7 @@ func (s *ExpenseService) List(ctx context.Context, opt *ExpenseListOptions) (*Ex
 
 	expenseList := new(ExpenseList)
 
-	resp, err := s.client.Do(ctx, req, &expenseList)
+	resp, err := s.client.Do(ctx, req, expenseList)
 	if err != nil {
 		return nil, resp, err
 	}

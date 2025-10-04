@@ -123,7 +123,7 @@ func (s *EstimateService) List(ctx context.Context, opt *EstimateListOptions) (*
 
 	estimateList := new(EstimateList)
 
-	resp, err := s.client.Do(ctx, req, &estimateList)
+	resp, err := s.client.Do(ctx, req, estimateList)
 	if err != nil {
 		return nil, resp, err
 	}

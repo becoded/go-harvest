@@ -107,7 +107,7 @@ func (s *EstimateService) ListEstimateMessages(
 
 	estimateMessageList := new(EstimateMessageList)
 
-	resp, err := s.client.Do(ctx, req, &estimateMessageList)
+	resp, err := s.client.Do(ctx, req, estimateMessageList)
 	if err != nil {
 		return nil, resp, err
 	}
