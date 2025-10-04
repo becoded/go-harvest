@@ -184,6 +184,20 @@ func TestEstimateService_CreateItemCategory(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "Error Creating Category",
+			request: &harvest.EstimateItemCategoryRequest{
+				Name: harvest.String("Hosting"),
+			},
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/estimate_item_categories", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "POST")
+					http.Error(w, `{"message":"Internal Server Error"}`, http.StatusInternalServerError)
+				})
+			},
+			want:    nil,
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -198,6 +212,7 @@ func TestEstimateService_CreateItemCategory(t *testing.T) {
 			got, _, err := service.Estimate.CreateItemCategory(context.Background(), tt.request)
 			if tt.wantErr {
 				assert.Error(t, err)
+				assert.Nil(t, got)
 			} else {
 				assert.NoError(t, err)
 				assert.Equal(t, tt.want, got)
@@ -238,6 +253,21 @@ func TestEstimateService_UpdateItemCategory(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "Error Updating Category",
+			id:   1379244,
+			request: &harvest.EstimateItemCategoryRequest{
+				Name: harvest.String("Transportation"),
+			},
+			setupMock: func(mux *http.ServeMux) {
+				mux.HandleFunc("/estimate_item_categories/1379244", func(w http.ResponseWriter, r *http.Request) {
+					testMethod(t, r, "PATCH")
+					http.Error(w, `{"message":"Internal Server Error"}`, http.StatusInternalServerError)
+				})
+			},
+			want:    nil,
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -252,6 +282,7 @@ func TestEstimateService_UpdateItemCategory(t *testing.T) {
 			got, _, err := service.Estimate.UpdateItemCategory(context.Background(), tt.id, tt.request)
 			if tt.wantErr {
 				assert.Error(t, err)
+				assert.Nil(t, got)
 			} else {
 				assert.NoError(t, err)
 				assert.Equal(t, tt.want, got)
@@ -308,6 +339,157 @@ func TestEstimateService_DeleteItemCategory(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 			}
+		})
+	}
+}
+
+func TestEstimateItemCategory_String(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		in   harvest.EstimateItemCategory
+		want string
+	}{
+		{
+			name: "EstimateItemCategory with all fields",
+			in: harvest.EstimateItemCategory{
+				ID:        harvest.Int64(1378704),
+				Name:      harvest.String("Product"),
+				CreatedAt: harvest.TimeTimeP(time.Date(2017, 6, 26, 20, 41, 0, 0, time.UTC)),
+				UpdatedAt: harvest.TimeTimeP(time.Date(2017, 6, 26, 20, 41, 5, 0, time.UTC)),
+			},
+			want: `harvest.EstimateItemCategory{ID:1378704, Name:"Product", CreatedAt:time.Time{2017-06-26 20:41:00 +0000 UTC}, UpdatedAt:time.Time{2017-06-26 20:41:05 +0000 UTC}}`, //nolint: lll
+		},
+		{
+			name: "EstimateItemCategory with minimal fields",
+			in: harvest.EstimateItemCategory{
+				ID:   harvest.Int64(999),
+				Name: harvest.String("Service"),
+			},
+			want: `harvest.EstimateItemCategory{ID:999, Name:"Service"}`,
+		},
+		{
+			name: "EstimateItemCategory with ID only",
+			in: harvest.EstimateItemCategory{
+				ID: harvest.Int64(123),
+			},
+			want: `harvest.EstimateItemCategory{ID:123}`,
+		},
+		{
+			name: "Empty EstimateItemCategory",
+			in:   harvest.EstimateItemCategory{},
+			want: `harvest.EstimateItemCategory{}`,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			got := tt.in.String()
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestEstimateItemCategoryList_String(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		in   harvest.EstimateItemCategoryList
+		want string
+	}{
+		{
+			name: "EstimateItemCategoryList with multiple categories",
+			in: harvest.EstimateItemCategoryList{
+				EstimateItemCategories: []*harvest.EstimateItemCategory{
+					{
+						ID:        harvest.Int64(1378704),
+						Name:      harvest.String("Product"),
+						CreatedAt: harvest.TimeTimeP(time.Date(2017, 6, 26, 20, 41, 0, 0, time.UTC)),
+						UpdatedAt: harvest.TimeTimeP(time.Date(2017, 6, 26, 20, 41, 0, 0, time.UTC)),
+					},
+					{
+						ID:        harvest.Int64(1378703),
+						Name:      harvest.String("Service"),
+						CreatedAt: harvest.TimeTimeP(time.Date(2017, 6, 26, 20, 41, 0, 0, time.UTC)),
+						UpdatedAt: harvest.TimeTimeP(time.Date(2017, 6, 26, 20, 41, 0, 0, time.UTC)),
+					},
+				},
+				Pagination: harvest.Pagination{
+					PerPage:      harvest.Int(2000),
+					TotalPages:   harvest.Int(1),
+					TotalEntries: harvest.Int(2),
+					Page:         harvest.Int(1),
+				},
+			},
+			want: `harvest.EstimateItemCategoryList{EstimateItemCategories:[harvest.EstimateItemCategory{ID:1378704, Name:"Product", CreatedAt:time.Time{2017-06-26 20:41:00 +0000 UTC}, UpdatedAt:time.Time{2017-06-26 20:41:00 +0000 UTC}} harvest.EstimateItemCategory{ID:1378703, Name:"Service", CreatedAt:time.Time{2017-06-26 20:41:00 +0000 UTC}, UpdatedAt:time.Time{2017-06-26 20:41:00 +0000 UTC}}], Pagination:harvest.Pagination{PerPage:2000, TotalPages:1, TotalEntries:2, Page:1}}`, //nolint: lll
+		},
+		{
+			name: "EstimateItemCategoryList with single category",
+			in: harvest.EstimateItemCategoryList{
+				EstimateItemCategories: []*harvest.EstimateItemCategory{
+					{
+						ID:   harvest.Int64(999),
+						Name: harvest.String("Hosting"),
+					},
+				},
+				Pagination: harvest.Pagination{
+					PerPage:      harvest.Int(100),
+					TotalPages:   harvest.Int(1),
+					TotalEntries: harvest.Int(1),
+					Page:         harvest.Int(1),
+				},
+			},
+			want: `harvest.EstimateItemCategoryList{EstimateItemCategories:[harvest.EstimateItemCategory{ID:999, Name:"Hosting"}], Pagination:harvest.Pagination{PerPage:100, TotalPages:1, TotalEntries:1, Page:1}}`, //nolint: lll
+		},
+		{
+			name: "Empty EstimateItemCategoryList",
+			in: harvest.EstimateItemCategoryList{
+				EstimateItemCategories: []*harvest.EstimateItemCategory{},
+				Pagination: harvest.Pagination{
+					PerPage:      harvest.Int(100),
+					TotalPages:   harvest.Int(0),
+					TotalEntries: harvest.Int(0),
+					Page:         harvest.Int(1),
+				},
+			},
+			want: `harvest.EstimateItemCategoryList{EstimateItemCategories:[], Pagination:harvest.Pagination{PerPage:100, TotalPages:0, TotalEntries:0, Page:1}}`, //nolint: lll
+		},
+		{
+			name: "EstimateItemCategoryList with Links",
+			in: harvest.EstimateItemCategoryList{
+				EstimateItemCategories: []*harvest.EstimateItemCategory{
+					{
+						ID:   harvest.Int64(100),
+						Name: harvest.String("Product"),
+					},
+				},
+				Pagination: harvest.Pagination{
+					PerPage:      harvest.Int(50),
+					TotalPages:   harvest.Int(3),
+					TotalEntries: harvest.Int(150),
+					Page:         harvest.Int(2),
+					Links: &harvest.PageLinks{
+						First:    harvest.String("https://api.harvestapp.com/v2/estimate_item_categories?page=1&per_page=50"),
+						Next:     harvest.String("https://api.harvestapp.com/v2/estimate_item_categories?page=3&per_page=50"),
+						Previous: harvest.String("https://api.harvestapp.com/v2/estimate_item_categories?page=1&per_page=50"),
+						Last:     harvest.String("https://api.harvestapp.com/v2/estimate_item_categories?page=3&per_page=50"),
+					},
+				},
+			},
+			want: `harvest.EstimateItemCategoryList{EstimateItemCategories:[harvest.EstimateItemCategory{ID:100, Name:"Product"}], Pagination:harvest.Pagination{PerPage:50, TotalPages:3, TotalEntries:150, Page:2, Links:harvest.PageLinks{First:"https://api.harvestapp.com/v2/estimate_item_categories?page=1&per_page=50", Next:"https://api.harvestapp.com/v2/estimate_item_categories?page=3&per_page=50", Previous:"https://api.harvestapp.com/v2/estimate_item_categories?page=1&per_page=50", Last:"https://api.harvestapp.com/v2/estimate_item_categories?page=3&per_page=50"}}}`, //nolint: lll
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			got := tt.in.String()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
