@@ -61,7 +61,7 @@ func (s *CompanyService) Get(ctx context.Context) (*Company, *http.Response, err
 
 	company := new(Company)
 
-	resp, err := s.client.Do(ctx, req, &company)
+	resp, err := s.client.Do(ctx, req, company)
 	if err != nil {
 		return nil, resp, err
 	}

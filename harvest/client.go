@@ -94,7 +94,7 @@ func (s *ClientService) List(ctx context.Context, opt *ClientListOptions) (*Clie
 
 	clientList := new(ClientList)
 
-	resp, err := s.client.Do(ctx, req, &clientList)
+	resp, err := s.client.Do(ctx, req, clientList)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -114,7 +114,7 @@ func (s *ClientService) Get(ctx context.Context, clientID int64) (*Client, *http
 
 	client := new(Client)
 
-	resp, err := s.client.Do(ctx, req, &client)
+	resp, err := s.client.Do(ctx, req, client)
 	if err != nil {
 		return nil, resp, err
 	}

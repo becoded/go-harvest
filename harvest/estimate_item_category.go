@@ -64,7 +64,7 @@ func (s *EstimateService) ListItemCategories(
 
 	estimateItemCategoryList := new(EstimateItemCategoryList)
 
-	resp, err := s.client.Do(ctx, req, &estimateItemCategoryList)
+	resp, err := s.client.Do(ctx, req, estimateItemCategoryList)
 	if err != nil {
 		return nil, resp, err
 	}
