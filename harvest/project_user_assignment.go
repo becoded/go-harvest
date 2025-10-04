@@ -75,7 +75,7 @@ func (s *ProjectService) ListUserAssignments(
 
 	projectUserAssignmentList := new(ProjectUserAssignmentList)
 
-	resp, err := s.client.Do(ctx, req, &projectUserAssignmentList)
+	resp, err := s.client.Do(ctx, req, projectUserAssignmentList)
 	if err != nil {
 		return nil, resp, err
 	}

@@ -69,7 +69,7 @@ func (s *InvoiceService) ListItemCategories(
 
 	invoiceItemCategoryList := new(InvoiceItemCategoryList)
 
-	resp, err := s.client.Do(ctx, req, &invoiceItemCategoryList)
+	resp, err := s.client.Do(ctx, req, invoiceItemCategoryList)
 	if err != nil {
 		return nil, resp, err
 	}

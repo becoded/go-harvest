@@ -65,7 +65,7 @@ func (s *RoleService) List(ctx context.Context, opt *RoleListOptions) (*RoleList
 
 	roleList := new(RoleList)
 
-	resp, err := s.client.Do(ctx, req, &roleList)
+	resp, err := s.client.Do(ctx, req, roleList)
 	if err != nil {
 		return nil, resp, err
 	}

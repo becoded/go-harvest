@@ -117,7 +117,7 @@ func (s *InvoiceService) ListInvoiceMessages(
 
 	invoiceMessageList := new(InvoiceMessageList)
 
-	resp, err := s.client.Do(ctx, req, &invoiceMessageList)
+	resp, err := s.client.Do(ctx, req, invoiceMessageList)
 	if err != nil {
 		return nil, resp, err
 	}

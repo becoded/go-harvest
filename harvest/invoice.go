@@ -275,7 +275,7 @@ func (s *InvoiceService) List(ctx context.Context, opt *InvoiceListOptions) (*In
 
 	invoiceList := new(InvoiceList)
 
-	resp, err := s.client.Do(ctx, req, &invoiceList)
+	resp, err := s.client.Do(ctx, req, invoiceList)
 	if err != nil {
 		return nil, resp, err
 	}

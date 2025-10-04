@@ -200,7 +200,7 @@ func (s *TimesheetService) List(
 
 	timeEntryList := new(TimeEntryList)
 
-	resp, err := s.client.Do(ctx, req, &timeEntryList)
+	resp, err := s.client.Do(ctx, req, timeEntryList)
 	if err != nil {
 		return nil, resp, err
 	}

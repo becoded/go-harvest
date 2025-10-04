@@ -98,7 +98,7 @@ func (s *TaskService) List(ctx context.Context, opt *TaskListOptions) (*TaskList
 
 	taskList := new(TaskList)
 
-	resp, err := s.client.Do(ctx, req, &taskList)
+	resp, err := s.client.Do(ctx, req, taskList)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -117,7 +117,7 @@ func (s *TaskService) Get(ctx context.Context, taskID int64) (*Task, *http.Respo
 
 	task := new(Task)
 
-	resp, err := s.client.Do(ctx, req, &task)
+	resp, err := s.client.Do(ctx, req, task)
 	if err != nil {
 		return nil, resp, err
 	}
