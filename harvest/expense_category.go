@@ -79,7 +79,7 @@ func (s *ExpenseService) ListExpenseCategories(
 
 	expenseCategoryList := new(ExpenseCategoryList)
 
-	resp, err := s.client.Do(ctx, req, &expenseCategoryList)
+	resp, err := s.client.Do(ctx, req, expenseCategoryList)
 	if err != nil {
 		return nil, resp, err
 	}

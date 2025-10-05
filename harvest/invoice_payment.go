@@ -93,7 +93,7 @@ func (s *InvoiceService) ListPayments(
 
 	invoicePaymentList := new(InvoicePaymentList)
 
-	resp, err := s.client.Do(ctx, req, &invoicePaymentList)
+	resp, err := s.client.Do(ctx, req, invoicePaymentList)
 	if err != nil {
 		return nil, resp, err
 	}

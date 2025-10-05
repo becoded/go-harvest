@@ -105,7 +105,7 @@ func (s *ProjectService) List(ctx context.Context, opt *ProjectListOptions) (*Pr
 
 	projectList := new(ProjectList)
 
-	resp, err := s.client.Do(ctx, req, &projectList)
+	resp, err := s.client.Do(ctx, req, projectList)
 	if err != nil {
 		return nil, resp, err
 	}

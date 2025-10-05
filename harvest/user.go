@@ -176,7 +176,7 @@ func (s *UserService) List(ctx context.Context, opt *UserListOptions) (*UserList
 
 	userList := new(UserList)
 
-	resp, err := s.client.Do(ctx, req, &userList)
+	resp, err := s.client.Do(ctx, req, userList)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -195,7 +195,7 @@ func (s *UserService) Get(ctx context.Context, userID int64) (*User, *http.Respo
 
 	user := new(User)
 
-	resp, err := s.client.Do(ctx, req, &user)
+	resp, err := s.client.Do(ctx, req, user)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -214,7 +214,7 @@ func (s *UserService) Current(ctx context.Context) (*User, *http.Response, error
 
 	user := new(User)
 
-	resp, err := s.client.Do(ctx, req, &user)
+	resp, err := s.client.Do(ctx, req, user)
 	if err != nil {
 		return nil, resp, err
 	}

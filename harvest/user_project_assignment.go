@@ -81,7 +81,7 @@ func (s *UserService) ListProjectAssignments(
 
 	list := new(UserProjectAssignmentList)
 
-	resp, err := s.client.Do(ctx, req, &list)
+	resp, err := s.client.Do(ctx, req, list)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -108,7 +108,7 @@ func (s *UserService) GetMyProjectAssignments(
 
 	list := new(UserProjectAssignmentList)
 
-	resp, err := s.client.Do(ctx, req, &list)
+	resp, err := s.client.Do(ctx, req, list)
 	if err != nil {
 		return nil, resp, err
 	}
