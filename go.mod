@@ -7,7 +7,6 @@ require (
 	github.com/magefile/mage v1.15.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/oauth2 v0.31.0
 	golang.org/x/tools v0.37.0
 )
 
