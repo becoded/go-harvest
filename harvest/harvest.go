@@ -119,7 +119,10 @@ func NewAPIClient(httpClient *http.Client) *APIClient {
 		httpClient = &http.Client{}
 	}
 
-	baseURL, _ := url.Parse(DefaultBaseURL)
+	baseURL, err := url.Parse(DefaultBaseURL)
+	if err != nil {
+		logrus.Error(err)
+	}
 
 	c := &APIClient{httpClient: httpClient, BaseURL: baseURL, UserAgent: UserAgent}
 	c.common.client = c

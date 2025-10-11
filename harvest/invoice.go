@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// InvoiceService handles communication with the issue related
+// InvoiceService handles communication with the invoice related
 // methods of the Harvest API.
 //
 // Harvest API docs: https://help.getharvest.com/api-v2/invoices-api/invoices/invoices/
