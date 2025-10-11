@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// ProjectService handles communication with the issue related
+// ProjectService handles communication with the project related
 // methods of the Harvest API.
 //
 // Harvest API docs: https://help.getharvest.com/api-v2/projects-api/projects/projects/

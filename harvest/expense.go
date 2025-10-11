@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// ExpenseService handles communication with the issue related
+// ExpenseService handles communication with the expense related
 // methods of the Harvest API.
 //
 // Harvest API docs: https://help.getharvest.com/api-v2/expenses-api/expenses/expenses/
