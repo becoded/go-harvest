@@ -3,7 +3,7 @@ module github.com/becoded/go-harvest
 go 1.25.1
 
 require (
-	github.com/google/go-querystring v1.1.0
+	github.com/google/go-querystring v1.2.0
 	github.com/magefile/mage v1.15.0
 	github.com/sirupsen/logrus v1.9.4
 	github.com/stretchr/testify v1.11.1
